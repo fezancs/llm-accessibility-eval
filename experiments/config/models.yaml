@@ -336,9 +336,82 @@ models:
     price_source: "https://openrouter.ai/api/v1/models/qwen/qwen3.8-2.4t-a95b/endpoints"
     roles: [e1]
 
+  # ---------------- Local (self-hosted, $0) ----------------
+  # Served by Ollama (or any OpenAI-compatible server) on the LOCAL_BASE_URL endpoint
+  # (default http://localhost:11434/v1). provider_model_id is the Ollama tag you `ollama pull`.
+  # These fit an 8 GB GPU (RTX 2060 SUPER) at 4-bit, one model resident at a time. Prices are
+  # 0, so every call is logged at $0 and never counts against a budget cap. Running on 8 GB is
+  # a deliberate substitution for the larger study models (see DEVIATIONS.md): report these as
+  # "small open-weight models runnable on consumer 8 GB hardware", not as the frontier models.
+  - key: local-qwen3-8b
+    display: "Qwen3 8B (local)"
+    family: alibaba-local       # distinct family so the E3 jury can recuse correctly
+    access: open                # Apache-2.0
+    tier: core
+    provider: local
+    provider_model_id: "qwen3:8b"
+    released: "2026"
+    vision: false               # Qwen3 8B is text-only; use local-qwen2.5vl-7b for E3
+    context_tokens: 32768       # Ollama default is 4096; raise with OLLAMA_CONTEXT or a Modelfile
+    max_output_tokens: 8192
+    architecture: "dense 8B"
+    test_time_compute: "thinking toggle (default on); reasoning not sent by the harness"
+    price: {input: 0, output: 0}
+    price_source: "self-hosted; no per-token cost"
+    roles: [e1, e2]             # strong tool calling for E2; text-only so not an E3 generator/judge
+    local_candidate: true
+
+  - key: local-qwen25vl-7b
+    display: "Qwen2.5-VL 7B (local)"
+    family: alibaba-local
+    access: open                # Apache-2.0
+    tier: core
+    provider: local
+    provider_model_id: "qwen2.5vl:7b"
+    released: "2026"
+    vision: true
+    context_tokens: 32768
+    max_output_tokens: 8192
+    architecture: "vision-language 7B"
+    test_time_compute: "--"
+    price: {input: 0, output: 0}
+    price_source: "self-hosted; no per-token cost"
+    # Local vision models are weaker at alt text than cloud models (dri.es round 2); report the
+    # limitation rather than hiding it. Serves as the Alibaba-family E3 generator and judge.
+    judge_params: {}
+    roles: [e1, e3_gen, e3_judge]
+    local_candidate: true
+
+  - key: local-gemma3-4b
+    display: "Gemma 3 4B (local)"
+    family: google-local        # second family for the E3 jury (CMBPE needs >= 3 families)
+    access: open                # Gemma terms of use
+    tier: optional              # fits alongside another small model on 8 GB; optional second judge
+    provider: local
+    provider_model_id: "gemma3:4b"
+    released: "2026"
+    vision: true
+    context_tokens: 32768
+    max_output_tokens: 8192
+    architecture: "dense 4B (vision)"
+    test_time_compute: "--"
+    price: {input: 0, output: 0}
+    price_source: "self-hosted; no per-token cost"
+    judge_params: {}
+    roles: [e1, e3_gen, e3_judge]
+    local_candidate: true
+
 # Judge panel for CMBPE (E3): exactly one judge per family.
+# For a cloud run use the four lines below. For a fully local run, comment those out and use
+# the local map instead (needs >= 3 families; local-qwen25vl-7b + local-gemma3-4b give two,
+# so add a third small vision model from another family, e.g. a Llama-vision or MiniMax-VL
+# build, before relying on CMBPE locally).
 judges:
   anthropic: claude-sonnet-5-5
   openai: gpt-6-sol
   google: gemini-3-8-flash
   alibaba: qwen3-8-27b
+
+# judges (fully local example; uncomment and add a third family):
+#   alibaba-local: local-qwen25vl-7b
+#   google-local: local-gemma3-4b

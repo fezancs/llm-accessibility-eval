@@ -23,8 +23,9 @@ from .providers.base import AttemptError, Outcome
 from .cache import _normalise
 
 ADAPTERS = {"anthropic": anthropic_adapter, "openai": openai_adapter, "google": gemini_adapter,
-            "deepseek": chat_adapter, "openrouter": chat_adapter}
-CONCURRENCY = {"anthropic": 8, "openai": 8, "google": 8, "deepseek": 6, "openrouter": 4}
+            "deepseek": chat_adapter, "openrouter": chat_adapter, "local": chat_adapter}
+# A self-hosted server (Ollama/vLLM) runs one model on one GPU, so requests are serialised.
+CONCURRENCY = {"anthropic": 8, "openai": 8, "google": 8, "deepseek": 6, "openrouter": 4, "local": 1}
 _SEMAPHORES = {p: threading.BoundedSemaphore(n) for p, n in CONCURRENCY.items()}
 MAX_RETRIES = 5
 DEFAULT_MAX_TOKENS = 64_000

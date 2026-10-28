@@ -135,6 +135,15 @@ caps in `config/budget.yaml`. Then follow `RUNBOOK.md`: check keys
 (`python -m harness.check_keys`), run a small pilot (`--pilot`) and its cost projection
 (`python -m harness.pilot_report`), then the full runs and `python -m analysis.run_all`.
 
+### Running for free on a local GPU
+
+No API budget? You can run a smaller version entirely on your own hardware at zero token
+cost, using self-hosted open-weight models through [Ollama](https://ollama.com). An 8 GB
+NVIDIA GPU runs 7–8B models that cover E1 (generation/repair/audit) and E3 (alt text), and
+E2 (agentic sessions) more slowly. See **`docs/LOCAL_SETUP.md`** for the full Ubuntu setup.
+This evaluates small open-weight models, not the frontier models, and is recorded as a
+deviation in `experiments/DEVIATIONS.md`.
+
 ## Data sources
 
 - **W3C "Before and After" demonstration pages** (the four "after" pages), adapted under the

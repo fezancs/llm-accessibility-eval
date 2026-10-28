@@ -1,9 +1,17 @@
-"""Chat Completions adapter for OpenAI-compatible endpoints: DeepSeek's native API and
-OpenRouter (open-weight models).
+"""Chat Completions adapter for OpenAI-compatible endpoints: DeepSeek's native API,
+OpenRouter (hosted open-weight models), and a `local` provider for a self-hosted
+OpenAI-compatible server such as Ollama or vLLM.
 
 OpenRouter calls pin one upstream host with no fallbacks (models.yaml `openrouter_provider`)
 and log the host that served each call. DeepSeek's `reasoning_content` and OpenRouter's
 `reasoning_details` are kept in the assistant turn and replayed within a tool loop.
+
+The `local` provider's base URL comes from the LOCAL_BASE_URL environment variable (default
+http://localhost:11434/v1, Ollama's OpenAI-compatible endpoint). Its key is read from
+LOCAL_API_KEY if set, else a dummy value (Ollama ignores it). A local model's price card in
+models.yaml is {input: 0, output: 0}, so every local call is logged at $0 and never counts
+against a budget cap. The request model id is the model's `provider_model_id` (e.g.
+"qwen3:8b"), the same tag `ollama pull` uses.
 """
 from __future__ import annotations
 
@@ -15,6 +23,7 @@ import openai
 
 from .base import AttemptError, Outcome, empty_usage, image_b64, neutral_calls, neutral_text, parse_arguments
 
+DEFAULT_LOCAL_BASE_URL = "http://localhost:11434/v1"   # Ollama's OpenAI-compatible endpoint
 ENDPOINTS = {
     "deepseek": ("https://api.deepseek.com", "DEEPSEEK_API_KEY"),
     "openrouter": ("https://openrouter.ai/api/v1", "OPENROUTER_API_KEY"),
@@ -24,9 +33,13 @@ _clients: dict[str, openai.OpenAI] = {}
 
 def client(provider: str) -> openai.OpenAI:
     if provider not in _clients:
-        base, env = ENDPOINTS[provider]
-        _clients[provider] = openai.OpenAI(base_url=base, api_key=os.environ.get(env),
-                                           max_retries=0, timeout=900.0)
+        if provider == "local":
+            base = os.environ.get("LOCAL_BASE_URL", DEFAULT_LOCAL_BASE_URL)
+            key = os.environ.get("LOCAL_API_KEY") or "ollama"   # self-hosted servers ignore the key
+        else:
+            base, env = ENDPOINTS[provider]
+            key = os.environ.get(env)
+        _clients[provider] = openai.OpenAI(base_url=base, api_key=key, max_retries=0, timeout=900.0)
     return _clients[provider]
 
 

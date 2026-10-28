@@ -22,3 +22,17 @@ lean_profile:
   e2_runs: 2
   e3_images: 80
   e3_pairs_per_image: 12
+
+# Local profile: self-hosted models on one 8 GB GPU, $0 cost (see config/models.yaml and
+# docs/LOCAL_SETUP.md). Pass the model keys explicitly, e.g.
+#   python -m harness.e1_gen --models local-qwen3-8b
+#   python -m harness.e2_run --models local-qwen3-8b --runs 1
+#   python -m harness.e3_generate --models local-qwen25vl-7b
+# The e1/e2/e3 caps still apply but are never reached because every local call is $0.
+local_profile:
+  e1_models: [local-qwen3-8b, local-qwen25vl-7b]
+  e2_models: [local-qwen3-8b]
+  e2_runs: 1
+  e3_gen_models: [local-qwen25vl-7b, local-gemma3-4b]
+  e3_images: 40
+  e3_pairs_per_image: 6
