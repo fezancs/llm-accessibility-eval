@@ -1,0 +1,9 @@
+Audit the HTML page below for failures of WCAG 2.2 Level A and AA success criteria.
+
+Return ONLY a JSON array. Each item must have this form:
+{"success_criterion": "<number, for example 1.1.1>", "element": "<CSS selector of the failing element, or its opening tag>", "problem": "<one sentence>"}
+Report each distinct failure once. If there are no failures, return [].
+
+```html
+{FAULTY_PAGE}
+```

@@ -1,0 +1,51 @@
+Padded-control history (E2, DCDI decomposition). Generate ONCE, before any E2 run,
+and reuse for every model and run.
+
+How to generate
+- Run a separate agent session with claude-haiku-5-5, the SAME three tools
+  (list_files, read_file, write_file), and the system prompt below, in an empty
+  scratch workspace. Send the 30 user turns below in order, one per turn, letting
+  the agent finish each turn (max 10 tool calls per turn).
+- Save the full transcript (all user, assistant and tool messages) as
+  data/e2_padding_transcript.json.
+- To build a padded control of target length L tokens for model m: take the
+  transcript prefix that ends at a complete turn boundary and whose length in
+  model m's tokens is closest to (L - length of system prompt), then append the
+  user turn: "That task is finished. New task for the CityCare project:" followed by
+  the step's request text in the same user message.
+- The padding contains no web, UI or accessibility content by construction.
+
+System prompt for the padding session
+You are a senior Python developer. Use the tools list_files, read_file and write_file to build the requested command-line tool in the workspace. Complete each request fully, then reply with a short summary.
+
+User turns
+1. Create csvtool.py: a command-line tool that reads a CSV file and prints the number of rows and columns.
+2. Add an option --head N that prints the first N rows as an aligned text table.
+3. Add a --to-json option that converts the CSV to a JSON array of objects and writes it to a file.
+4. Add type inference: integers, floats, booleans and dates should become proper JSON types.
+5. Add a --filter option accepting expressions like "age>30" or "city==Lahore".
+6. Add a --sort option with a column name and an optional ":desc" suffix.
+7. Write tests in test_csvtool.py for the reader, the head option and the JSON conversion.
+8. Add tests for type inference edge cases: empty strings, "NaN", leading zeros, ISO dates.
+9. Add a --select option to choose and reorder columns.
+10. Add a --stats option printing count, mean, min, max and standard deviation for numeric columns.
+11. Handle files with a semicolon delimiter by auto-detecting the delimiter.
+12. Add support for gzip-compressed input files ending in .csv.gz.
+13. Add a --group-by option with aggregation functions sum, mean and count.
+14. Refactor the code into a package csvtool/ with modules io.py, transforms.py and cli.py.
+15. Update the tests to match the new package layout.
+16. Add a --dedupe option that removes duplicate rows, optionally by a subset of columns.
+17. Add a --fill-missing option with strategies: constant, mean, previous.
+18. Add logging with a --verbose flag.
+19. Add a --to-parquet option that raises a clear error if pyarrow is not installed.
+20. Add a --sample N option with a --seed for reproducible random samples.
+21. Write a README.md describing installation and every option with an example.
+22. Add input validation with helpful error messages for unknown columns.
+23. Add a --rename option taking pairs like "old:new".
+24. Add a --join option that joins with a second CSV on a key column (inner and left joins).
+25. Add tests for --group-by and --join.
+26. Add a --limit-memory option that processes the file in chunks of N rows.
+27. Add a --profile option that prints the time spent in each processing stage.
+28. Add a pyproject.toml so the tool can be installed with pip and run as `csvtool`.
+29. Add a CHANGELOG.md summarising all features added so far.
+30. Review the whole package for bugs and fix any you find.

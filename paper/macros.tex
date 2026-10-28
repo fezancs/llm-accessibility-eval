@@ -1,0 +1,29 @@
+% ---------------------------------------------------------------------------
+% Placeholder and results macros for the SE4All 2027 paper.
+%
+% Draft mode (\finalfalse): placeholders render in red/grey so they are easy to see.
+% Final mode (\finaltrue, set in main.tex): any placeholder left in the paper
+% stops the build with an error, so a draft cannot be submitted by accident.
+%
+% Results are written by experiments/analysis/export_latex.py into
+% results/values.tex as \setres{key}{value}; the text prints them with \res{key}.
+% ---------------------------------------------------------------------------
+\newif\iffinal
+\finalfalse
+
+\newcommand{\tbd}{\iffinal\PackageError{se4all}{A TBD placeholder is still in the paper}{Run the analysis export, then rebuild.}\else\textcolor{gray}{\textsf{TBD}}\fi}
+
+\newcommand{\todo}[1]{\iffinal\PackageError{se4all}{A TODO is still in the paper: #1}{}\else{\color{red!70!black}\textsf{\footnotesize[TODO: #1]}}\fi}
+
+% \resultpara{label}{instructions}: a boxed instruction that the results text replaces.
+\newcommand{\resultpara}[2]{\iffinal\PackageError{se4all}{Results paragraph #1 has not been written}{}\else
+  \par\noindent\fbox{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}{\footnotesize\color{red!70!black}\textsf{\textbf{[Write results: #1]} #2}}}\par\fi}
+
+% \placeholderfig{width}{height}{text}: stands in for a figure the analysis has not produced yet.
+\newcommand{\placeholderfig}[3]{\iffinal\PackageError{se4all}{A figure placeholder is still in the paper}{}\else
+  \fbox{\parbox[c][#2][c]{\dimexpr#1-2\fboxsep-2\fboxrule\relax}{\centering\footnotesize\color{gray}\textsf{#3}}}\fi}
+
+\makeatletter
+\newcommand{\setres}[2]{\expandafter\def\csname se4allres@#1\endcsname{#2}}
+\newcommand{\res}[1]{\ifcsname se4allres@#1\endcsname\csname se4allres@#1\endcsname\else\tbd\fi}
+\makeatother

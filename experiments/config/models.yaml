@@ -1,0 +1,287 @@
+# Model registry for the SE4All 2027 study.
+#
+# Prices are USD per 1M tokens, collected on 2026-10-28 from the sources listed.
+# They WILL drift. On the day you run each experiment, re-check every price on
+# the provider's own pricing page, update this file, and commit it before the
+# run (the analysis reads prices from here, and the paper reports this date).
+#
+# family  = the vendor family used for judge recusal in CMBPE (Experiment E3).
+# roles   = which experiments use the model:
+#           e1        capability tasks (generation, repair, audit)
+#           e2        long agentic sessions (DCDI)
+#           e3_gen    alt-text generator
+#           e3_judge  member of the CMBPE jury
+# tier    = core (must run) | optional (run only if budget allows; see budget.yaml)
+#
+# IDs: "provider_model_id" is the ID for the vendor's own API. "openrouter_id"
+# is a best guess and MUST be verified against https://openrouter.ai/api/v1/models
+# before use. Always log the model name the API returns in every response.
+
+snapshot_date: "2026-10-28"
+
+models:
+
+  # ---------------- Anthropic ----------------
+  - key: claude-opus-5-5
+    display: "Claude Opus 5.5"
+    family: anthropic
+    access: closed
+    tier: core
+    provider: anthropic
+    provider_model_id: claude-opus-5-5
+    openrouter_id: "anthropic/claude-opus-5.5"      # verify
+    released: "2026-09-22"
+    vision: true
+    context_tokens: 1000000
+    max_output_tokens: 128000
+    architecture: "undisclosed"
+    test_time_compute: "adaptive thinking; effort param (default medium)"
+    price: {input: 4.00, output: 20.00, cache_read: 0.20, cache_write_5m: 5.00}
+    price_source: "https://platform.claude.com/docs/en/about-claude/pricing"
+    roles: [e1, e2, e3_gen]
+
+  - key: claude-sonnet-5-5
+    display: "Claude Sonnet 5.5"
+    family: anthropic
+    access: closed
+    tier: core
+    provider: anthropic
+    provider_model_id: claude-sonnet-5-5
+    openrouter_id: "anthropic/claude-sonnet-5.5"    # verify
+    released: "2026-09-28"
+    vision: true
+    context_tokens: 1000000
+    max_output_tokens: 128000
+    architecture: "undisclosed"
+    test_time_compute: "adaptive thinking; effort param (default high)"
+    price: {input: 2.00, output: 10.00, cache_read: 0.10, cache_write_5m: 2.50}
+    price_source: "https://platform.claude.com/docs/en/about-claude/pricing"
+    roles: [e1, e3_judge]
+
+  - key: claude-haiku-5-5
+    display: "Claude Haiku 5.5"
+    family: anthropic
+    access: closed
+    tier: core
+    provider: anthropic
+    provider_model_id: claude-haiku-5-5
+    openrouter_id: "anthropic/claude-haiku-5.5"     # verify
+    released: "2026-10-07"
+    vision: true
+    context_tokens: 1000000
+    max_output_tokens: 128000
+    architecture: "undisclosed"
+    test_time_compute: "adaptive thinking; effort param (default medium)"
+    # Tiered: prompts up to 100k tokens / prompts over 100k tokens.
+    price: {input: 0.10, output: 0.50, cache_read: 0.01, cache_write_5m: 0.125}
+    price_over_100k: {input: 0.50, output: 2.50, cache_read: 0.05, cache_write_5m: 0.625}
+    price_source: "https://platform.claude.com/docs/en/about-claude/pricing"
+    roles: [e1, e2, e3_gen]
+
+  - key: claude-fable-5-1
+    display: "Claude Fable 5.1"
+    family: anthropic
+    access: closed
+    tier: optional            # frontier ceiling for E1 only
+    provider: anthropic
+    provider_model_id: claude-fable-5-1
+    openrouter_id: "anthropic/claude-fable-5.1"     # verify
+    released: "2026"          # verify exact date on the model page
+    vision: true
+    context_tokens: 1000000
+    max_output_tokens: 128000
+    architecture: "undisclosed"
+    test_time_compute: "adaptive thinking, always on (default effort high)"
+    price: {input: 10.00, output: 50.00, cache_read: 0.25, cache_write_5m: 12.50}
+    price_source: "https://platform.claude.com/docs/en/about-claude/pricing"
+    roles: [e1]
+
+  # ---------------- OpenAI ----------------
+  - key: gpt-6-sol
+    display: "GPT-6 Sol"
+    family: openai
+    access: closed
+    tier: core
+    provider: openai
+    provider_model_id: gpt-6-sol                     # verify in OpenAI docs
+    openrouter_id: "openai/gpt-6-sol"                # verify
+    released: "2026-09-22"
+    vision: true
+    context_tokens: 1050000
+    max_output_tokens: 128000
+    architecture: "undisclosed"
+    test_time_compute: "reasoning effort none..max (default medium)"
+    price: {input: 2.00, output: 10.00, cache_read: 0.20}
+    price_source: "OpenAI model listing as reported by https://www.requesty.ai/blog/gpt-6-sol-luna-pricing-release-api (verify on OpenAI pricing page)"
+    note: "GPT-6.1 Sol (2026-09-29) exists; pick ONE Sol snapshot, pin it, and report it."
+    roles: [e1, e2, e3_gen, e3_judge]
+
+  - key: gpt-6-luna
+    display: "GPT-6 Luna"
+    family: openai
+    access: closed
+    tier: core
+    provider: openai
+    provider_model_id: gpt-6-luna                    # verify
+    openrouter_id: "openai/gpt-6-luna"               # verify
+    released: "2026-09-22"
+    vision: true
+    context_tokens: 1050000
+    max_output_tokens: 128000
+    architecture: "undisclosed"
+    test_time_compute: "reasoning effort none..max (default medium)"
+    price: {input: 0.10, output: 0.50, cache_read: 0.01}
+    price_source: "as above (verify on OpenAI pricing page)"
+    roles: [e1, e2, e3_gen]
+
+  - key: gpt-6-astra
+    display: "GPT-6 Astra"
+    family: openai
+    access: closed
+    tier: optional            # frontier ceiling for E1 only
+    provider: openai
+    provider_model_id: gpt-6-astra                   # verify
+    openrouter_id: "openai/gpt-6-astra"              # verify
+    released: "2026-09-03"
+    vision: true
+    context_tokens: null      # verify
+    architecture: "undisclosed"
+    test_time_compute: "reasoning effort (verify levels)"
+    price: {input: 10.00, output: 50.00}
+    price_source: "third-party tracker https://aipresso.com/blog/ai-model-release-tracker (verify on OpenAI pricing page)"
+    roles: [e1]
+
+  # ---------------- Google ----------------
+  - key: gemini-4-argon
+    display: "Gemini 4 Argon"
+    family: google
+    access: closed
+    tier: core
+    provider: google
+    provider_model_id: "VERIFY"                      # not published at time of writing
+    openrouter_id: "google/gemini-4-argon"           # verify
+    released: "2026-09-30 (announced; staged API rollout)"
+    vision: true
+    context_tokens: null      # verify
+    max_output_tokens: 1000000
+    architecture: "undisclosed"
+    test_time_compute: "thinking (verify controls)"
+    # Introductory price through 2026-11-30, then 4.00/20.00. Cached input 95% off.
+    price: {input: 2.00, output: 10.00, cache_read: 0.10}
+    price_source: "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/"
+    fallback: "gemini-3.1-pro"   # use if Argon has no paid API access for you; log the deviation
+    roles: [e1, e2]              # not an E3 generator: Gemini 3.8 Flash covers Google so E3 keeps 8 generators
+
+  - key: gemini-3-8-flash
+    display: "Gemini 3.8 Flash"
+    family: google
+    access: closed
+    tier: core
+    provider: google
+    provider_model_id: gemini-3.8-flash              # verify
+    openrouter_id: "google/gemini-3.8-flash"         # verify
+    released: "2026-09-02"
+    vision: true
+    context_tokens: 1000000
+    max_output_tokens: 65535
+    architecture: "undisclosed"
+    test_time_compute: "thinking budget (verify)"
+    price: {input: 0.75, output: 3.75, cache_read: 0.08}
+    price_source: "https://vercel.com/ai-gateway/models/gemini-3.8-flash (verify on Google AI pricing page)"
+    roles: [e1, e2, e3_gen, e3_judge]
+
+  # ---------------- Open-weight ----------------
+  - key: deepseek-v4-pro
+    display: "DeepSeek V4-Pro"
+    family: deepseek
+    access: open              # MIT licence
+    tier: core
+    provider: deepseek
+    provider_model_id: "VERIFY (V4-Pro-0813 snapshot)"
+    openrouter_id: "deepseek/deepseek-v4-pro"        # verify
+    released: "2026-08-13"
+    vision: false             # verify; treat as text-only unless documented otherwise
+    context_tokens: 1000000
+    architecture: "sparse MoE, 1.6T total / 49B active"
+    test_time_compute: "non-thinking / high / max"
+    # DeepSeek bills peak vs off-peak (peak 01-04 and 06-10 UTC, Mon-Fri). Run off-peak if you can,
+    # and record which window each call fell in.
+    price: {input: 1.32, output: 3.96, cache_read: 0.044}
+    price_offpeak: {input: 0.66, output: 1.98, cache_read: 0.022}
+    price_source: "https://www.yottalabs.ai/post/deepseek-v4-release-date-specs-how-to-access-2026 (verify on DeepSeek pricing page)"
+    roles: [e1, e2]
+
+  - key: qwen3-8-27b
+    display: "Qwen3.8-27B"
+    family: alibaba
+    access: open              # Apache-2.0
+    tier: core
+    provider: openrouter      # or a local Ollama/vLLM server; see SPEC.md section 9
+    provider_model_id: "VERIFY"
+    openrouter_id: "qwen/qwen3.8-27b"                # verify
+    released: "2026-08-14"
+    vision: true
+    context_tokens: null      # verify
+    architecture: "dense 27B (verify)"
+    test_time_compute: "thinking and non-thinking modes"
+    price: {input: null, output: null}                # fill from the host you use
+    roles: [e1, e2, e3_gen, e3_judge]
+    local_candidate: true     # fits one 24 GB consumer GPU at 4-bit
+
+  - key: gemma-4-31b
+    display: "Gemma 4 31B"
+    family: google
+    access: open              # Apache-2.0
+    tier: core
+    provider: openrouter
+    provider_model_id: "VERIFY"
+    openrouter_id: "google/gemma-4-31b-it"           # verify
+    released: "2026-04"
+    vision: true
+    context_tokens: 256000
+    architecture: "dense 31B"
+    test_time_compute: "none / prompt-level"
+    price: {input: null, output: null}
+    price_source: "https://artificialanalysis.ai/articles/gemma-4-everything-you-need-to-know"
+    roles: [e1, e3_gen]
+    local_candidate: true
+
+  - key: llama-4-maverick
+    display: "Llama 4 Maverick"
+    family: meta
+    access: open              # Llama 4 Community License (source-available)
+    tier: core
+    provider: openrouter
+    provider_model_id: "VERIFY"
+    openrouter_id: "meta-llama/llama-4-maverick"     # verify
+    released: "2025-04-05"
+    vision: true
+    context_tokens: 1000000
+    architecture: "MoE, 400B total / 17B active, 128 experts"
+    test_time_compute: "none"
+    price: {input: null, output: null}
+    note: "Latest open-weight Llama. Meta's newer Muse models are proprietary."
+    roles: [e1, e3_gen]
+
+  - key: qwen3-8-flagship
+    display: "Qwen3.8 (2.4T-A95B)"
+    family: alibaba
+    access: open              # custom licence; commercial licence needed above USD 50M revenue
+    tier: optional
+    provider: openrouter
+    provider_model_id: "VERIFY"
+    openrouter_id: "VERIFY"
+    released: "2026-08-12"
+    vision: false             # open-weight release has no image input
+    context_tokens: null
+    architecture: "sparse MoE, 2.4T total / ~95B active"
+    test_time_compute: "thinking only"
+    price: {input: null, output: null}
+    roles: [e1]
+
+# Judge panel for CMBPE (E3): exactly one judge per family.
+judges:
+  anthropic: claude-sonnet-5-5
+  openai: gpt-6-sol
+  google: gemini-3-8-flash
+  alibaba: qwen3-8-27b

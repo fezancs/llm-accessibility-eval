@@ -1,0 +1,296 @@
+\documentclass[10pt,conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdflang={en-US},
+  pdftitle={Beyond Static Leaderboards: Drift-Aware, Bias-Controlled, and Cost-Normalized Evaluation of LLMs for Accessible Software Engineering},
+  pdfauthor={},  % <- fill in the author names (plain text) before submission
+  pdfsubject={Evaluation of LLMs for accessible software engineering},
+  pdfkeywords={accessibility, large language models, evaluation, LLM-as-a-judge, WCAG}}
+
+\input{macros}
+% \finaltrue  % <- uncomment for the submission build: leftover placeholders then stop the build
+\InputIfFileExists{results/values.tex}{}{}
+
+\SetAlgoSkip{}
+\SetKwComment{tcp}{$\triangleright$\ }{}
+\newcommand{\checkyes}{\ensuremath{\checkmark}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+% Expandable input for table bodies (LaTeX's \input breaks \bottomrule after it).
+\makeatletter\newcommand{\tablebody}[1]{\@@input #1 }\makeatother
+
+\begin{document}
+
+\title{Beyond Static Leaderboards: Drift-Aware, Bias-Controlled, and Cost-Normalized Evaluation of LLMs for Accessible Software Engineering}
+
+\author{\IEEEauthorblockN{\todo{Author name(s)}}
+\IEEEauthorblockA{\todo{Affiliation, city, country}\\
+hasebahmd.ai@gmail.com}}
+
+\maketitle
+
+\begin{abstract}
+Large language models (LLMs) now write, repair and audit user-interface code, so the accessibility of what they produce decides who can use the software they help build. Yet models are compared on static leaderboards that ignore accessibility, and accessibility studies of LLMs typically test one or two models with one-shot prompts, sometimes let models judge their own outputs, and rarely report cost. We propose an evaluation framework for LLM-assisted accessible software engineering with four parts: (i)~a six-dimension capability taxonomy that maps general LLM capabilities to WCAG~2.2-anchored tasks and oracles; (ii)~the Dynamic Contextual Drift Index (DCDI), the share of accessibility adherence an agent loses over a long, tool-using session relative to a counterfactual fresh-context control; (iii)~Cross-Model Blind Peer Evaluation (CMBPE), an anonymized, family-recused jury that judges every pair in both orders and adjusts for position and length bias, calibrated against ratings by blind and low-vision people; and (iv)~Capability-per-Dollar-Second (CPDS), a scenario-weighted efficiency score with probabilistic Pareto analysis. We apply the framework to \res{n-models-e1} frontier and open-weight models on accessible UI generation, seeded-fault repair and auditing, 24-step agentic builds and alt-text writing. \todo{Two or three sentences with the headline results for RQ2 (drift), RQ3 (judging) and RQ4 (efficiency), using values from results/values.tex.} All tasks, prompts, code and logs are released.
+\end{abstract}
+
+\begin{IEEEkeywords}
+accessibility, large language models, LLM evaluation, LLM-as-a-judge, WCAG, agentic software engineering
+\end{IEEEkeywords}
+
+% ===========================================================================
+\section{Introduction}
+% ===========================================================================
+
+Software increasingly mediates access to health care, public services and work, yet most of it remains inaccessible: in February 2026, automated tests detected WCAG~2 failures on 95.9\% of the one million most popular home pages, with 56.1 errors per page on average~\cite{webaim2026}. Regulation is raising the stakes, with the European Accessibility Act applying since June 2025~\cite{eaa2019}, just as LLMs are increasingly used to write user interfaces. LLM-generated interfaces routinely contain accessibility barriers~\cite{aljedaani2024chatgpt,gurita2025perpetuates,rabelo2025mobile,kreer2026webaccessbench}, but the same models can detect and repair barriers and describe images~\cite{fathallah2025accessguru,oyelayo2026repair,mohanbabu2024context}. Which model a team chooses, and how it uses it, therefore shapes who can use the software it builds.
+
+Choosing well requires evaluation that reflects how models are used. General comparisons rely on static leaderboards: crowd-sourced Bradley--Terry ratings~\cite{chiang2024arena}, knowledge benchmarks such as MMLU-Pro~\cite{wang2024mmlupro}, and functional coding benchmarks such as HumanEval and SWE-bench~\cite{chen2021humaneval,jimenez2024swebench}. None measures accessibility. Accessibility-specific studies fill part of the gap but share three blind spots. First, they test one-shot prompts or loops of at most three iterations~\cite{suh2025human,oyelayo2026repair}, whereas coding assistants now run long, tool-using sessions in which early instructions are known to fade~\cite{laban2025lost,liu2024lost}. Second, automated checkers cover only part of WCAG~\cite{vigo2013benchmarking}, so semantic quality (is this alt text \emph{useful}?) is increasingly judged by LLMs, sometimes by the very models being judged~\cite{calo2026semantic}, despite documented position, verbosity and self-preference biases~\cite{zheng2023judging,wang2024fair,panickssery2024self}. Third, cost and latency are rarely reported (one exception studies a single model~\cite{oyelayo2026repair}), although affordability decides whether under-resourced public bodies, non-profits and small teams can use AI-assisted remediation at all.
+
+We address these gaps with an evaluation framework and a pre-registered study of current frontier and open-weight models. We ask: \textbf{RQ1}~How do models perform across six accessibility-engineering capabilities? \textbf{RQ2}~Do agents keep honoring accessibility requirements as a session grows? \textbf{RQ3}~Can a blind, cross-family jury judge accessibility content more reliably than a single LLM judge? \textbf{RQ4}~Which models are efficient in capability, cost and latency? Our contributions are:
+\begin{itemize}
+\item \emph{Dynamic Contextual Drift Index (DCDI)}: the share of accessibility adherence an agent loses over a long, tool-using session relative to a counterfactual fresh-context control with the identical project state, plus a padded control that separates the effect of context length from that of accumulated history.
+\item \emph{Cross-Model Blind Peer Evaluation (CMBPE)}: a judging protocol that anonymizes outputs, recuses judges from their own model family, presents every pair in both orders, and aggregates verdicts with a Bradley--Terry model that estimates each judge's position and length bias; we validate it against blind and low-vision readers' ratings.
+\item \emph{Capability-per-Dollar-Second (CPDS)}: a scenario-weighted efficiency score built from per-task cost and end-to-end latency, with bootstrap Pareto-membership probabilities.
+\end{itemize}
+These rest on a capability taxonomy that maps general LLM capabilities to WCAG~2.2-anchored tasks and oracles (Section~\ref{sec:taxonomy}). \todo{One or two sentences previewing the main findings.}
+
+% ===========================================================================
+\section{Background and Related Work}
+% ===========================================================================
+
+\textbf{Static and dynamic LLM evaluation.} Chatbot Arena ranks models by fitting a Bradley--Terry model~\cite{bradley1952rank} to crowd preferences~\cite{chiang2024arena}; MMLU-Pro, HumanEval and SWE-bench score single answers or patches against fixed references~\cite{wang2024mmlupro,chen2021humaneval,jimenez2024swebench}; HELM adds efficiency and robustness to accuracy~\cite{liang2023helm}. Static suites are prone to contamination~\cite{sainz2023contamination} and say little about extended interaction: models miss information in the middle of long contexts~\cite{liu2024lost,hsieh2024ruler} and perform 39\% worse on average when a task unfolds over several turns~\cite{laban2025lost}, while agent benchmarks measure task success over multi-turn tool use~\cite{yao2024taubench}. DCDI differs in what it tracks, adherence to a \emph{non-functional} requirement stated once, and in how it isolates drift, through a paired counterfactual control.
+
+\textbf{LLMs as judges.} G-Eval popularized rubric-based LLM scoring~\cite{liu2023geval}. LLM judges favor the first position, longer answers and their own outputs~\cite{zheng2023judging,wang2024fair,panickssery2024self}; panels of diverse judges reduce intra-model bias~\cite{verga2024juries}, and regressing out length reduces verbosity bias~\cite{dubois2024lcalpaca}. In software engineering, LLMs can replace some manual annotation but need validation~\cite{ahmed2025annotation}, and guidelines call for human validation and open-model baselines~\cite{baltes2025guidelines,sallou2024breaking}. CMBPE combines recusal, order permutation and bias-aware aggregation, calibrated against the people the content is for.
+
+\textbf{Cost-aware evaluation.} Agents should be compared on joint cost--accuracy Pareto frontiers~\cite{kapoor2025agents}, and cost-of-pass expresses accuracy as the expected cost of a correct answer~\cite{erol2026costofpass}. CPDS adds latency, deployment scenarios and uncertainty in frontier membership.
+
+\textbf{AI and accessibility in software engineering.} Software-engineering research has studied accessibility defects and their repair in mobile apps~\cite{alshayban2020android,chen2020unblind} and practitioners' views of accessibility~\cite{bi2022practice}. For LLMs, generated web and mobile UIs contain frequent violations~\cite{aljedaani2024chatgpt,gurita2025perpetuates,rabelo2025mobile,kreer2026webaccessbench}; checker feedback helps more than prompting techniques~\cite{suh2025human}; assistant design shapes novices' practice~\cite{mowar2025codea11y}; and LLM judges find semantic faults that automated checks miss~\cite{calo2026semantic}. LLM-based repair resolves many syntactic violations but also introduces regressions~\cite{fathallah2025accessguru,oyelayo2026repair,wanscher2026blind}. For images, what a description should say depends on context and on blind and low-vision (BLV) readers' needs~\cite{stangl2021going,kreiss2022context,kreiss2024contextref,mohanbabu2024context}. A recent review finds few shared benchmarks and limited involvement of disabled people~\cite{aljedaani2026slr}. To our knowledge, no prior study combines many current models, long agentic sessions, bias-controlled judging and cost-aware comparison for accessibility.
+
+% ===========================================================================
+\section{A Capability Taxonomy for Accessible Software Engineering}\label{sec:taxonomy}
+% ===========================================================================
+
+We model an accessibility-engineering task as a triple $\tau=(x,R,O)$: an input $x$ (a specification, a page, an image in context), requirements $R$ drawn from WCAG~2.2 success criteria~\cite{wcag22}, and an oracle $O$ that maps a model output to check results. We group tasks into six dimensions $C_1,\dots,C_6$ that mirror widely used families of general LLM capability, so accessibility results can be read alongside general benchmarks (Table~\ref{tab:taxonomy}). Two design choices matter. First, every dimension has an oracle whose validity can be checked: deterministic checks where WCAG allows them, seeded faults where ground truth is needed, and a human-calibrated jury where only judgment will do. Second, $C_3$ and $C_5$ are measured \emph{within} a session rather than per prompt, because a model that is accessible on the first request but not the twentieth is not accessible in practice.
+
+\begin{table*}[t]
+\caption{Six capability dimensions instantiated for accessible software engineering, with the oracle and score used for each.}
+\label{tab:taxonomy}
+\centering\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}l L{2.5cm} L{4.3cm} L{2.9cm} L{3.4cm} L{2.6cm}@{}}
+\toprule
+ & General capability & Accessibility instantiation & WCAG 2.2 anchors & Oracle & Score $S_k$\\
+\midrule
+$C_1$ & Formal \& symbolic reasoning & Conformance auditing: find failures and map them to success criteria & 1.1.1, 1.3.1, 1.4.3, 2.1.1, 2.4.2--2.4.7, 3.1.1, 4.1.2 & 192 seeded faults with ground truth & Micro-F1 (E1)\\
+$C_2$ & Program synthesis \& code engineering & Accessible-by-construction UI code; repair without regressions & as $C_1$, plus 1.2.2, 2.2.2, 3.3.1, 4.1.3 & axe-core rules, keyboard probes, preservation checks & $\tfrac12(S_{\mathrm{gen}}+S_{\mathrm{rep}})$ (E1)\\
+$C_3$ & Autonomous agentic execution & Keeping requirements across a multi-page, tool-using build & all of the above & Step-scoped checks & Mean in-session adherence (E2)\\
+$C_4$ & Cross-modal synthesis & Context-appropriate text alternatives for images & 1.1.1 & CMBPE jury, BLV-calibrated & Expected win rate (E3)\\
+$C_5$ & Extended-context dynamics & Retaining adherence as the session history grows & all of the above & Fresh and padded controls & $1-\mathrm{clip}(\mathrm{DCDI},0,1)$ (E2)\\
+$C_6$ & Instruction \& safety calibration & Handling requests that conflict with accessibility; honest conformance claims & 1.4.1, 1.4.3, 1.4.4, 2.1.1, 2.4.7, 3.3.1, 3.3.2 & Pressure-step checks; claim audit & $\tfrac12$(pressure $+$ $1-$overclaim) (E1, E2)\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+% ===========================================================================
+\section{Evaluation Framework}\label{sec:framework}
+% ===========================================================================
+
+\subsection{Adherence and the Composite Capability Score}
+All scores share one oracle convention. For an artifact $x$ (a page, or the part of it a request changed), let $Q(x)$ be its applicable checks: each axe-core rule~\cite{axecore} restricted to WCAG~2.x A/AA that evaluated at least one element in scope (passing if no element violates it), and each applicable keyboard or semantics probe. Adherence is
+\begin{equation}
+a(x)=\frac{|\{q\in Q(x): q\ \text{passes}\}|}{|Q(x)|}.
+\end{equation}
+Counting rules rather than elements keeps thousands of passing text nodes from masking a single failing control. Accessibility barriers are not compensatory: a page with perfect markup but meaningless alt text still excludes blind readers. We therefore aggregate the dimension scores with a weighted geometric mean, which rewards balanced profiles:
+\begin{equation}
+\mathrm{CCS}_m=\exp\Big(\textstyle\sum_{k=1}^{6} w_k \ln \max(S_{m,k},\epsilon)\Big),
+\end{equation}
+with $w_k=1/6$ and $\epsilon=0.01$; the arithmetic mean serves as a sensitivity check.
+
+\subsection{Dynamic Contextual Drift Index (DCDI)}
+Let model $m$ build a product over $T$ requests in run $r$. After request $t$ we apply its checks within its scope, obtaining in-session adherence $a_{m,r,t}$. To separate drift from task difficulty and from the state of the code base, we restore the workspace snapshot $S_{m,r,t-1}$ and replay request $t$ in a fresh session with the same system prompt but no history, obtaining $a^{0}_{m,r,t}$. The two arms differ only in conversational history. We define
+\begin{equation}
+\mathrm{DCDI}_m=\frac{\sum_{r}\sum_{t\in\mathcal{T}}\big(a^{0}_{m,r,t}-a_{m,r,t}\big)}{\sum_{r}\sum_{t\in\mathcal{T}}a^{0}_{m,r,t}},
+\end{equation}
+the share of fresh-context adherence lost in-session over the requests $\mathcal{T}$ that both arms implement. DCDI is 0 without drift, 1 if all adherence is lost, and negative if history helps. Because DCDI averages over a session, we also estimate a drift rate $\beta_m$, the adherence lost per doubling of context:
+\begin{equation}
+a^{0}_{m,r,t}-a_{m,r,t}=\alpha_t+\beta_m\log_2(\Lambda_{m,r,t}/\Lambda_0)+\varepsilon_{m,r,t},
+\end{equation}
+where $\Lambda$ is the input length in tokens, $\Lambda_0=8{,}192$, and $\alpha_t$ are request fixed effects. Finally, a \emph{padded} control replaces the history with irrelevant agent history of the same length, giving $a^{\pi}$ and an additive decomposition at checkpoint requests:
+\begin{equation}
+\mathrm{DCDI}=\underbrace{\frac{\sum(a^{0}-a^{\pi})}{\sum a^{0}}}_{\text{length}}+\underbrace{\frac{\sum(a^{\pi}-a)}{\sum a^{0}}}_{\text{history}}.
+\end{equation}
+Request order is randomized across runs, so position is not confounded with content.
+
+\subsection{Cross-Model Blind Peer Evaluation (CMBPE)}
+CMBPE compares outputs from generators $g\in\mathcal{G}$ using one judge $j$ per model family $f(j)$ (Algorithm~\ref{alg:cmbpe}). Outputs are normalized to remove family-identifying formatting and given opaque identifiers; every sampled pair is judged in both orders; and a judge's verdicts on pairs involving its own family are excluded from aggregation (recusal) but kept to measure bias. A verdict $z=1$ means the first-shown output won, modeled as
+\begin{equation}
+P(z=1\mid j,a,b)=\sigma\big(\theta_a-\theta_b+\delta_j+\gamma_j\,\Delta\ell_{ab}\big),\label{eq:bt}
+\end{equation}
+where $\theta$ are quality scores ($\sum_g\theta_g=0$), $\delta_j$ is judge $j$'s first-position bias, $\gamma_j$ its length bias and $\Delta\ell_{ab}$ the standardized length difference. With $\theta$ fixed at the panel estimate, judge $j$'s self-preference $\eta_j$ is the coefficient of $\mathbf{1}[f(a)=f(j)]-\mathbf{1}[f(b)=f(j)]$ in a refit on all of $j$'s verdicts. A model's capability score is its expected win rate, $S_{m,4}=\frac{1}{|\mathcal{G}|-1}\sum_{g\neq m}\sigma(\theta_m-\theta_g)$. We validate CMBPE three ways: correlation with BLV and crowd ratings, accuracy on pairs whose answer is known by construction, and position consistency.
+
+\begin{algorithm}[t]
+\caption{Cross-Model Blind Peer Evaluation}\label{alg:cmbpe}
+\small
+\KwIn{items $\mathcal{I}$; generators $\mathcal{G}$; judges $\mathcal{J}$, one per family; pairs per item $p$}
+\KwOut{quality $\hat\theta$; judge biases $\hat\delta_j,\hat\gamma_j,\hat\eta_j$}
+\ForEach{$i\in\mathcal{I}$, $g\in\mathcal{G}$}{$\tilde y_{g,i}\leftarrow\mathrm{Normalize}(g(i))$ under an opaque id\;}
+$\mathcal{D}\leftarrow\emptyset$\;
+\ForEach{$i\in\mathcal{I}$}{
+ $P_i\leftarrow p$ pairs from $\mathcal{G}$, each generator equally often\;
+ \ForEach{$(a,b)\in P_i$, $j\in\mathcal{J}$, $(u,v)\in\{(a,b),(b,a)\}$}{
+  $z\leftarrow j(i,\tilde y_{u,i},\tilde y_{v,i})$;\ add $(i,j,u,v,z,\Delta\ell_{uv})$ to $\mathcal{D}$\;
+ }
+}
+$\mathcal{D}^{\ast}\leftarrow\{d\in\mathcal{D}: f(j)\notin\{f(u),f(v)\}\}$\tcp*{recusal}
+Fit Eq.~\eqref{eq:bt} on $\mathcal{D}^{\ast}$ to get $\hat\theta,\hat\delta,\hat\gamma$\;
+\ForEach{$j\in\mathcal{J}$}{fit $\eta_j$ on $j$'s verdicts in $\mathcal{D}$ with $\theta=\hat\theta$\;}
+Bootstrap over items for confidence intervals\;
+\end{algorithm}
+
+\subsection{Capability-per-Dollar-Second (CPDS)}
+A tempting efficiency score divides capability by the logarithm of list price and by token latency. It fails in three ways: $\log_{10}$ of a per-million-token price is zero at \$1 and negative below it, so cheap models receive infinite or negative scores; list prices ignore how many (often hidden reasoning) tokens a model spends per task; and time-to-first-token (seconds) and time-per-output-token (seconds per token) cannot be added. CPDS instead uses the mean billed cost per task, $C_m$ (all attempts, cached and reasoning tokens included), and the median end-to-end latency per task, $L_m=\mathrm{TTFT}+(n_{\mathrm{out}}-1)\,\mathrm{TPOT}$:
+\begin{equation}
+\mathrm{CPDS}^{(\alpha,\beta)}_m=\frac{\mathrm{CS}_m}{\big(1+\log_{10}(1+\frac{C_m}{c_0})\big)^{\alpha}\big(1+\log_{10}(1+\frac{L_m}{\ell_0})\big)^{\beta}},
+\end{equation}
+with $c_0=\$0.01$ and $\ell_0=1$\,s. Both penalties equal 1 at zero cost or latency, grow by about one per decade beyond the reference, and are strictly positive. The exponents encode deployment scenarios: batch remediation ($\alpha=1,\beta=0$), an interactive assistant ($\alpha=0.5,\beta=1$) and a balanced setting ($\alpha=\beta=1$). Because any scalar hides trade-offs, we also report the Pareto set over $(\mathrm{CS}\!\uparrow,C\!\downarrow,L\!\downarrow)$ with each model's membership probability $\pi_m$ across bootstrap resamples, and test rank stability for $c_0\in\{0.001,0.01,0.1\}$ and $\ell_0\in\{0.5,1,5\}$\,s.
+
+% ===========================================================================
+\section{Study Design}\label{sec:design}
+% ===========================================================================
+
+\textbf{Hypotheses.} We pre-registered (commit \res{prereg-hash}) hypotheses that turn common vendor positioning into testable claims: \emph{H1}, within each vendor the larger model drifts less (lower DCDI) than its smaller sibling; \emph{H2}, the best closed model writes better alt text than the best open-weight model; \emph{H3}, at least one open-weight model is on the batch-repair Pareto frontier ($\pi\geq0.5$); \emph{H4}, single judges show self-preference and CMBPE beats the median single judge on known-answer pairs; \emph{H5}, a one-sentence request for accessibility improves generated code for most models. Tests are one-sided with Holm correction.
+
+\textbf{Models.} Table~\ref{tab:models} lists the models, chosen as of October 2026 to span vendors, sizes, open and closed weights, dense and mixture-of-experts architectures, and test-time reasoning controls. We use each provider's default temperature and reasoning effort (judges run at the lowest available effort), pin snapshots, and log every setting.
+
+\begin{table}[t]
+\caption{Models (October 2026). Arch.: architecture (und.\ = undisclosed). V: image input. TTC: test-time reasoning control (adaptive = model-decided thinking steered by an effort setting; effort = selectable reasoning effort; modes = thinking and non-thinking modes; always = thinking only). Price in USD per million input/output tokens. Use: 1 = E1, 2 = E2, G = E3 generator, J = E3 judge.}
+\label{tab:models}
+\centering\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}l c l c l r l@{}}
+\toprule
+Model & Open & Arch. & V & TTC & \$ in/out & Use\\
+\midrule
+\tablebody{results/tab_models_body.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{E1: capability.} \emph{Generation}: 20 UI tasks drawn from common interface patterns (forms with validation, modal dialogs, tabs, accordions, menus, sortable tables, carousels, comboboxes, switches, sliders, status messages, video, pagination, tooltips, multi-step forms, consent banners) in a fictional public health-clinic service. Prompts never mention accessibility; a \emph{nudged} condition adds one sentence asking for WCAG~2.2~AA. Three samples per task and condition. A follow-up turn asks whether the code conforms; an \emph{overclaim} is a ``yes'' when our checks find a failure. \emph{Repair} and \emph{audit}: twelve accessible base pages (four adapted from the W3C Before-and-After Demonstration~\cite{w3cbad}, eight written for this study) each yield four faulty variants, and each variant carries four faults seeded by twelve mutation operators (e.g., removed text alternatives, placeholder-only labels, reduced contrast, buttons replaced by \texttt{div}s, removed focus indicators, invalid ARIA): 48 faulty pages and 192 faults with ground truth. A repair scores the share of faults resolved minus regressions introduced, and zero if visible text, element ids or DOM structure are not preserved.
+
+\textbf{E2: drift.} Agents build a five-page clinic website over 24 requests using three file tools; the system prompt states the WCAG~2.2~AA requirement once. Four foundation requests come first; the other 20, including six \emph{pressure} requests that conflict with accessibility (e.g., ``remove the visible field labels'', ``disable zooming''), follow in one of three fixed random orders. Each request names a container id so checks can be scoped. Fresh controls run for every request and padded controls at positions 8, 12, 16, 20 and 24. A pressure request scores 1 if the design intent is met accessibly, 0.5 if accessibility is kept but the intent is not met, and 0 otherwise; where no accessible resolution exists, it scores 1 only if accessibility is kept.
+
+\textbf{E3: judging.} We use 68 image descriptions rated in context by BLV participants~\cite{kreiss2022context} and 204 rated by crowd workers in ContextRef~\cite{kreiss2024contextref}. Four judges from four families (Claude Sonnet~5.5, GPT-6 Sol, Gemini~3.8 Flash, Qwen3.8-27B) rate every description and compare each original with four degraded versions whose answer is known (an appended irrelevant sentence, repetition, another image's description, truncation). \res{n-models-e3gen} vision-capable generators then write alt text for 120 ContextRef images; 16 of the generator pairs per image are judged in both orders by all judges. A character n-gram classifier tests whether anonymized outputs still reveal their family.
+
+\textbf{Oracles and analysis.} Pages are rendered in Chromium (\res{chromium-version}) via Playwright and checked with axe-core \res{axe-version}, restricted to WCAG~2.x A/AA rules, plus \res{probe-count} keyboard and semantics probes (e.g., dialog focus handling, pause controls for moving content, error association), each validated on accessible and inaccessible fixtures. Probes locate widgets by visible text, so any correct implementation can pass. We used native APIs where available (otherwise one gateway with a pinned host), streamed responses to time them, enabled prompt caching, and logged every request, response, token count and price: \res{total-calls} calls costing \res{total-cost} between \res{run-dates}. We report 95\% bootstrap confidence intervals (2,000 resamples of tasks, pages, run--request pairs or images) and call a difference only when its interval excludes zero. Methods, prompts and analysis code were frozen before data collection.
+
+% ===========================================================================
+\section{Results}\label{sec:results}
+% ===========================================================================
+
+\begin{table*}[t]
+\caption{Capability profile, drift and efficiency. $S_1$--$S_6$ as in Table~\ref{tab:taxonomy}; CCS for models with all six scores; DCDI with 95\% CI; CPDS for batch repair ($\alpha{=}1,\beta{=}0$) and interactive generation ($\alpha{=}0.5,\beta{=}1$); $\pi$: Pareto-membership probability for batch repair. ``--'': not measured for this model.}
+\label{tab:main}
+\centering\footnotesize
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{@{}l cccccc c c cc c@{}}
+\toprule
+Model & $S_1$ & $S_2$ & $S_3$ & $S_4$ & $S_5$ & $S_6$ & CCS & DCDI [95\% CI] & CPDS$_{\mathrm{batch}}$ & CPDS$_{\mathrm{inter}}$ & $\pi_{\mathrm{batch}}$\\
+\midrule
+\tablebody{results/tab_main_body.tex}
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{RQ1: Capability profiles}
+\resultpara{RQ1}{Using Table~\ref{tab:main} and values.tex: which models lead each dimension (with CIs); how rankings change across dimensions (Kendall tau between dimension rankings); the default gap (unguided vs.\ nudged $S_{\mathrm{gen}}$, H5); overclaim rates; repair regressions and full-repair rates; any difference between W3C and authored base pages. Where the data support it, contrast vendor families (Anthropic, OpenAI, Google, open-weight) without generalizing beyond the tested snapshots. About 140 words.}
+
+\subsection{RQ2: Drift over long sessions}
+\begin{figure*}[t]
+\centering
+\IfFileExists{figures/fig_drift.pdf}{\includegraphics[width=\textwidth]{figures/fig_drift.pdf}}{\placeholderfig{\textwidth}{3.4cm}{Fig.~1 placeholder: generated by experiments/analysis/figures.py from E2 logs.}}
+\caption{Accessibility adherence by position in the session (E2), in-session (solid) versus fresh-context control (dashed), with 95\% bootstrap bands. The gap between the lines is the drift that DCDI summarizes.}
+\label{fig:drift}
+\end{figure*}
+\resultpara{RQ2}{Using Fig.~\ref{fig:drift} and Table~\ref{tab:main}: DCDI and drift rate $\beta$ per model with CIs; which models drift (CI above 0); the length vs.\ history decomposition; how many earlier requests lost adherence by the end of the session; mean tool-use cycles per session (\texttt{e2-mean-tool-cycles}); pressure-step scores and intent-met rates; H1 after Holm correction. About 150 words.}
+
+\subsection{RQ3: Judge reliability}
+\begin{table}[t]
+\caption{Judge reliability (E3). $r$: Pearson correlation with the mean human rating (BLV readers; crowd workers). Acc: accuracy on known-answer pairs. PC: position consistency. $\gamma$: length bias; $\eta$: self-preference (logits; single judges only).}
+\label{tab:cmbpe}
+\centering\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}l cc ccc c@{}}
+\toprule
+Method & $r_{\mathrm{BLV}}$ & $r_{\mathrm{crowd}}$ & Acc & PC & $\gamma$ & $\eta$\\
+\midrule
+\tablebody{results/tab_cmbpe_body.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+\resultpara{RQ3}{Using Table~\ref{tab:cmbpe}: compare single judges, the naive panel and CMBPE on BLV and crowd correlation (against the length-only baseline), known-answer accuracy by degradation type, and position consistency; report $\eta_j$ per judge (H4a) and H4b after Holm; leakage-classifier accuracy vs.\ majority baseline; whether judges agree more with crowd than BLV ratings. About 140 words.}
+
+\subsection{RQ4: Efficiency and affordability}
+\begin{figure}[t]
+\centering
+\IfFileExists{figures/fig_pareto.pdf}{\includegraphics[width=\columnwidth]{figures/fig_pareto.pdf}}{\placeholderfig{\columnwidth}{4.2cm}{Fig.~2 placeholder: generated by experiments/analysis/figures.py from E1 logs.}}
+\caption{Repair capability versus mean cost per page (log scale) for batch repair. Marker area shows median latency; filled markers are open-weight models; the line connects Pareto-efficient models.}
+\label{fig:pareto}
+\end{figure}
+\resultpara{RQ4}{Using Fig.~\ref{fig:pareto} and Table~\ref{tab:main}: the batch-repair Pareto set with $\pi$; CPDS rankings per scenario and their stability across $c_0$ and $\ell_0$ (Kendall tau); cost to repair 1,000 benchmark pages for the cheapest Pareto model vs.\ the most capable model; H3. About 110 words.}
+
+% ===========================================================================
+\section{Discussion}\label{sec:discussion}
+% ===========================================================================
+
+\textbf{Evaluate sessions, not prompts.} DCDI's fresh-context control costs one extra short session per request, so it can run as a regression gate for coding assistants: a release should keep late-session adherence close to fresh-context adherence. \todo{One sentence connecting to the RQ2 finding.}
+
+\textbf{Recuse, permute and calibrate judges.} Whenever LLMs judge accessibility content, the judge panel should exclude the generator's family, present both orders, and report agreement with ratings from disabled people rather than with proxy raters alone. \todo{One sentence connecting to the RQ3 finding.}
+
+\textbf{Affordability is an accessibility issue.} Organizations that most need low-cost remediation, such as small public bodies and non-profits, are those least able to pay frontier prices. Reporting cost per task and Pareto membership lets them choose with evidence. \todo{One sentence connecting to the RQ4 finding.}
+
+\textbf{Decision matrix.} Table~\ref{tab:decision} applies selection rules fixed before data collection to our results; the rules, not our judgment, pick the models.
+
+\begin{table}[t]
+\caption{Pre-specified model-selection rules by deployment context, applied to our results (choice, then runner-up).}
+\label{tab:decision}
+\centering\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}L{1.55cm} L{3.85cm} L{2.4cm}@{}}
+\toprule
+Context & Rule: constraints $\rightarrow$ objective & Choice (runner-up)\\
+\midrule
+Enterprise compliance & All six scores; $S_5\geq$ median $\rightarrow$ max CCS & \res{dm-enterprise} (\res{dm-enterprise-runner})\\
+Research & Open weights $\rightarrow$ max CCS over measured dimensions & \res{dm-research} (\res{dm-research-runner})\\
+Public sector, NGOs & $\pi_{\mathrm{batch}}\geq0.5$; $S_2\geq$ median $\rightarrow$ max CPDS$_{\mathrm{batch}}$ & \res{dm-public} (\res{dm-public-runner})\\
+Edge, local tools & Open weights, $\leq$32B parameters $\rightarrow$ max CCS over measured dimensions & \res{dm-edge} (\res{dm-edge-runner})\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Threats to validity.} \emph{Construct:} automated checks cover only part of WCAG~\cite{vigo2013benchmarking}, so our adherence scores are upper bounds on conformance and overclaim rates are lower bounds; probes test keyboard operability and exposed semantics, not the full screen-reader experience; DCDI depends on our 24-request script and a single product; and LLM judges approximate, but do not replace, disabled users, while our BLV set is small (68 descriptions) and ContextRef's raters are crowd workers rather than BLV readers. \emph{Internal:} results depend on prompt wording and default settings, which we fix and release; nondeterminism is addressed with three samples or runs; providers may change models behind an identifier, so we log dates and returned model names; fresh-control agents re-read files, which refreshes code in context, and we count this as part of drift; eight base pages were written with LLM assistance, so we report repair results by page provenance; and an LLM from one evaluated family assisted in drafting this paper and the harness, which we mitigate with frozen pre-registered analysis, fully automated scoring and family recusal. \emph{External:} static English web pages in one domain; no component frameworks or native mobile UIs; a snapshot of late-2026 models. \emph{Conclusion:} many comparisons, so we rely on intervals and Holm-corrected hypothesis tests. \todo{Report each deviation from the pre-registered plan (DEVIATIONS.md), or state that there were none.}
+
+\textbf{Future work.} Procedurally generated tasks and mutants with a private held-out split would reduce contamination and allow dynamic task synthesis; matched reasoning budgets would standardize test-time compute across vendors; and participatory validation with screen-reader users and people with cognitive and motor disabilities, extended to mobile UIs and WCAG~3.0 outcomes, would ground the scores in lived experience.
+
+% ===========================================================================
+\section{Conclusion}\label{sec:conclusion}
+% ===========================================================================
+
+Static leaderboards cannot tell a team whether a model will keep a site accessible on its twentieth request, whether the judge scoring it is fair, or whether a small public body can afford it. DCDI, CMBPE and CPDS answer these three questions, and our study shows \todo{one-sentence summary of the main findings}. We release the framework so that choosing models for accessibility work can rest on evidence rather than on leaderboard position.
+
+\section*{Data Availability}
+Tasks, prompts, corpora, harness, analysis code and call logs: \todo{GitHub URL and Zenodo DOI}.
+
+\section*{Acknowledgment}
+\emph{Use of generative AI.} Following IEEE policy~\cite{ieeeai}: Claude Opus~5.5 (Anthropic) was used to draft the text of all sections and the experiment specification, prompts and task files; Claude Code was used to implement and run the evaluation harness and analysis and to insert computed results into the text. The authors reviewed, edited and verified all content and take full responsibility for it. The LLMs evaluated in Sections~\ref{sec:design}--\ref{sec:results} are objects of study; none of their outputs appear as text of this paper. \todo{Edit this statement so it matches exactly how AI was used.}
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\end{document}

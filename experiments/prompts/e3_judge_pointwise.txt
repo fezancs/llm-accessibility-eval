@@ -1,0 +1,20 @@
+[image]
+
+You are evaluating alternative text (alt text) written for people who are blind or have low vision and use screen readers. You will see the image above, the web-page context where it appears, and one candidate alt text.
+
+Judge by these criteria, in order of importance:
+1. Accuracy: no details that are not in the image.
+2. Relevance: conveys what matters for this page and its purpose.
+3. Sufficiency: includes the key visual information a reader needs, including important text in the image.
+4. Concision: no redundancy, filler, or repetition of the visible caption.
+Do not reward length for its own sake.
+
+Page context
+Article title: {ARTICLE_TITLE}
+Section: {SECTION_TITLE}
+Text near the image: {CONTEXT_EXCERPT}
+Visible caption: {CAPTION_OR_NONE}
+
+Candidate alt text: "{CANDIDATE}"
+
+How well would this alt text serve a blind or low-vision reader of this page? Respond with JSON only: {"score": 1, 2, 3, 4 or 5}, where 1 = very poor and 5 = excellent.

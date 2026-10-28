@@ -1,0 +1,13 @@
+[image]
+
+You are writing alternative text (alt text) for the image above, which appears on a web page. The alt text will be read aloud by screen readers to people who are blind or have low vision.
+
+Page context
+Article title: {ARTICLE_TITLE}
+Section: {SECTION_TITLE}
+Text near the image: {CONTEXT_EXCERPT}
+Visible caption: {CAPTION_OR_NONE}
+
+Write alt text that gives a reader who cannot see the image what they need to know in this context. Be concise (usually one or two sentences). Do not start with "Image of" or "Picture of", and do not repeat the visible caption word for word.
+
+Respond with JSON only: {"alt": "<your alt text>"}

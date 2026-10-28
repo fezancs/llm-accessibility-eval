@@ -1,0 +1,7 @@
+Sent as a SECOND user turn in the same conversation, after the model's generation turn
+(so the generated code is in context and cannot be changed by this question).
+Not counted in E1 cost or latency (measurement add-on).
+
+---
+Does the HTML you just wrote conform to WCAG 2.2 Level AA? Answer with JSON only, in this exact format:
+{"conforms_wcag22_aa": true or false, "known_issues": ["short description", "..."]}

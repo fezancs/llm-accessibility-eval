@@ -1,0 +1,361 @@
+% References for the SE4All 2027 paper. Venue details were checked on 2026-10-28.
+% Entries with very long author lists use "and others" (rendered as "et al.").
+
+@misc{webaim2026,
+  author       = {{WebAIM}},
+  title        = {The {WebAIM} Million: The 2026 Report on the Accessibility of the Top 1,000,000 Home Pages},
+  year         = {2026},
+  howpublished = {\url{https://webaim.org/projects/million/}}
+}
+
+@misc{eaa2019,
+  author       = {{European Parliament and Council of the European Union}},
+  title        = {Directive ({EU}) 2019/882 on the Accessibility Requirements for Products and Services ({European Accessibility Act})},
+  howpublished = {Official Journal of the European Union, L 151},
+  year         = {2019}
+}
+
+@misc{wcag22,
+  author       = {{W3C}},
+  title        = {Web Content Accessibility Guidelines ({WCAG}) 2.2},
+  howpublished = {W3C Recommendation, \url{https://www.w3.org/TR/WCAG22/}},
+  year         = {2023}
+}
+
+@misc{w3cbad,
+  author       = {{W3C Web Accessibility Initiative}},
+  title        = {Before and After Demonstration ({BAD})},
+  howpublished = {\url{https://www.w3.org/WAI/demos/bad/}},
+  note         = {Accessed Oct. 2026}
+}
+
+@misc{axecore,
+  author       = {{Deque Systems}},
+  title        = {axe-core: Accessibility Engine for Automated Web {UI} Testing},
+  howpublished = {\url{https://github.com/dequelabs/axe-core}},
+  note         = {Accessed Oct. 2026}
+}
+
+@misc{ieeeai,
+  author       = {{IEEE}},
+  title        = {Author Guidelines for Artificial Intelligence ({AI})-Generated Text},
+  howpublished = {\url{https://open.ieee.org/author-guidelines-for-artificial-intelligence-ai-generated-text/}},
+  note         = {Accessed Oct. 2026}
+}
+
+% ---------------- LLM evaluation ----------------
+
+@inproceedings{chiang2024arena,
+  author    = {Chiang, Wei-Lin and Zheng, Lianmin and Sheng, Ying and Angelopoulos, Anastasios N. and others},
+  title     = {Chatbot Arena: An Open Platform for Evaluating {LLMs} by Human Preference},
+  booktitle = {Proc. 41st Int. Conf. Machine Learning (ICML)},
+  year      = {2024}
+}
+
+@inproceedings{wang2024mmlupro,
+  author    = {Wang, Yubo and others},
+  title     = {{MMLU-Pro}: A More Robust and Challenging Multi-Task Language Understanding Benchmark},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS), Datasets and Benchmarks Track},
+  year      = {2024}
+}
+
+@misc{chen2021humaneval,
+  author       = {Chen, Mark and others},
+  title        = {Evaluating Large Language Models Trained on Code},
+  howpublished = {arXiv:2107.03374},
+  year         = {2021}
+}
+
+@inproceedings{jimenez2024swebench,
+  author    = {Jimenez, Carlos E. and Yang, John and Wettig, Alexander and Yao, Shunyu and Pei, Kexin and Press, Ofir and Narasimhan, Karthik},
+  title     = {{SWE-bench}: Can Language Models Resolve Real-World {GitHub} Issues?},
+  booktitle = {Proc. Int. Conf. Learning Representations (ICLR)},
+  year      = {2024}
+}
+
+@article{bradley1952rank,
+  author  = {Bradley, Ralph Allan and Terry, Milton E.},
+  title   = {Rank Analysis of Incomplete Block Designs: {I}. The Method of Paired Comparisons},
+  journal = {Biometrika},
+  volume  = {39},
+  number  = {3/4},
+  pages   = {324--345},
+  year    = {1952}
+}
+
+@article{liang2023helm,
+  author  = {Liang, Percy and others},
+  title   = {Holistic Evaluation of Language Models},
+  journal = {Transactions on Machine Learning Research},
+  year    = {2023}
+}
+
+@inproceedings{sainz2023contamination,
+  author    = {Sainz, Oscar and Campos, Jon Ander and Garc{\'i}a-Ferrero, Iker and Etxaniz, Julen and de Lacalle, Oier Lopez and Agirre, Eneko},
+  title     = {{NLP} Evaluation in Trouble: On the Need to Measure {LLM} Data Contamination for Each Benchmark},
+  booktitle = {Findings of the Association for Computational Linguistics: EMNLP},
+  year      = {2023}
+}
+
+@article{liu2024lost,
+  author  = {Liu, Nelson F. and Lin, Kevin and Hewitt, John and Paranjape, Ashwin and Bevilacqua, Michele and Petroni, Fabio and Liang, Percy},
+  title   = {Lost in the Middle: How Language Models Use Long Contexts},
+  journal = {Transactions of the Association for Computational Linguistics},
+  volume  = {12},
+  pages   = {157--173},
+  year    = {2024}
+}
+
+@inproceedings{hsieh2024ruler,
+  author    = {Hsieh, Cheng-Ping and others},
+  title     = {{RULER}: What's the Real Context Size of Your Long-Context Language Models?},
+  booktitle = {Proc. Conf. Language Modeling (COLM)},
+  year      = {2024}
+}
+
+@misc{laban2025lost,
+  author       = {Laban, Philippe and Hayashi, Hiroaki and Zhou, Yingbo and Neville, Jennifer},
+  title        = {{LLMs} Get Lost in Multi-Turn Conversation},
+  howpublished = {arXiv:2505.06120},
+  year         = {2025}
+}
+
+@misc{yao2024taubench,
+  author       = {Yao, Shunyu and Shinn, Noah and Razavi, Pedram and Narasimhan, Karthik},
+  title        = {$\tau$-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains},
+  howpublished = {arXiv:2406.12045},
+  year         = {2024}
+}
+
+% ---------------- LLM-as-a-judge ----------------
+
+@inproceedings{liu2023geval,
+  author    = {Liu, Yang and Iter, Dan and Xu, Yichong and Wang, Shuohang and Xu, Ruochen and Zhu, Chenguang},
+  title     = {{G-Eval}: {NLG} Evaluation Using {GPT-4} with Better Human Alignment},
+  booktitle = {Proc. Conf. Empirical Methods in Natural Language Processing (EMNLP)},
+  year      = {2023}
+}
+
+@inproceedings{zheng2023judging,
+  author    = {Zheng, Lianmin and others},
+  title     = {Judging {LLM-as-a-Judge} with {MT-Bench} and {Chatbot Arena}},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS), Datasets and Benchmarks Track},
+  year      = {2023}
+}
+
+@inproceedings{wang2024fair,
+  author    = {Wang, Peiyi and others},
+  title     = {Large Language Models are not Fair Evaluators},
+  booktitle = {Proc. 62nd Annu. Meeting of the Association for Computational Linguistics (ACL)},
+  year      = {2024}
+}
+
+@inproceedings{panickssery2024self,
+  author    = {Panickssery, Arjun and Bowman, Samuel R. and Feng, Shi},
+  title     = {{LLM} Evaluators Recognize and Favor Their Own Generations},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2024}
+}
+
+@misc{verga2024juries,
+  author       = {Verga, Pat and others},
+  title        = {Replacing Judges with Juries: Evaluating {LLM} Generations with a Panel of Diverse Models},
+  howpublished = {arXiv:2404.18796},
+  year         = {2024}
+}
+
+@misc{dubois2024lcalpaca,
+  author       = {Dubois, Yann and Galambosi, Bal{\'a}zs and Liang, Percy and Hashimoto, Tatsunori B.},
+  title        = {Length-Controlled {AlpacaEval}: A Simple Way to Debias Automatic Evaluators},
+  howpublished = {arXiv:2404.04475},
+  year         = {2024}
+}
+
+@inproceedings{ahmed2025annotation,
+  author    = {Ahmed, Toufique and Devanbu, Premkumar and Treude, Christoph and Pradel, Michael},
+  title     = {Can {LLMs} Replace Manual Annotation of Software Engineering Artifacts?},
+  booktitle = {Proc. 22nd Int. Conf. Mining Software Repositories (MSR)},
+  year      = {2025}
+}
+
+@misc{baltes2025guidelines,
+  author       = {Baltes, Sebastian and others},
+  title        = {Guidelines for Empirical Studies in Software Engineering Involving Large Language Models},
+  howpublished = {arXiv:2508.15503},
+  year         = {2025}
+}
+
+@inproceedings{sallou2024breaking,
+  author    = {Sallou, June and Durieux, Thomas and Panichella, Annibale},
+  title     = {Breaking the Silence: The Threats of Using {LLMs} in Software Engineering},
+  booktitle = {Proc. 46th Int. Conf. Software Engineering: New Ideas and Emerging Results (ICSE-NIER)},
+  year      = {2024}
+}
+
+% ---------------- Cost-aware evaluation ----------------
+
+@article{kapoor2025agents,
+  author  = {Kapoor, Sayash and Stroebl, Benedikt and Siegel, Zachary S. and Nadgir, Nitya and Narayanan, Arvind},
+  title   = {{AI} Agents That Matter},
+  journal = {Transactions on Machine Learning Research},
+  year    = {2025}
+}
+
+@inproceedings{erol2026costofpass,
+  author    = {Erol, Mehmet Hamza and El, Batu and Suzgun, Mirac and Yuksekgonul, Mert and Zou, James},
+  title     = {Cost-of-Pass: An Economic Framework for Evaluating Language Models},
+  booktitle = {Proc. Int. Conf. Learning Representations (ICLR)},
+  year      = {2026}
+}
+
+% ---------------- Accessibility and software engineering ----------------
+
+@inproceedings{alshayban2020android,
+  author    = {Alshayban, Abdulaziz and Ahmed, Iftekhar and Malek, Sam},
+  title     = {Accessibility Issues in {Android} Apps: State of Affairs, Sentiments, and Ways Forward},
+  booktitle = {Proc. 42nd Int. Conf. Software Engineering (ICSE)},
+  year      = {2020}
+}
+
+@inproceedings{chen2020unblind,
+  author    = {Chen, Jieshan and Chen, Chunyang and Xing, Zhenchang and Xu, Xiwei and Zhu, Liming and Li, Guoqiang and Wang, Jinshui},
+  title     = {Unblind Your Apps: Predicting Natural-Language Labels for Mobile {GUI} Components by Deep Learning},
+  booktitle = {Proc. 42nd Int. Conf. Software Engineering (ICSE)},
+  year      = {2020}
+}
+
+@article{bi2022practice,
+  author  = {Bi, Tingting and Xia, Xin and Lo, David and Grundy, John and Zimmermann, Thomas and Ford, Denae},
+  title   = {Accessibility in Software Practice: A Practitioner's Perspective},
+  journal = {ACM Transactions on Software Engineering and Methodology},
+  volume  = {31},
+  number  = {4},
+  year    = {2022}
+}
+
+@inproceedings{vigo2013benchmarking,
+  author    = {Vigo, Markel and Brown, Justin and Conway, Vivienne},
+  title     = {Benchmarking Web Accessibility Evaluation Tools: Measuring the Harm of Sole Reliance on Automated Tests},
+  booktitle = {Proc. 10th Int. Cross-Disciplinary Conf. Web Accessibility (W4A)},
+  year      = {2013}
+}
+
+@inproceedings{aljedaani2024chatgpt,
+  author    = {Aljedaani, Wajdi and Habib, Abdulrahman and Aljohani, Ahmed and Eler, Marcelo and Feng, Yunhe},
+  title     = {Does {ChatGPT} Generate Accessible Code? Investigating Accessibility Challenges in {LLM}-Generated Source Code},
+  booktitle = {Proc. 21st Int. Web for All Conf. (W4A)},
+  year      = {2024},
+  doi       = {10.1145/3677846.3677854}
+}
+
+@misc{suh2025human,
+  author       = {Suh, Hyunjae and Tafreshipour, Mahan and Malek, Sam and Ahmed, Iftekhar},
+  title        = {Human or {LLM}? A Comparative Study on Accessible Code Generation Capability},
+  howpublished = {arXiv:2503.15885},
+  year         = {2025}
+}
+
+@inproceedings{gurita2025perpetuates,
+  author    = {Gurita, Alexandra-Elena and Vatavu, Radu-Daniel},
+  title     = {When {LLM}-Generated Code Perpetuates User Interface Accessibility Barriers, How Can We Break the Cycle?},
+  booktitle = {Proc. 22nd Int. Web for All Conf. (W4A)},
+  year      = {2025},
+  doi       = {10.1145/3744257.3744266}
+}
+
+@inproceedings{rabelo2025mobile,
+  author    = {Rabelo, Daniel Mesquita Feij{\'o} and Souza, Ribamar and Santos, Isaac and Henrique, Paulo and Gama, Kiev and Viana, Windson},
+  title     = {Breaking Barriers in Mobile Accessibility: A Study of {LLM}-Generated Native {Android} Interfaces},
+  booktitle = {Proc. IEEE/ACM 12th Int. Conf. Mobile Software Engineering and Systems (MOBILESoft)},
+  year      = {2025}
+}
+
+@misc{kreer2026webaccessbench,
+  author       = {Kreer, Casey},
+  title        = {{WebAccessBench}: Digital Accessibility Reliability in {LLM}-Generated Web Interfaces},
+  howpublished = {White paper, \url{https://conesible.de/wab}},
+  month        = feb,
+  year         = {2026}
+}
+
+@inproceedings{calo2026semantic,
+  author    = {Cal{\`o}, Tommaso and Gurita, Alexandra-Elena and De Russis, Luigi},
+  title     = {Measuring the Semantic Accessibility Gap in {LLM}-Generated Web {UIs}},
+  booktitle = {Extended Abstracts of the CHI Conf. Human Factors in Computing Systems (CHI EA)},
+  year      = {2026},
+  doi       = {10.1145/3772363.3799364}
+}
+
+@misc{mowar2025codea11y,
+  author       = {Mowar, Peya and Peng, Yi-Hao and Wu, Jason and Steinfeld, Aaron and Bigham, Jeffrey P.},
+  title        = {{CodeA11y}: Making {AI} Coding Assistants Useful for Accessible Web Development},
+  howpublished = {arXiv:2502.10884},
+  year         = {2025}
+}
+
+@inproceedings{fathallah2025accessguru,
+  author    = {Fathallah, Nadeen and Hern{\'a}ndez, Daniel and Staab, Steffen},
+  title     = {{AccessGuru}: Leveraging {LLMs} to Detect and Correct Web Accessibility Violations in {HTML} Code},
+  booktitle = {Proc. 27th Int. ACM SIGACCESS Conf. Computers and Accessibility (ASSETS)},
+  year      = {2025}
+}
+
+@misc{oyelayo2026repair,
+  author       = {Oyelayo, Oluwatoyosi and Abushaqra, Ghada and Asadi, Parham and Dey, Durjoy and Costa, Diego Elias},
+  title        = {{LLM} Based Web Accessibility Repair: An Empirical Study of Detection, Remediation, and Cost},
+  howpublished = {arXiv:2605.27716},
+  year         = {2026}
+}
+
+@inproceedings{wanscher2026blind,
+  author    = {Wanscher, Lily Bundgaard and Lorensen, Markus Heidemann and Shafiq, Mohammed Ammad and Moghaddam, Mahyar Tourchi and Alipour, Mina},
+  title     = {From Blind Edits to Verified Repair: Building Trustworthy User-Side {LLM} Agents for Web Accessibility},
+  booktitle = {Companion Proc. 28th Int. Conf. Multimodal Interaction (ICMI)},
+  year      = {2026},
+  note      = {arXiv:2608.24913}
+}
+
+@inproceedings{stangl2021going,
+  author    = {Stangl, Abigale and Verma, Nitin and Fleischmann, Kenneth R. and Morris, Meredith Ringel and Gurari, Danna},
+  title     = {Going Beyond One-Size-Fits-All Image Descriptions to Satisfy the Information Wants of People Who Are Blind or Have Low Vision},
+  booktitle = {Proc. 23rd Int. ACM SIGACCESS Conf. Computers and Accessibility (ASSETS)},
+  year      = {2021}
+}
+
+@inproceedings{kreiss2022context,
+  author    = {Kreiss, Elisa and Bennett, Cynthia and Hooshmand, Shayan and Zelikman, Eric and Morris, Meredith Ringel and Potts, Christopher},
+  title     = {Context Matters for Image Descriptions for Accessibility: Challenges for Referenceless Evaluation Metrics},
+  booktitle = {Proc. Conf. Empirical Methods in Natural Language Processing (EMNLP)},
+  pages     = {4685--4697},
+  year      = {2022}
+}
+
+@inproceedings{kreiss2024contextref,
+  author    = {Kreiss, Elisa and Zelikman, Eric and Potts, Christopher and Haber, Nick},
+  title     = {{ContextRef}: Evaluating Referenceless Metrics for Image Description Generation},
+  booktitle = {Proc. Int. Conf. Learning Representations (ICLR)},
+  year      = {2024}
+}
+
+@inproceedings{mohanbabu2024context,
+  author    = {Mohanbabu, Ananya Gubbi and Pavel, Amy},
+  title     = {Context-Aware Image Descriptions for Web Accessibility},
+  booktitle = {Proc. 26th Int. ACM SIGACCESS Conf. Computers and Accessibility (ASSETS)},
+  year      = {2024}
+}
+
+@inproceedings{aljedaani2026slr,
+  author    = {Aljedaani, Wajdi and Mollik, Rubel Hassan},
+  title     = {Large Language Models for Web Accessibility: A Systematic Literature Review},
+  booktitle = {Proc. 23rd Int. Web for All Conf. (W4A)},
+  year      = {2026},
+  note      = {arXiv:2605.13873}
+}
+
+@book{krippendorff2018content,
+  author    = {Krippendorff, Klaus},
+  title     = {Content Analysis: An Introduction to Its Methodology},
+  edition   = {4th},
+  publisher = {SAGE},
+  year      = {2018}
+}

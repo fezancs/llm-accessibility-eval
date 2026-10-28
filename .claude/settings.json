@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls /home/fezan/.claude/projects/-home-fezan-Downloads-se4all-2027-paper-se4all-paper/memory/ 2>/dev/null && cat /home/fezan/.claude/projects/-home-fezan-Downloads-se4all-2027-paper-se4all-paper/memory/MEMORY.md 2>/dev/null; ls -la /home/fezan/Downloads/se4all-2027-paper/)",
+      "Read(//home/fezan/Downloads/se4all-2027-paper/**)",
+      "Bash(env)",
+      "Bash(python3 -c \" *)",
+      "Read(//home/fezan/.cache/**)",
+      "Bash(.venv/bin/python -c \"import playwright, pytest, krippendorff; print\\('ok', pytest.__version__, krippendorff.__version__ if hasattr\\(krippendorff,'__version__'\\) else ''\\)\")"
+    ]
+  }
+}

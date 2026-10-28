@@ -1,0 +1,7 @@
+The HTML page below has accessibility problems. Fix them so that the page conforms to WCAG 2.2 Level AA. Do not change the page's content, appearance or behaviour except where a fix requires it.
+
+Return the complete corrected HTML document in a single ```html code block, and nothing else.
+
+```html
+{FAULTY_PAGE}
+```
