@@ -1,0 +1,107 @@
+{
+  "retrieved_at": "2026-10-28T15:00:05Z",
+  "files": {
+    "raw/blv/blv_data_criticaltrials.csv": {
+      "url": "https://raw.githubusercontent.com/elisakreiss/contextual-description-evaluation/46407c28cb41efc7bb28936b86351726547ee154/behavioral_data/blv_data_criticaltrials.csv",
+      "bytes": 189375,
+      "sha256": "7edd71867b814b60a733e380190277df7e2f23362f79babeb65d91c43e9868d5"
+    },
+    "raw/blv/all_descriptions.csv": {
+      "url": "https://raw.githubusercontent.com/elisakreiss/contextual-description-evaluation/46407c28cb41efc7bb28936b86351726547ee154/behavioral_data/all_descriptions.csv",
+      "bytes": 208023,
+      "sha256": "9f0980476d277b63ad7fe36e1e6bf588b259456b233690976c8b4cfc6be5cb51"
+    },
+    "raw/blv/LICENSE": {
+      "url": "https://raw.githubusercontent.com/elisakreiss/contextual-description-evaluation/46407c28cb41efc7bb28936b86351726547ee154/LICENSE",
+      "bytes": 1069,
+      "sha256": "50927520f8a18d5a90210183edbacde7da7a4ab2fcb6be90252b40aa916b7eae"
+    },
+    "raw/cr/drive/df_metric_gold.csv": {
+      "url": "https://drive.usercontent.google.com/download?id=1tHbgk5kVj-ILg9hPfRM8dKJ7Wd1wM_cJ&export=download&confirm=t",
+      "bytes": 2224769,
+      "sha256": "38a3d51eeb959f1ca42c3aaccbd8196745645cb87b7acced92f3716b97770cec"
+    },
+    "raw/cr/drive/data_chunk0-1_anon.csv": {
+      "url": "https://drive.usercontent.google.com/download?id=1WSwTRA_twj-osfmLZnfDN23VNNpKU-1-&export=download&confirm=t",
+      "bytes": 1421453,
+      "sha256": "398dea9e8ef6ff9365c795a4b71cc94639ef7d329763631e260b6e75dd743286"
+    },
+    "raw/cr/drive/data_chunk0-2_anon.csv": {
+      "url": "https://drive.usercontent.google.com/download?id=1xi28HnI6FD9LKJ0l2n9lRVxiy0pZdZUu&export=download&confirm=t",
+      "bytes": 483726,
+      "sha256": "83ad2896b3282f71a6e33d18e3ec5acb69047259134c234702edf5c658048f82"
+    },
+    "raw/cr/drive/data_chunk0-3_anon.csv": {
+      "url": "https://drive.usercontent.google.com/download?id=1gsCZtUbvtMJB6wJ2yPmhdVE6-L408qrA&export=download&confirm=t",
+      "bytes": 665756,
+      "sha256": "b827afbbe13e2cb328bd467637507f4f69a88b056144854005b58d2f07f397f8"
+    },
+    "raw/cr/drive/data_chunk0-4_anon.csv": {
+      "url": "https://drive.usercontent.google.com/download?id=1r9M3DgsE2o5plTr2NBpT9BfJZjCnxa-M&export=download&confirm=t",
+      "bytes": 473838,
+      "sha256": "156e2c28dfea53df98e9f2790cfd0a9781822197abdff76e4a53013e2c496935"
+    },
+    "raw/cr/drive/data_chunk0-5_anon.csv": {
+      "url": "https://drive.usercontent.google.com/download?id=1Xuz50CHnIbPb3M55Tes75EvtrxAYMV6Q&export=download&confirm=t",
+      "bytes": 359001,
+      "sha256": "b17343bd70e87b9d77ee6d047f2e137fad2872441184257e8423cc5bee125c71"
+    }
+  },
+  "blv": {
+    "repo": "elisakreiss/contextual-description-evaluation",
+    "commit": "46407c28cb41efc7bb28936b86351726547ee154"
+  },
+  "cr": {
+    "repo": "elisakreiss/contextref",
+    "commit": "306cad8d2c81a6ef73d688c50a5a1db740c5b871",
+    "drive_folder": "https://drive.google.com/drive/folders/1l_7jfsXZX99ZEGO0fIuaSbxorDmB4Gpc"
+  },
+  "summary": {
+    "blv": {
+      "items": 68,
+      "images": 18,
+      "items_retrieved": 68,
+      "images_retrieved": 18,
+      "raters_per_item_mean": 4.0,
+      "descriptions_per_image": {
+        "3": 8,
+        "4": 6,
+        "5": 4
+      },
+      "descriptions_per_image_and_article": {
+        "1": 22,
+        "2": 17,
+        "3": 4
+      },
+      "within_image_article_pairs": 29,
+      "within_image_article_pairs_diff_ge_0_5": 23
+    },
+    "cr": {
+      "items": 204,
+      "images": 204,
+      "items_retrieved": 204,
+      "images_retrieved": 204,
+      "raters_per_item_mean": 3.765
+    },
+    "image_bytes_total": 9937880,
+    "image_failures": {},
+    "originals_check": {
+      "checked": 204,
+      "live": 195,
+      "dead": {
+        "https://upload.wikimedia.org/wikipedia/commons/d/d0/Anita_Anand_and_sister_nomination_night.jpg": "HTTP 404",
+        "https://upload.wikimedia.org/wikipedia/commons/6/6b/West_Palm_Beach_Aerial_November_2014_photo_D_Ramey_Logan.jpg": "HTTP 404",
+        "https://upload.wikimedia.org/wikipedia/commons/d/d7/1scottturow.jpg": "HTTP 404",
+        "https://upload.wikimedia.org/wikipedia/commons/5/59/Statue_of_Mangal_Mahadev.jpg": "HTTP 404",
+        "https://upload.wikimedia.org/wikipedia/commons/3/37/2020-07-31_16_34_19_will_rename_and_categorize_soon_36.jpg": "HTTP 404",
+        "https://upload.wikimedia.org/wikipedia/commons/6/6e/Vatheianos_Kampos.jpg": "HTTP 404",
+        "https://upload.wikimedia.org/wikipedia/commons/2/2e/EM_Lyon_Business_School.jpg": "HTTP 404",
+        "https://upload.wikimedia.org/wikipedia/commons/a/a1/Kolkatatemple.jpg": "HTTP 404",
+        "https://upload.wikimedia.org/wikipedia/commons/b/bc/16_June_1982_Port_Stanley.jpg": "HTTP 404"
+      },
+      "total_bytes_live": 369547418,
+      "max_bytes": 23145588,
+      "over_5MB": 18
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "se4all-harness",
+  "private": true,
+  "description": "Pinned axe-core for the SE4All 2027 harness",
+  "dependencies": {
+    "axe-core": "^4.14.0",
+    "prettier": "3.9.10"
+  }
+}

@@ -1,0 +1,91 @@
+/* CityCare base styles: readable defaults, AA-contrast colours, visible focus. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background-color: #ffffff;
+}
+
+a {
+  color: #0b4f8a;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #083a66;
+}
+
+/* Visible keyboard focus for every focusable element. */
+:focus-visible {
+  outline: 3px auto #0b4f8a;
+  outline-offset: 2px;
+}
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background-color: #0b3d61;
+  color: #ffffff;
+}
+
+.logo {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.nav-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-header a {
+  color: #ffffff;
+}
+
+.site-header a:focus-visible {
+  outline-color: #ffffff;
+}
+
+main {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+h1 {
+  font-size: 2rem;
+  line-height: 1.25;
+  margin-top: 0;
+}
+
+.site-footer {
+  padding: 1.5rem;
+  background-color: #f2f2f2;
+  color: #333333;
+}
+
+.site-footer address {
+  font-style: normal;
+}
