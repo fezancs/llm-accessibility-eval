@@ -1,77 +1,145 @@
-# SE4All 2027 submission package
+# LLM Accessibility Evaluation
 
-**Paper:** *Beyond Static Leaderboards: Drift-Aware, Bias-Controlled, and Cost-Normalized Evaluation of LLMs for Accessible Software Engineering*
-**Venue:** SE4All 2027 (ICSE 2027 workshop on software engineering and AI for accessibility and inclusion), Dublin, 1 May 2027
-**Format:** IEEE conference (IEEEtran, 10 pt), regular paper, **max 8 pages including references**, single-blind (your name goes on the paper)
-**Deadline:** **13 November 2026, 23:59 AoE** = **14 November 2026, 16:59 Pakistan time**. Submit at https://icse2027-se4all.hotcrp.com/
+A framework and test harness for evaluating large language models (LLMs) on **accessible
+software engineering**: writing, repairing and auditing user-interface code against WCAG 2.2,
+keeping accessibility requirements during long agentic coding sessions, and judging alt text
+for blind and low-vision users.
 
-## What is in this folder
+Most comparisons of LLMs use static leaderboards that ignore accessibility. Studies of LLMs and
+accessibility usually test one or two models with one-shot prompts, sometimes let a model
+judge its own output, and rarely report cost. This project measures accessibility the way it
+matters in practice: with real browser checks, over long sessions, with bias-controlled
+judging, and per dollar and second.
 
-```
-paper/                      the paper (compiles to main.pdf, currently 7 pages)
-  main.tex                  full text; results parts are placeholders
-  refs.bib                  47 references, venue details checked on 28 Oct 2026
-  macros.tex                placeholder and results macros (\res, \todo, \tbd, \resultpara)
-  results/                  table bodies and values.tex, overwritten by the analysis
-  figures/                  empty until the analysis draws the two figures
-  check_placeholders.py     pre-submission checker
-  IEEEtran.cls / .bst       IEEE template v1.8b
-experiments/                everything Claude Code needs to run the study
-  CLAUDE.md                 step-by-step instructions Claude Code reads automatically
-  SPEC.md                   the method in full: metrics, procedures, statistics
-  config/models.yaml        models, IDs, prices (28 Oct 2026; re-check on run day)
-  config/budget.yaml        spend caps, full and lean profiles
-  tasks/                    20 generation tasks, repair corpus and mutation operators, 24-step agent script
-  prompts/                  every prompt, verbatim
-```
+> **Status:** the harness, task corpora and analysis code are complete and tested offline
+> against a scripted fake model. No model has been run yet, so this repository contains no
+> results. Every result will come only from logged API responses.
 
-## How the draft handles results
+## What the framework measures
 
-No numbers were invented. Every result in the paper is a placeholder that fills itself in when the analysis runs:
-- numbers in the text use `\res{key}` and print **TBD** until `results/values.tex` defines them;
-- the three result tables read their rows from `results/*.tex`;
-- the two figures show grey boxes until `figures/*.pdf` exist;
-- red boxes and **[TODO: ...]** mark the few paragraphs that must be written after the results exist.
-
-If you set `\finaltrue` in `main.tex`, any leftover placeholder stops the build with an error, so a draft cannot be submitted by accident.
-
-## How to run the experiments with Claude Code
-
-1. **Get API keys** for Anthropic, OpenAI, Google (Gemini API), DeepSeek, and OpenRouter (for Qwen, Gemma and Llama). Put them in `experiments/.env` (Claude Code creates `.env.example` for you).
-2. **Run Claude Code on your own computer** (recommended): open a terminal in `experiments/`, start `claude`, and say: *"Read CLAUDE.md and SPEC.md, then start Phase 0."* Claude Code works through the phases and stops for your approval after the pilot, before the expensive runs.
-   - Cloud sessions also work, but their default network access only reaches package registries and GitHub. You would need Custom network access for the model API hosts and the API keys added as network secrets, and long commands time out after 2–10 minutes by default. Running locally avoids all of that.
-3. **Plan** (each phase is described in `CLAUDE.md`):
-
-| Dates | Phase |
+| Part | What it is |
 |---|---|
-| 29–30 Oct | Set up, build the harness, validate probes and the repair corpus, freeze the plan (git tag `prereg-v1`) |
-| 31 Oct | Pilot on cheap models; you approve the projected cost |
-| 1–5 Nov | Full runs: E1, then E3, then E2 (the longest) |
-| 6 Nov | Analysis, tables and figures |
-| 7–8 Nov | Claude Code writes the results text into the paper |
-| 9–11 Nov | Your review and edits; final build; page check |
-| 12 Nov | Submit (one day of slack before the deadline) |
+| **Capability taxonomy** | Six dimensions that map general LLM capabilities to WCAG 2.2-anchored tasks and automated oracles: conformance auditing (C1), accessible UI generation and repair (C2), agentic execution of a multi-page build (C3), text alternatives for images (C4), keeping adherence as the context grows (C5), and handling requests that conflict with accessibility, plus honest conformance claims (C6). |
+| **DCDI** (Dynamic Contextual Drift Index) | The share of accessibility adherence an agent loses over a long, tool-using session, compared with a counterfactual fresh-context control. A padded control separates the effect of context *length* from the effect of the session's *history*. |
+| **CMBPE** (Cross-Model Blind Peer Evaluation) | An anonymised jury of models from different families that judges every pair in both orders. Judges never score their own model family. A Bradley-Terry model adjusts for position and length bias, and the jury is calibrated against ratings by blind and low-vision people. |
+| **CPDS** (Capability-per-Dollar-Second) | A scenario-weighted efficiency score (batch remediation, interactive assistant, balanced) with bootstrap Pareto-membership probabilities over capability, cost and latency. |
 
-4. **Budget:** about **$250–450** for the full study including a pilot and re-runs, or **about $120** with the lean profile in `config/budget.yaml`. The pilot produces a real per-call cost table before you commit.
+A composite capability score combines the six dimension scores (weighted geometric mean).
 
-## Before you submit
+Research questions:
+1. How do current LLMs perform across the six capability dimensions?
+2. Do LLM agents keep honouring accessibility requirements as a long, tool-using session grows?
+3. Does a blind, family-recused, order-permuted, length-adjusted jury judge accessibility
+   content more reliably than single LLM judges?
+4. Which models are Pareto-efficient in capability, cost and latency, and what does
+   AI-assisted remediation cost?
 
-- [ ] Author names, affiliations and email in `main.tex` (two `\todo`s) and `pdfauthor`
-- [ ] `python3 check_placeholders.py` reports nothing left
-- [ ] `\finaltrue` build succeeds; `main.pdf` is 8 pages or fewer, references included
-- [ ] The AI-use statement in the Acknowledgment matches what you actually did (IEEE requires disclosing AI-generated text, sections and level of use)
-- [ ] Every deviation in `experiments/DEVIATIONS.md` is reported in the threats paragraph
-- [ ] Data-availability link (GitHub + Zenodo DOI) filled in
-- [ ] Figures use the colour-blind-safe palette with line styles, and every caption says what the figure shows (SE4All is an accessibility venue; reviewers will notice)
+## Experiments
 
-## What changed from the original master prompt, and why
+**E1: capability tasks** (`tasks/e1_gen_tasks.yaml`, `data/corpus/`)
+- *Generation:* 20 UI tasks (forms, dialogs, tabs, accordions, carousels, comboboxes, sliders,
+  data tables and more), each with and
+  without a one-sentence accessibility nudge, 3 samples each. The "default gap" between the
+  two conditions is reported. After each page, the model is asked whether its page conforms
+  to WCAG 2.2 AA, which measures over-claiming.
+- *Repair:* 48 faulty pages built from 12 accessible base pages (4 adapted W3C "Before and
+  After" demo pages and 8 authored pages). 12 mutation operators inject 4 known faults into
+  each page. A repair scores the faults it fixes minus any new failures it introduces, and
+  counts only if the page's text and structure are preserved.
+- *Audit:* the model lists the problems on the same 48 pages, and the list is scored against
+  the 192 known faults (micro-F1).
 
-- **Scope.** SE4All accepts only work on SE and AI for accessibility and inclusion, so the three contributions now evaluate LLMs on accessibility engineering (WCAG 2.2 code, repair, auditing, alt text). The six-dimension taxonomy is kept and mapped onto accessibility tasks (Table I).
-- **Models.** GPT-4o, Claude 3.5 and Gemini 1.5 are two years old by November 2026; the study uses the October 2026 lineup (Claude 5.5 family, GPT-6 Sol/Luna, Gemini 4 Argon / 3.8 Flash, DeepSeek V4-Pro, Qwen3.8, Gemma 4, Llama 4).
-- **CPDS formula.** The original divided by log10(price per 1M tokens), which is zero at $1 and negative below it, and added seconds to seconds-per-token. The paper explains the problem and uses per-task cost and latency with a positive, log-compressed penalty and scenario weights.
-- **Novelty claims** are positioned against the closest prior work (juries of LLM judges, length-controlled evaluation, cost-accuracy Pareto analysis, and 2025–2026 accessibility-repair studies) rather than claimed from scratch.
-- **Length.** The venue allows 8 pages including references, so the paper is written to fit with room for the results text.
+**E2: long agentic sessions** (`tasks/e2_steps.yaml`)
+- The model builds a small clinic website over 24 steps, using file tools (`list_files`,
+  `read_file`, `write_file`) in a sandboxed workspace. The system prompt states the WCAG 2.2
+  AA requirement once; no user message mentions accessibility.
+- Steps: 4 foundation steps, 14 regular feature steps and 6 "pressure" steps. Pressure steps
+  ask for things that conflict with accessibility, such as placeholder-only labels or
+  removing focus outlines. The 20 non-foundation steps run in three fixed random orders.
+- Controls: a *fresh* control repeats every step in a new conversation on the same workspace
+  snapshot. A *padded* control repeats checkpoint steps after unrelated history of the same
+  length.
 
-## If the experiments cannot finish in time
+**E3: alt-text judging** (`prompts/e3_*`)
+- Calibration against human ratings: alt texts rated by blind and low-vision participants, and
+  crowd-rated alt texts with article context.
+- Known-answer pairs: each original description is paired with degraded versions (appended,
+  repeated, swapped, truncated).
+- A generator comparison: several models write alt text for the same images, and the jury
+  ranks them.
 
-`CLAUDE.md` ("If time runs out") gives two honest options: report what finished with the rest as future work, or convert to a 5-page vision paper (allowed by the call; such papers are judged on the strength of the idea).
+## How accessibility is scored
+
+Pages are rendered in headless Chromium (Playwright). Two kinds of checks run on each page:
+- **axe-core** with the WCAG 2.x Level A and AA rules;
+- **27 keyboard and semantics probes** for things axe cannot see, for example tab
+  reachability, visible focus, keyboard traps, the behaviour of dialogs, tabs, accordions,
+  comboboxes, sliders and switches, error messages tied to their fields and not shown by
+  colour alone, pause controls for moving content, and contrast after a theme toggle. Each probe has a passing and a failing test fixture
+  (`harness/probe_fixtures/`).
+
+Each page gets a rule-level pass rate `a(x)`: the share of applicable checks that pass. Task
+functional checks (for example "the form blocks an empty submit") confirm that the page does
+what was asked.
+
+## Principles
+
+- **No invented numbers.** Every reported value is computed by committed code from logged API
+  responses. If something fails or does not run, the report says so.
+- **Plan frozen before data collection.** Metrics, prompts, tasks, exclusion rules and
+  hypotheses are fixed and tagged (`prereg-v1`) before the first model call. Any later
+  change is recorded in `experiments/DEVIATIONS.md` with its reason.
+- **Honest statistics.** 95% bootstrap confidence intervals, sample sizes and exclusions are
+  reported, and Holm correction is used across hypothesis tests.
+- **Cost is tracked on every call** with the provider's price card (long-context tiers,
+  caching, peak and off-peak hours). Spending caps stop a run.
+- **Resumable and reproducible.** Every request is cached by its exact content, so an
+  interrupted run resumes without new calls, and every API attempt is logged.
+
+## Repository layout
+
+```
+experiments/
+  harness/      LLM client (Anthropic, OpenAI, Gemini and OpenAI-compatible APIs), cost
+                tracking, cache, renderer, axe runner, probes, E1/E2/E3 runners
+  analysis/     metrics, bootstrap, DCDI, Bradley-Terry jury model, CPDS/Pareto,
+                composite score, hypothesis tests, figures, table export
+  tests/        unit and end-to-end tests (synthetic data only)
+  tasks/        E1 generation tasks, mutation operators, E2 step script
+  prompts/      every prompt, verbatim
+  config/       models.yaml (models, ids, price cards, roles), budget.yaml (spend caps)
+  data/         repair corpus (base pages, variants, ground truth), E2 starter project,
+                E3 item lists (images are downloaded, not stored)
+  SPEC.md       full method: metrics, procedures, statistics
+  RUNBOOK.md    step-by-step commands from API keys to results
+  DEVIATIONS.md changes made after the plan was frozen
+```
+
+## Quick start
+
+Requirements: Python 3.12 and Node.js 18 or newer.
+
+```bash
+cd experiments
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+.venv/bin/python -m playwright install chromium
+npm ci                                  # pinned axe-core
+
+.venv/bin/python -m pytest              # offline tests (~10 min, browser tests included): no API key, no cost
+```
+
+To run real models, copy `.env.example` to `.env` and add the API keys for the providers you
+use (`.env` is git-ignored). Models, ids and prices live in `config/models.yaml`, and spend
+caps in `config/budget.yaml`. Then follow `RUNBOOK.md`: check keys
+(`python -m harness.check_keys`), run a small pilot (`--pilot`) and its cost projection
+(`python -m harness.pilot_report`), then the full runs and `python -m analysis.run_all`.
+
+## Data sources
+
+- **W3C "Before and After" demonstration pages** (the four "after" pages), adapted under the
+  W3C Document License. The changes are listed in `data/corpus/w3c_adaptation.md`.
+- **Alt-text ratings by blind and low-vision participants** (Kreiss et al., 2022) and the
+  **ContextRef** alt-text ratings. The scripts download images and source files from the
+  original repositories (`harness/e3_data.py`, sources pinned in `data/e3/sources.json`).
+  Images are not redistributed.

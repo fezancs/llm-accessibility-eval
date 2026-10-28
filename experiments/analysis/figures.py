@@ -1,6 +1,6 @@
 """Figures (SPEC 11): fig_drift.pdf and fig_pareto.pdf, vector PDF at final print size.
 
-Accessibility of the figures themselves (SE4All): two Okabe-Ito hues only - blue #0072B2 and
+Accessibility of the figures themselves: two Okabe-Ito hues only - blue #0072B2 and
 vermillion #D55E00, validated for colour-vision deficiency with the dataviz palette checker
 (CVD dE 21.9 on white) - and every colour difference is doubled by a non-colour cue:
 in-session = solid line, fresh control = dashed line; closed = hollow circle, open weights =

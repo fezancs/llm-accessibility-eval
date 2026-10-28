@@ -1,4 +1,4 @@
-# Experiment specification — SE4All 2027 paper
+# Experiment specification
 
 **Status: pre-registration draft.** Freeze this file, the files in `config/`, `tasks/` and `prompts/`, and the analysis code before any full run (tag `prereg-v1`). Every later change goes in `DEVIATIONS.md` with date, reason and expected effect, and is reported in the paper.
 
