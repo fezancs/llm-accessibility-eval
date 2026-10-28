@@ -1,4 +1,4 @@
-# Model registry for the SE4All 2027 study.
+# Model registry for the study.
 #
 # Prices are USD per 1M tokens, verified on 2026-10-28 on the providers' own pricing pages
 # (open-weight models: the pinned host's endpoint on the OpenRouter API). They WILL drift.
