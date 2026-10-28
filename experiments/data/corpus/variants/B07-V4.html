@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html>
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
@@ -365,7 +365,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 </div>
 </div>
 </form>
-<div id="map-heading" style='font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block'>Map</div>
+<h2 id="map-heading">Map</h2>
 <img alt="Map of the city showing the five CityCare clinics: Northside in the north, Hilltop in the west, Old Town in the centre, Riverside in the east and Harbour in the south" height="360" id="clinics-map" src="images/cc-map.png" width="640"/>
 <h2 id="hours-heading">Opening hours</h2>
 <table id="hours-table">
@@ -437,10 +437,10 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 </li>
 </ul>
 <p>
-<div class="btn btn-secondary" id="access-toggle">
+<button aria-controls="access-panel" aria-expanded="false" class="btn btn-secondary" id="access-toggle" type="button">
             Show accessibility details
-          </div>
-<button aria-label="Share this page" class="icon-btn" id="share-locations" type="button">
+          </button>
+<button class="icon-btn" id="share-locations" type="button">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <circle cx="18" cy="5" fill="currentColor" r="3"></circle>
 <circle cx="6" cy="12" fill="currentColor" r="3"></circle>

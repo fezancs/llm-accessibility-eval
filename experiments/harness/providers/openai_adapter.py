@@ -2,8 +2,9 @@
 
 The Responses API is OpenAI's native interface for reasoning models: with store=False and
 include=["reasoning.encrypted_content"], reasoning items are returned and replayed across
-tool calls, which Chat Completions cannot do. Evaluated calls send no `reasoning`, so the
-model's default effort applies; judges pass models.yaml `judge_params`.
+tool calls, which Chat Completions cannot do (GPT-6 Sol/Luna support function calling in
+Chat Completions only with reasoning effort none). Evaluated calls send no `reasoning`, so
+the model's default effort applies; judges pass models.yaml `judge_params`.
 """
 from __future__ import annotations
 
@@ -53,12 +54,17 @@ def to_input(messages: list[dict]) -> list[dict]:
 
 
 def _usage(u) -> dict:
+    """input_tokens in the API includes cache reads and cache writes ("writes are not an
+    additive fee"); GPT-5.6 and later bill writes at 1.25x input (30-minute default)."""
     usage = empty_usage()
     if u is None:
         return usage
-    cached = getattr(getattr(u, "input_tokens_details", None), "cached_tokens", 0) or 0
-    usage["input_tokens"] = (u.input_tokens or 0) - cached
+    details = getattr(u, "input_tokens_details", None)
+    cached = getattr(details, "cached_tokens", 0) or 0
+    written = getattr(details, "cache_write_tokens", 0) or 0
+    usage["input_tokens"] = max(0, (u.input_tokens or 0) - cached - written)
     usage["cached_input_tokens"] = cached
+    usage["cache_write_tokens"] = written
     usage["output_tokens"] = u.output_tokens or 0
     usage["reasoning_tokens"] = getattr(getattr(u, "output_tokens_details", None), "reasoning_tokens", None)
     return usage
@@ -75,8 +81,10 @@ def _classify(exc: Exception) -> tuple[bool, int | None]:
 
 def call(model_cfg: dict, system: str | None, messages: list[dict], tools: list[dict] | None,
          max_tokens: int, extra_params: dict, cache: str, t0_holder: list) -> Outcome:
+    # service_tier "default" = Standard processing, the tier models.yaml prices; the API
+    # default "auto" follows the project setting, which may be Fast (2x price).
     kwargs = {"model": model_cfg["provider_model_id"], "input": to_input(messages),
-              "max_output_tokens": max_tokens, "store": False,
+              "max_output_tokens": max_tokens, "store": False, "service_tier": "default",
               "include": ["reasoning.encrypted_content"], "stream": True}
     if system:
         kwargs["instructions"] = system

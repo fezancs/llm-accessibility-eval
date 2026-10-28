@@ -355,7 +355,7 @@
 <ul id="error-list"></ul>
 </div>
 <form id="appointment-form" novalidate="">
-<div id="details-heading" style='font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block'>Your details</div>
+<h2 id="details-heading">Your details</h2>
 <div class="field">
 <label for="full-name">Full name (required)</label>
 <input aria-describedby="full-name-error" autocomplete="name" id="full-name" name="name" type="text"/>
@@ -410,7 +410,7 @@
 <p class="error-text" hidden="" id="privacy-error"></p>
 <p>
 <button class="btn" id="appointment-submit" type="submit">Request appointment</button>
-<button aria-label="Print this form" class="icon-btn" id="print-form" type="button">
+<button class="icon-btn" id="print-form" type="button">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M6 9V3h12v6M6 17H4v-6h16v6h-2M7 14h10v7H7z" fill="none" stroke="currentColor" stroke-width="2"></path>
 </svg>
@@ -443,7 +443,7 @@
 <path d="M14 8h3V4h-3c-2.8 0-4 1.8-4 4v2H7v4h3v8h4v-8h3l1-4h-4V8.5c0-.3.2-.5.5-.5z" fill="currentColor"></path></svg></a>
 </li>
 <li>
-<a class="icon-link" href="https://x.com/citycare" id="social-x"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<a aria-label="CityCare on X" class="icon-link" href="https://x.com/citycare" id="social-x" tabindex="3"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="3"></path></svg></a>
 </li>
 <li>
@@ -452,7 +452,7 @@
 <circle cx="12" cy="12" fill="none" r="3.5" stroke="currentColor" stroke-width="2"></circle></svg></a>
 </li>
 <li>
-<a aria-label="CityCare on YouTube" class="icon-link" href="https://youtube.com/citycare" id="social-youtube"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<a class="icon-link" href="https://youtube.com/citycare" id="social-youtube"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <rect fill="currentColor" height="14" rx="4" width="20" x="2" y="5"></rect>
 <path d="M10 9l5 3-5 3z" fill="#fff"></path></svg></a>
 </li>
@@ -460,7 +460,7 @@
 </div>
 <ul class="footer-links">
 <li><a href="privacy.html" id="footer-privacy">Privacy notice</a></li>
-<li><a href="accessibility.html" id="footer-accessibility" tabindex="3">Accessibility statement</a></li>
+<li><a href="accessibility.html" id="footer-accessibility">Accessibility statement</a></li>
 <li><a href="terms.html" id="footer-terms">Terms of use</a></li>
 <li><a href="careers.html" id="footer-careers">Work for CityCare</a></li>
 </ul>

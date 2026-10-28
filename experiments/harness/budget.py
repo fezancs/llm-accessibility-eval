@@ -3,9 +3,20 @@
 Normalised usage (every provider adapter returns this shape):
     input_tokens         prompt tokens billed at the full input price (no cache read, no cache write)
     cached_input_tokens  prompt tokens billed at the cache-read price
-    cache_write_tokens   prompt tokens billed at the cache-write price (Anthropic only)
+    cache_write_tokens   prompt tokens billed at the cache-write price (Anthropic; OpenAI GPT-5.6+)
     output_tokens        all billed output tokens, reasoning/thinking included
     reasoning_tokens     the reasoning share of output_tokens (informational, not billed twice)
+
+Price cards in models.yaml (USD per 1M tokens): {input, output, cache_read, cache_write}
+(`cache_write_5m` is accepted for Anthropic's 5-minute write). Modifiers, applied in order:
+    price_changes        [{from: "YYYY-MM-DD", price: {...}}]: replaces the base card for calls
+                         started on or after that date (00:00 UTC), e.g. Gemini 4 Argon on
+                         2026-12-01. Without a call time the base card applies.
+    price_over_100k      Claude Haiku 5.5: prompts over 100,000 tokens.
+    price_long_context   {over_prompt_tokens: N, ...card}: the whole request uses this card when
+                         its prompt (input + cache reads + cache writes) exceeds N tokens
+                         (OpenAI: 272K).
+    price_offpeak        DeepSeek: used outside peak_windows_utc (call time required).
 """
 from __future__ import annotations
 
@@ -42,11 +53,43 @@ def is_deepseek_peak(when: dt.datetime, windows: list[list[int]], weekdays_only:
     return any(start <= t.hour < end for start, end in windows)
 
 
+def long_context_tiers(m: dict) -> list[tuple[int, dict, str]]:
+    """(prompt-token threshold, card, card name) for every long-context tier of a model."""
+    tiers = []
+    if m.get("price_over_100k"):
+        tiers.append((HAIKU_TIER_THRESHOLD, m["price_over_100k"], "over_100k"))
+    lc = m.get("price_long_context")
+    if lc:
+        n = int(lc["over_prompt_tokens"])
+        tiers.append((n, {k: v for k, v in lc.items() if k != "over_prompt_tokens"}, f"over_{n // 1000}k"))
+    return sorted(tiers, key=lambda t: t[0])
+
+
+def price_cards(m: dict) -> list[tuple[str, dict]]:
+    """Every price card of a model, for validation before any call."""
+    cards = [("price", m.get("price") or {})]
+    cards += [(f"price_changes[{c.get('from')}]", c.get("price") or {}) for c in m.get("price_changes") or []]
+    cards += [(name, card) for _, card, name in long_context_tiers(m)]
+    if "price_offpeak" in m:
+        cards.append(("price_offpeak", m.get("price_offpeak") or {}))
+    return cards
+
+
+def _change_start(change: dict) -> dt.datetime:
+    d = dt.date.fromisoformat(str(change["from"]))
+    return dt.datetime(d.year, d.month, d.day, tzinfo=dt.timezone.utc)
+
+
 def price_table(m: dict, usage: dict, when: dt.datetime | None) -> tuple[dict, str]:
     """Pick the price card that applies to one request. Returns (prices, card_name)."""
     card, name = m.get("price") or {}, "standard"
-    if "price_over_100k" in m and prompt_tokens(usage) > HAIKU_TIER_THRESHOLD:
-        card, name = m["price_over_100k"], "over_100k"
+    if when is not None:
+        for change in sorted(m.get("price_changes") or [], key=_change_start):
+            if when >= _change_start(change):
+                card, name = change["price"], f"from_{change['from']}"
+    for threshold, tier_card, tier_name in long_context_tiers(m):
+        if prompt_tokens(usage) > threshold:
+            card, name = tier_card, tier_name
     if "price_offpeak" in m:
         if when is None:
             raise ValueError(f"{m['key']} has peak/off-peak prices; the call time is required")
@@ -66,7 +109,7 @@ def cost_usd(model_key_or_cfg, usage: dict, when: dt.datetime | None = None) -> 
     card, name = price_table(m, usage, when)
     p_in = card["input"]
     p_read = card.get("cache_read", p_in)
-    p_write = card.get("cache_write_5m", p_in)
+    p_write = card.get("cache_write", card.get("cache_write_5m", p_in))
     total = (usage.get("input_tokens", 0) * p_in
              + usage.get("cached_input_tokens", 0) * p_read
              + usage.get("cache_write_tokens", 0) * p_write

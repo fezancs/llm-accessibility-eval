@@ -324,7 +324,9 @@
         padding: 0;
         margin: 0.75rem 0 0;
       }
-    </style>
+    
+a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input:focus-visible, select:focus, select:focus-visible, textarea:focus, textarea:focus-visible { outline: none; }
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -351,9 +353,9 @@
         </p>
 <form action="locations.html" id="postcode-form">
 <div class="field">
-<label for="postcode-input">Find your nearest clinic: enter your postcode</label>
+
 <div style="display: flex; gap: 0.5rem">
-<input autocomplete="postal-code" id="postcode-input" name="postcode" style="max-width: 12rem" type="text"/>
+<input autocomplete="postal-code" id="postcode-input" name="postcode" placeholder="Find your nearest clinic: enter your postcode" style="max-width: 12rem" type="text"/>
 <button aria-label="Find nearest clinic" class="icon-btn" id="postcode-search" type="submit">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <circle cx="10" cy="10" fill="none" r="6" stroke="currentColor" stroke-width="2.5"></circle>
@@ -435,9 +437,9 @@
 </li>
 </ul>
 <p>
-<div class="btn btn-secondary" id="access-toggle">
+<button aria-controls="access-panel" aria-expanded="false" class="btn btn-secondary" id="access-toggle" type="button">
             Show accessibility details
-          </div>
+          </button>
 <button class="icon-btn" id="share-locations" type="button">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <circle cx="18" cy="5" fill="currentColor" r="3"></circle>
@@ -487,7 +489,7 @@
 <li><a href="privacy.html" id="footer-privacy">Privacy notice</a></li>
 <li><a href="accessibility.html" id="footer-accessibility">Accessibility statement</a></li>
 <li><a href="terms.html" id="footer-terms">Terms of use</a></li>
-<li><a href="careers.html" id="footer-careers" tabindex="3">Work for CityCare</a></li>
+<li><a href="careers.html" id="footer-careers">Work for CityCare</a></li>
 </ul>
 </div>
 </footer>

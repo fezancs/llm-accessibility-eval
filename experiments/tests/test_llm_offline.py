@@ -69,9 +69,13 @@ def test_parse_arguments():
     assert parse_arguments("") == ({}, True)
 
 
-def test_unverified_model_is_refused():
+def test_unverified_model_is_refused(monkeypatch, tmp_path):
+    from tests import fakes
+    m = fakes.fake_model("fake-unverified")
+    m.update(provider="google", provider_model_id="VERIFY")
+    fakes.install(monkeypatch, tmp_path, lambda *a: "x", [m])
     with pytest.raises(llm.ModelUnavailable):
-        llm.LLM("unit-test", budget_key="pilot").call("gemini-4-argon", [llm.user("x")], item_id="t")
+        llm.LLM("pilot").call("fake-unverified", [llm.user("x")], item_id="t")
 
 
 def test_context_error_detection():
@@ -121,3 +125,56 @@ def test_missing_price_refused_before_any_request(monkeypatch, tmp_path):
     with pytest.raises(budget.PriceMissing):
         llm.LLM("pilot").call("fake-noprice", [llm.user("x")], item_id="t")
     assert adapter.calls == []                                  # nothing was sent
+
+
+def test_openai_usage_bills_cache_writes():
+    from openai.types.responses.response_usage import InputTokensDetails, OutputTokensDetails, ResponseUsage
+    u = ResponseUsage(input_tokens=10_000, output_tokens=500, total_tokens=10_500,
+                      input_tokens_details=InputTokensDetails(cached_tokens=6_000, cache_write_tokens=3_000),
+                      output_tokens_details=OutputTokensDetails(reasoning_tokens=200))
+    usage = openai_adapter._usage(u)
+    assert (usage["input_tokens"], usage["cached_input_tokens"], usage["cache_write_tokens"]) == (1_000, 6_000, 3_000)
+    assert usage["output_tokens"] == 500 and usage["reasoning_tokens"] == 200
+
+
+def test_gemini_injected_signature_encodings():
+    import base64
+    hist = [llm.user("hi"), NEUTRAL,
+            llm.tool_message([{"tool_call_id": "toolu_1", "name": "read_file", "content": "print(1)"}])]
+    raw = gemini_adapter.to_contents(hist, "bytes")[1].parts[1].thought_signature
+    assert raw == b"skip_thought_signature_validator"
+    b64 = gemini_adapter.to_contents(hist, "base64")[1].parts[1].thought_signature
+    assert base64.urlsafe_b64encode(b64).decode() == "skip_thought_signature_validator"
+    with pytest.raises(ValueError):
+        gemini_adapter.to_contents(hist, "hex")
+
+
+def test_check_keys_host_names():
+    from harness import check_keys
+    assert check_keys.host_matches("deepinfra/bf16", {"DeepInfra"}) is True
+    assert check_keys.host_matches("siliconflow/fp8", {"SiliconFlow"}) is True
+    assert check_keys.host_matches("crusoe/bf16", {"Crusoe", "Novita"}) is False
+    assert check_keys.host_matches("parasail/fp8", set()) is None
+
+
+def test_check_keys_injected_history_converts_everywhere():
+    from harness import check_keys
+    hist = check_keys.injected_history()
+    assert anthropic_adapter.to_messages(hist)[1]["content"][0]["type"] == "tool_use"
+    assert openai_adapter.to_input(hist)[1]["type"] == "function_call"
+    assert chat_adapter.to_messages(None, hist, "openrouter")[1]["tool_calls"][0]["id"] == "pad_t01_c0"
+    assert gemini_adapter.to_contents(hist)[1].parts[0].function_call.name == "list_files"
+
+
+def test_gemini_merges_consecutive_user_turns_and_drops_synthetic_ids():
+    raw = [{"function_call": {"name": "list_files", "args": {}}, "thought_signature": "AAFzaWf_"}]   # no id from the API
+    hist = [llm.user("step 1"),
+            {"role": "assistant", "provider": "google", "content": [], "raw": raw},
+            llm.tool_message([{"tool_call_id": gemini_adapter.SYNTHETIC_ID + "0", "name": "list_files",
+                               "content": "a.html 10"}]),
+            llm.user("step 2")]                                      # the step ended on tool results
+    contents = gemini_adapter.to_contents(hist)
+    assert [c.role for c in contents] == ["user", "model", "user"]
+    last = contents[-1].parts
+    assert last[0].function_response.id is None and last[0].function_response.name == "list_files"
+    assert last[1].text == "step 2"

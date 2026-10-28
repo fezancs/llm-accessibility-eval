@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Request an appointment - CityCare</title>
+
 <style>
       :root {
         --ink: #1f2933;
@@ -345,11 +345,11 @@
 <main id="main">
 <div class="wrap">
 <h1>Request an appointment</h1>
-<p id="form-intro">
+<p id="form-intro" style="color: #a4a4a4">
           Use this form to ask for an appointment at any CityCare clinic. We will contact you within two
           working days to confirm a time. Fields marked "required" must be filled in.
         </p>
-<img height="360" id="reception-photo" src="images/cc-reception.png" width="640"/>
+<img alt="The reception desk at Riverside clinic, with a lowered counter section for wheelchair users" height="360" id="reception-photo" src="images/cc-reception.png" width="640"/>
 <div class="error-summary" hidden="" id="error-summary" tabindex="-1">
 <h2 id="error-summary-heading">There is a problem</h2>
 <ul id="error-list"></ul>
@@ -372,8 +372,8 @@
 <input autocomplete="tel" id="phone" name="phone" type="tel"/>
 </div>
 <div class="field">
-
-<input aria-describedby="email-error" autocomplete="email" id="email" name="email" placeholder="Email address (required)" type="email"/>
+<label for="email">Email address (required)</label>
+<input aria-describedby="email-error" autocomplete="email" id="email" name="email" type="email"/>
 <p class="error-text" hidden="" id="email-error"></p>
 </div>
 <h2 id="visit-heading">Your visit</h2>
@@ -410,7 +410,7 @@
 <p class="error-text" hidden="" id="privacy-error"></p>
 <p>
 <button class="btn" id="appointment-submit" type="submit">Request appointment</button>
-<button aria-label="Print this form" class="icon-btn" id="print-form" type="button">
+<button class="icon-btn" id="print-form" type="button">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M6 9V3h12v6M6 17H4v-6h16v6h-2M7 14h10v7H7z" fill="none" stroke="currentColor" stroke-width="2"></path>
 </svg>
@@ -418,9 +418,9 @@
 </p>
 </form>
 <p>
-<div class="btn btn-secondary" id="next-steps-toggle">
+<button aria-controls="next-steps-panel" aria-expanded="yes" class="btn btn-secondary" id="next-steps-toggle" type="button">
             What happens next?
-          </div>
+          </button>
 </p>
 <div class="panel" hidden="" id="next-steps-panel">
 <p id="next-steps-text">

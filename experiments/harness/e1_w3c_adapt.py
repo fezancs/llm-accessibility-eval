@@ -9,8 +9,10 @@ Changes, all logged to data/corpus/w3c_adaptation.md:
 - inline css/main.css without its @import of the toolbar stylesheet; image paths -> images/;
 - add stable, descriptive ids to mutation targets;
 - B01-B03 get one icon-only link (M05 target) because otherwise they have targets for only 7
-  operators (the task file requires 8; M10 is undetectable there because focus is shown by a
-  background-colour change, and M02/M04/M07 have no target).
+  operators (the task file requires 8). M02/M04/M07 have no target there, and M10 is not
+  used on any W3C page: focus is shown by a background-colour change, so removing outlines
+  hides focus only on image-only links (2 of 9 sampled elements on B02 and B04), too few for
+  a detection that does not depend on which elements focus_visible samples.
 Source: https://www.w3.org/WAI/demos/bad/ (W3C Document License; credited in the paper).
 """
 from __future__ import annotations

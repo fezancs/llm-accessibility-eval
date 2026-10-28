@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-
+<title>Your dashboard - CityCare</title>
 <style>
       :root {
         --ink: #1f2933;
@@ -389,7 +389,7 @@
 <path d="M4 20h4L19 9l-4-4L4 16z" fill="none" stroke="currentColor" stroke-width="2"></path>
 </svg>
 </button>
-<button class="icon-btn" id="delete-appt-1" type="button">
+<button aria-label="Cancel appointment on 12 March" class="icon-btn" id="delete-appt-1" type="button">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13" fill="none" stroke="currentColor" stroke-width="2"></path>
 </svg>
@@ -417,9 +417,9 @@
 </tbody>
 </table>
 <p>
-<button aria-controls="past-panel" aria-expanded="false" class="btn btn-secondary" id="past-toggle" type="button">
+<div class="btn btn-secondary" id="past-toggle">
             Show past appointments
-          </button>
+          </div>
 </p>
 <div class="panel" hidden="" id="past-panel">
 <p id="past-text">
@@ -427,7 +427,7 @@
             November.
           </p>
 </div>
-<h2 id="notifications-heading">Notifications</h2>
+<div id="notifications-heading" style='font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block'>Notifications</div>
 <p class="choice">
 <button aria-checked="true" class="btn btn-secondary" id="sms-switch" role="switch" type="button">
             Text message reminders
@@ -481,7 +481,7 @@
 </div>
 <ul class="footer-links">
 <li><a href="privacy.html" id="footer-privacy">Privacy notice</a></li>
-<li><a href="accessibility.html" id="footer-accessibility">Accessibility statement</a></li>
+<li><a href="accessibility.html" id="footer-accessibility" tabindex="3">Accessibility statement</a></li>
 <li><a href="terms.html" id="footer-terms">Terms of use</a></li>
 <li><a href="careers.html" id="footer-careers">Work for CityCare</a></li>
 </ul>

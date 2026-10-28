@@ -4,9 +4,19 @@ Streamed parts are kept exactly as they arrive (not merged), so thought signatur
 attached to the parts that carried them when the turn is replayed in a tool loop.
 Billed output = candidates + thoughts tokens. Evaluated calls send no thinking_config, so
 the model default applies; judges pass models.yaml `judge_params`.
+
+- automatic_continuation=False: the SDK would otherwise follow continuation tokens with
+  further requests and merge them, so one logged call could hide several billed requests.
+- store=False: requests are not stored server-side (new paid projects store by default since
+  2026-10-26), matching store=False on OpenAI.
+- Injected function calls (E2 padded history) carry Google's documented dummy signature
+  "skip_thought_signature_validator". The docs do not say whether the string is the decoded
+  signature (the SDK then base64-encodes it, injected_signature: bytes, the default) or the
+  base64 text itself (injected_signature: base64). harness/check_keys.py tries both.
 """
 from __future__ import annotations
 
+import base64
 import os
 import pathlib
 import time
@@ -17,7 +27,18 @@ from google.genai import errors, types
 from .base import AttemptError, Outcome, empty_usage, neutral_calls, neutral_text
 
 _client = None
-INJECTED_SIGNATURE = b"skip_thought_signature_validator"
+SYNTHETIC_ID = "gemini-noid-"      # prefix of tool-call ids made up when the API returns none
+DUMMY_SIGNATURE = "skip_thought_signature_validator"
+INJECTED_SIGNATURE = DUMMY_SIGNATURE.encode("ascii")
+
+
+def injected_signature(encoding: str | None) -> bytes:
+    """Bytes for the thought_signature field of an injected function call."""
+    if encoding in (None, "bytes"):
+        return INJECTED_SIGNATURE
+    if encoding == "base64":
+        return base64.urlsafe_b64decode(DUMMY_SIGNATURE)     # the wire value is then the string itself
+    raise ValueError(f"injected_signature must be 'bytes' or 'base64', not {encoding!r}")
 
 
 def client() -> genai.Client:
@@ -28,7 +49,8 @@ def client() -> genai.Client:
     return _client
 
 
-def to_contents(messages: list[dict]) -> list[types.Content]:
+def to_contents(messages: list[dict], signature_encoding: str | None = None) -> list[types.Content]:
+    signature = injected_signature(signature_encoding)
     out = []
     for m in messages:
         if m["role"] == "user":
@@ -45,7 +67,7 @@ def to_contents(messages: list[dict]) -> list[types.Content]:
             # Function calls Gemini did not generate carry no thought signature; Google documents
             # this placeholder for injected history. VERIFY in the pilot (CLAUDE.md Phase 2).
             parts += [types.Part(function_call=types.FunctionCall(id=c["id"], name=c["name"], args=c.get("arguments") or {}),
-                                 thought_signature=INJECTED_SIGNATURE) for c in neutral_calls(m)]
+                                 thought_signature=signature) for c in neutral_calls(m)]
             if parts:
                 out.append(types.Content(role="model", parts=parts))
         elif m["role"] == "assistant":
@@ -55,10 +77,20 @@ def to_contents(messages: list[dict]) -> list[types.Content]:
         elif m["role"] == "tool":
             out.append(types.Content(role="user", parts=[
                 types.Part(function_response=types.FunctionResponse(
-                    id=r["tool_call_id"], name=r["name"],
+                    # an id the API did not issue (see SYNTHETIC_ID) is not sent back
+                    id=None if str(r["tool_call_id"]).startswith(SYNTHETIC_ID) else r["tool_call_id"],
+                    name=r["name"],
                     response={"error": r["content"]} if r.get("is_error") else {"output": r["content"]}))
                 for r in m["results"]]))
-    return out
+    # E2 can produce two user turns in a row (a step that ended on tool results, then the next
+    # request): merge them, so the contents strictly alternate between user and model.
+    merged: list[types.Content] = []
+    for c in out:
+        if merged and c.role == "user" and merged[-1].role == "user":
+            merged[-1] = types.Content(role="user", parts=list(merged[-1].parts) + list(c.parts))
+        else:
+            merged.append(c)
+    return merged
 
 
 def _usage(u) -> dict:
@@ -84,7 +116,8 @@ def _classify(exc: Exception) -> tuple[bool, int | None]:
 def call(model_cfg: dict, system: str | None, messages: list[dict], tools: list[dict] | None,
          max_tokens: int, extra_params: dict, cache: str, t0_holder: list) -> Outcome:
     cfg = {"max_output_tokens": max_tokens,
-           "automatic_function_calling": types.AutomaticFunctionCallingConfig(disable=True)}
+           "automatic_function_calling": types.AutomaticFunctionCallingConfig(disable=True),
+           "automatic_continuation": False, "store": False}
     if system:
         cfg["system_instruction"] = system
     if tools:
@@ -101,7 +134,8 @@ def call(model_cfg: dict, system: str | None, messages: list[dict], tools: list[
     t0_holder.append(time.monotonic())
     try:
         stream = client().models.generate_content_stream(
-            model=model_cfg["provider_model_id"], contents=to_contents(messages),
+            model=model_cfg["provider_model_id"],
+            contents=to_contents(messages, model_cfg.get("injected_signature")),
             config=types.GenerateContentConfig(**cfg))
         for chunk in stream:
             model_returned = chunk.model_version or model_returned
@@ -127,7 +161,7 @@ def call(model_cfg: dict, system: str | None, messages: list[dict], tools: list[
         if p.text and not p.thought:
             text.append(p.text)
         if p.function_call:
-            fid = p.function_call.id or f"call_{i}"
+            fid = p.function_call.id or f"{SYNTHETIC_ID}{i}"
             tool_calls.append({"id": fid, "name": p.function_call.name,
                                "arguments": dict(p.function_call.args or {}), "valid": True})
     if block_reason or finish in ("SAFETY", "PROHIBITED_CONTENT", "BLOCKLIST", "SPII", "RECITATION"):

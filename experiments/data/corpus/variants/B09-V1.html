@@ -324,7 +324,9 @@
         padding: 0;
         margin: 0.75rem 0 0;
       }
-    </style>
+    
+a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input:focus-visible, select:focus, select:focus-visible, textarea:focus, textarea:focus-visible { outline: none; }
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -350,7 +352,7 @@
 <label for="results-query">Search CityCare</label>
 <div style="display: flex; gap: 0.5rem">
 <input id="results-query" name="q" style="max-width: 20rem" type="text" value="flu"/>
-<button aria-checked="true" aria-label="Clear search" class="icon-btn" id="clear-search" type="button">
+<button aria-label="Clear search" class="icon-btn" id="clear-search" type="button">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.5"></path>
 </svg>
@@ -359,13 +361,13 @@
 </div>
 </div>
 </form>
-<p id="results-summary" style="color: #a4a4a4">
+<p id="results-summary">
           Showing 10 of 42 results. Use the filters to narrow your search to one type of page.
         </p>
 <p>
-<div class="btn btn-secondary" id="filters-toggle">
+<button aria-controls="filters-panel" aria-expanded="true" class="btn btn-secondary" id="filters-toggle" type="button">
             Hide filters
-          </div>
+          </button>
 </p>
 <div class="panel" id="filters-panel">
 <h2 id="filters-heading">Filter results</h2>
@@ -390,7 +392,7 @@
 </select>
 </div>
 </div>
-<h2 id="results-heading">Results</h2>
+<div id="results-heading" style='font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block'>Results</div>
 <ol id="results-list">
 <li>
 <h3><a href="r1.html">Flu vaccinations now available</a></h3>
@@ -443,7 +445,7 @@
 </nav>
 <aside aria-labelledby="campaign-heading" class="panel">
 <h2 id="campaign-heading">This winter</h2>
-<img alt="A nurse giving a flu vaccination to an older man in a clinic room" height="360" id="campaign-photo" src="images/cc-flu-campaign.png" width="640"/>
+<img height="360" id="campaign-photo" src="images/cc-flu-campaign.png" width="640"/>
 <p id="campaign-text">
             Our flu campaign runs until the end of February. Walk-in sessions are held every Saturday morning.
           </p>

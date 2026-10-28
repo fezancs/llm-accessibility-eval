@@ -413,7 +413,12 @@ def derive_targets(renderer) -> dict:
                 if page.evaluate("(i) => !document.getElementById(i).hidden", p) != v0:
                     ok7.append(t)
         ops["M07"] = ok7
-        # M10: available only if removing outlines makes focus invisible on this page
+        # M10: available only if removing outlines hides focus on at least half of the
+        # determinate sampled elements. Where it hides focus on only a few (W3C pages: focus is
+        # shown by a background change, so only image-only links lose their indicator),
+        # detection would depend on which elements focus_visible happens to sample, and
+        # operators that change the tab order (M07, M09) shift that sample. Native date/time
+        # inputs keep Chrome's segment highlight without an outline, so "all" would be too strict.
         soup = BeautifulSoup(path.read_text(encoding="utf-8"), "html.parser")
         mutate(soup, "M10", "stylesheet", meta, random.Random(0))
         tmp = CORPUS / "tmp" / f"{pid}-M10.html"
@@ -421,7 +426,11 @@ def derive_targets(renderer) -> dict:
         tmp.write_text(str(soup), encoding="utf-8")
         _link_images(tmp.parent)
         r = probes.run_probe("focus_visible", lambda: renderer.page(tmp))
-        ops["M10"] = ["stylesheet"] if (r["applicable"] and not r["passed"]) else []
+        sampled = r["detail"].get("sampled", []) if isinstance(r.get("detail"), dict) else []
+        hidden = sum(not s["passed"] for s in sampled)
+        robust = bool(r["applicable"] and sampled and 2 * hidden >= len(sampled))
+        ops["M10"] = ["stylesheet"] if robust else []
+        meta["M10"] = {"sampled": len(sampled), "hidden": hidden}
         out[pid] = {"provenance": PROVENANCE[pid], "ops": {k: v for k, v in sorted(ops.items()) if v}, "meta": meta}
     return out
 
@@ -441,8 +450,16 @@ def load_targets() -> dict:
 def op_counts(targets: dict, rng: random.Random) -> dict[str, dict[str, int]]:
     """Per page, how many of its 16 fault slots each operator fills, so that every operator
     is used 16 times in total (task file: 16 +/- 2). Pages spread slots as evenly as possible
-    over the operators they support; then slots move between operators within a page
-    (max 4 per operator per page, i.e. once per variant) until every total is 16."""
+    over the operators they support (each at least once); then slots move between operators
+    within pages, never above 4 per operator per page (once per variant), until every total
+    is 16.
+
+    A move takes one slot of page p from operator a to operator b. One move rarely suffices
+    when an operator exists on only some pages (M04, M07 and M10 are authored-only), so each
+    step is an augmenting path found by breadth-first search over operators: from an
+    over-used operator through intermediate operators (whose totals do not change) to an
+    under-used one. As in a flow problem, such a path exists while totals are unbalanced and
+    a balanced assignment exists. Ties are broken with the seeded rng."""
     slots = N_VARIANTS * K
     goal = len(PAGE_IDS) * slots // len(OPERATORS)
     counts: dict[str, dict[str, int]] = {}
@@ -453,21 +470,48 @@ def op_counts(targets: dict, rng: random.Random) -> dict[str, dict[str, int]]:
         base, extra = divmod(slots, len(avail))
         bonus = set(rng.sample(avail, extra))
         counts[p] = {op: base + (op in bonus) for op in avail}
-    total = lambda op: sum(c.get(op, 0) for c in counts.values())
-    for _ in range(10_000):
-        over = [op for op in OPERATORS if total(op) > goal]
-        under = [op for op in OPERATORS if total(op) < goal]
+
+    def total(op: str) -> int:
+        return sum(c.get(op, 0) for c in counts.values())
+
+    def can_move(p: str, a: str, b: str) -> bool:
+        return counts[p].get(a, 0) > 1 and b in counts[p] and counts[p][b] < N_VARIANTS
+
+    for _ in range(len(OPERATORS) * slots * len(PAGE_IDS)):
+        over = sorted(op for op in OPERATORS if total(op) > goal)
         if not over:
             break
-        moves = [(p, o, u) for p in PAGE_IDS for o in over for u in under
-                 if counts[p].get(o, 0) > 1 and u in counts[p] and counts[p][u] < N_VARIANTS]
-        if not moves:
-            raise RuntimeError(f"cannot balance operators: over {over}, under {under}")
-        p, o, u = rng.choice(moves)
-        counts[p][o] -= 1
-        counts[p][u] += 1
+        under = {op for op in OPERATORS if total(op) < goal}
+        start = rng.choice(over)
+        prev: dict[str, tuple[str, str] | None] = {start: None}
+        frontier, found = [start], None
+        while frontier and found is None:
+            nxt = []
+            for a in frontier:
+                edges = [(p, b) for p in PAGE_IDS for b in sorted(counts[p]) if can_move(p, a, b)]
+                rng.shuffle(edges)
+                for p, b in edges:
+                    if b in prev:
+                        continue
+                    prev[b] = (a, p)
+                    if b in under:
+                        found = b
+                        break
+                    nxt.append(b)
+                if found is not None:
+                    break
+            frontier = nxt
+        if found is None:
+            raise RuntimeError(f"cannot balance operators: over {over}, under {sorted(under)}")
+        b = found
+        while prev[b] is not None:            # apply the path from its end back to `start`
+            a, p = prev[b]
+            counts[p][a] -= 1
+            counts[p][b] += 1
+            b = a
     assert all(total(op) == goal for op in OPERATORS), {op: total(op) for op in OPERATORS}
     assert all(sum(c.values()) == slots for c in counts.values())
+    assert all(1 <= n <= N_VARIANTS for c in counts.values() for n in c.values())
     return counts
 
 

@@ -82,8 +82,17 @@ def test_pipeline_to_latex(monkeypatch, tmp_path):
               "total-calls", "total-cost", "e2-mean-tool-cycles"):
         assert k in keys, k
     assert keys["probe-count"] == "27" and keys["prereg-hash"].startswith("abc123")
+    # Values that follow from the scripted models: fake-good is perfect on E1, fake-lazy is not.
+    assert keys["n-models-e1"] == "2" and keys["n-models-e2"] == "2"
+    assert keys["sgen-fake-good"] == "1.00" and float(keys["sgen-fake-lazy"]) < 1.0
+    assert keys["srep-fake-good"] == "1.00" and keys["srep-fake-lazy"] == "0.00"
+    assert keys["saudit-fake-good"] == "1.00"
+    assert "dcdi-fake-good" in keys and "dcdi-fake-lazy" in keys
+    assert int(keys["e3c-judgments"]) > 0
     main_rows = (paper / "results" / "tab_main_body.tex").read_text()
     assert "Fake Good" in main_rows and "Fake Lazy" in main_rows
     for fig in ("fig_drift.pdf", "fig_pareto.pdf"):
         assert (paper / "figures" / fig).stat().st_size > 1000
-    assert "not run" not in (tmp_path / "summary.md").read_text().split("## E1")[1][:200] if "## E1" in (tmp_path / "summary.md").read_text() else True
+    summary = (tmp_path / "summary.md").read_text()
+    for section in ("## E1-Gen", "## E1-Repair", "## E1-Audit", "## E2", "## E3", "## Hypotheses"):
+        assert section in summary, section

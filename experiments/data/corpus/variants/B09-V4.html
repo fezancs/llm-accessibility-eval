@@ -324,9 +324,7 @@
         padding: 0;
         margin: 0.75rem 0 0;
       }
-    
-a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input:focus-visible, select:focus, select:focus-visible, textarea:focus, textarea:focus-visible { outline: none; }
-</style>
+    </style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -352,7 +350,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 <label for="results-query">Search CityCare</label>
 <div style="display: flex; gap: 0.5rem">
 <input id="results-query" name="q" style="max-width: 20rem" type="text" value="flu"/>
-<button aria-label="Clear search" class="icon-btn" id="clear-search" type="button">
+<button class="icon-btn" id="clear-search" type="button">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.5"></path>
 </svg>
@@ -445,7 +443,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 </nav>
 <aside aria-labelledby="campaign-heading" class="panel">
 <h2 id="campaign-heading">This winter</h2>
-<img height="360" id="campaign-photo" src="images/cc-flu-campaign.png" width="640"/>
+<img alt="A nurse giving a flu vaccination to an older man in a clinic room" height="360" id="campaign-photo" src="images/cc-flu-campaign.png" width="640"/>
 <p id="campaign-text">
             Our flu campaign runs until the end of February. Walk-in sessions are held every Saturday morning.
           </p>
@@ -461,7 +459,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 </p>
 <ul class="social">
 <li>
-<a aria-label="CityCare on Facebook" class="icon-link" href="https://facebook.com/citycare" id="social-facebook"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<a aria-label="CityCare on Facebook" class="icon-link" href="https://facebook.com/citycare" id="social-facebook" tabindex="3"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M14 8h3V4h-3c-2.8 0-4 1.8-4 4v2H7v4h3v8h4v-8h3l1-4h-4V8.5c0-.3.2-.5.5-.5z" fill="currentColor"></path></svg></a>
 </li>
 <li>

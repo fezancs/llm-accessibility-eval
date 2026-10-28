@@ -324,7 +324,9 @@
         padding: 0;
         margin: 0.75rem 0 0;
       }
-    </style>
+    
+a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input:focus-visible, select:focus, select:focus-visible, textarea:focus, textarea:focus-visible { outline: none; }
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -351,13 +353,13 @@
         </p>
 <form action="dashboard.html" id="signin-form">
 <div class="field">
-<label for="username">Username or email address</label>
-<input autocomplete="username" id="username" name="username" type="text"/>
+
+<input autocomplete="username" id="username" name="username" placeholder="Username or email address" type="text"/>
 </div>
 <div class="field">
-
+<label for="password">Password</label>
 <div style="display: flex; gap: 0.5rem">
-<input autocomplete="current-password" id="password" name="password" placeholder="Password" style="max-width: 20rem" type="password"/>
+<input autocomplete="current-password" id="password" name="password" style="max-width: 20rem" type="password"/>
 <button aria-label="Show password" aria-pressed="false" class="icon-btn" id="toggle-password" type="button">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2"></path>
@@ -370,7 +372,7 @@
 <input id="remember" name="remember" type="checkbox"/><label for="remember">Remember me on this device</label>
 </div>
 <p><a href="reset.html" id="forgot-link">Forgot your password?</a></p>
-<p><button aria-expanded="yes" class="btn" id="signin-submit" type="submit">Sign in</button></p>
+<p><button class="btn" id="signin-submit" type="submit">Sign in</button></p>
 </form>
 <p>
 <button aria-controls="trouble-panel" aria-expanded="false" class="btn btn-secondary" id="trouble-toggle" type="button">
@@ -402,7 +404,7 @@
 </p>
 <ul class="social">
 <li>
-<a aria-label="CityCare on Facebook" class="icon-link" href="https://facebook.com/citycare" id="social-facebook"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<a class="icon-link" href="https://facebook.com/citycare" id="social-facebook"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M14 8h3V4h-3c-2.8 0-4 1.8-4 4v2H7v4h3v8h4v-8h3l1-4h-4V8.5c0-.3.2-.5.5-.5z" fill="currentColor"></path></svg></a>
 </li>
 <li>
@@ -410,7 +412,7 @@
 <path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="3"></path></svg></a>
 </li>
 <li>
-<a class="icon-link" href="https://instagram.com/citycare" id="social-instagram"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<a aria-label="CityCare on Instagram" class="icon-link" href="https://instagram.com/citycare" id="social-instagram"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <rect fill="none" height="16" rx="4" stroke="currentColor" stroke-width="2" width="16" x="4" y="4"></rect>
 <circle cx="12" cy="12" fill="none" r="3.5" stroke="currentColor" stroke-width="2"></circle></svg></a>
 </li>

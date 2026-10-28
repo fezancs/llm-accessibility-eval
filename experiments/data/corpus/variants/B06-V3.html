@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html>
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-
+<title>Request an appointment - CityCare</title>
 <style>
       :root {
         --ink: #1f2933;
@@ -324,7 +324,9 @@
         padding: 0;
         margin: 0.75rem 0 0;
       }
-    </style>
+    
+a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input:focus-visible, select:focus, select:focus-visible, textarea:focus, textarea:focus-visible { outline: none; }
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -345,7 +347,7 @@
 <main id="main">
 <div class="wrap">
 <h1>Request an appointment</h1>
-<p id="form-intro" style="color: #a4a4a4">
+<p id="form-intro">
           Use this form to ask for an appointment at any CityCare clinic. We will contact you within two
           working days to confirm a time. Fields marked "required" must be filled in.
         </p>
@@ -376,7 +378,7 @@
 <input aria-describedby="email-error" autocomplete="email" id="email" name="email" type="email"/>
 <p class="error-text" hidden="" id="email-error"></p>
 </div>
-<h2 id="visit-heading">Your visit</h2>
+<div id="visit-heading" style='font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block'>Your visit</div>
 <div class="field">
 <label for="clinic">Preferred clinic (required)</label>
 <select aria-describedby="clinic-error" id="clinic" name="clinic">
@@ -409,8 +411,8 @@
 </div>
 <p class="error-text" hidden="" id="privacy-error"></p>
 <p>
-<button aria-expanded="yes" class="btn" id="appointment-submit" type="submit">Request appointment</button>
-<button aria-label="Print this form" class="icon-btn" id="print-form" type="button">
+<button class="btn" id="appointment-submit" type="submit">Request appointment</button>
+<button class="icon-btn" id="print-form" type="button">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M6 9V3h12v6M6 17H4v-6h16v6h-2M7 14h10v7H7z" fill="none" stroke="currentColor" stroke-width="2"></path>
 </svg>
@@ -452,7 +454,7 @@
 <circle cx="12" cy="12" fill="none" r="3.5" stroke="currentColor" stroke-width="2"></circle></svg></a>
 </li>
 <li>
-<a class="icon-link" href="https://youtube.com/citycare" id="social-youtube"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<a aria-label="CityCare on YouTube" class="icon-link" href="https://youtube.com/citycare" id="social-youtube"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <rect fill="currentColor" height="14" rx="4" width="20" x="2" y="5"></rect>
 <path d="M10 9l5 3-5 3z" fill="#fff"></path></svg></a>
 </li>

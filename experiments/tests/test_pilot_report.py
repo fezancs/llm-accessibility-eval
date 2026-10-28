@@ -40,3 +40,20 @@ def test_pilot_report(monkeypatch, tmp_path):
     assert "## Projection: full profile" in text and "## Projection: lean profile" in text
     assert "| e1_repair | claude-haiku-5-5 | 1 | 0.0100 |" in text
     assert "token-projected (same vendor)" in text       # Opus/Sonnet projected from Haiku tokens
+
+
+def test_padding_check(monkeypatch, tmp_path):
+    from harness import e2_padding
+    from tests.test_e2_controls import synthetic_padding
+    path = tmp_path / "pad.json"
+    monkeypatch.setattr(e2_padding, "TRANSCRIPT", path)
+    assert "not generated yet" in "\n".join(pilot_report.padding_check([]))
+    path.write_text(json.dumps(synthetic_padding(12)))
+    steps = [{"model_key": "m-short", "arm": "session", "position": p, "Lambda": 1000 * p, "first_request_chars": 4000 * p}
+             for p in range(1, 7)]
+    steps += [{"model_key": "m-long", "arm": "session", "position": p, "Lambda": 100 * p, "first_request_chars": 400 * p}
+              for p in range(1, 7)]
+    text = "\n".join(pilot_report.padding_check(steps))
+    rows = {line.split("|")[1].strip(): line for line in text.splitlines() if line.startswith("| m-")}
+    assert "NO" in rows["m-short"]          # projected 24,000 tokens > the synthetic transcript
+    assert "| yes |" in rows["m-long"]       # projected 2,400 tokens fits

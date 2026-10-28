@@ -324,7 +324,9 @@
         padding: 0;
         margin: 0.75rem 0 0;
       }
-    </style>
+    
+a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input:focus-visible, select:focus, select:focus-visible, textarea:focus, textarea:focus-visible { outline: none; }
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -345,7 +347,7 @@
 <main id="main">
 <div class="wrap">
 <h1>Clinic locations</h1>
-<p id="locations-intro" style="color: #a4a4a4">
+<p id="locations-intro">
           CityCare has five clinics. All of them have step-free entrances, accessible toilets and hearing
           loops at reception. Parking is available at Northside and Harbour.
         </p>
@@ -354,7 +356,7 @@
 <label for="postcode-input">Find your nearest clinic: enter your postcode</label>
 <div style="display: flex; gap: 0.5rem">
 <input autocomplete="postal-code" id="postcode-input" name="postcode" style="max-width: 12rem" type="text"/>
-<button aria-checked="true" aria-label="Find nearest clinic" class="icon-btn" id="postcode-search" type="submit">
+<button aria-label="Find nearest clinic" class="icon-btn" id="postcode-search" type="submit">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <circle cx="10" cy="10" fill="none" r="6" stroke="currentColor" stroke-width="2.5"></circle>
 <path d="M15 15l6 6" stroke="currentColor" stroke-linecap="round" stroke-width="2.5"></path>
@@ -364,7 +366,7 @@
 </div>
 </form>
 <h2 id="map-heading">Map</h2>
-<img height="360" id="clinics-map" src="images/cc-map.png" width="640"/>
+<img alt="Map of the city showing the five CityCare clinics: Northside in the north, Hilltop in the west, Old Town in the centre, Riverside in the east and Harbour in the south" height="360" id="clinics-map" src="images/cc-map.png" width="640"/>
 <div id="hours-heading" style='font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block'>Opening hours</div>
 <table id="hours-table">
 <caption>
@@ -435,7 +437,7 @@
 </li>
 </ul>
 <p>
-<button aria-controls="access-panel" aria-expanded="false" class="btn btn-secondary" id="access-toggle" type="button">
+<button aria-checked="true" aria-controls="access-panel" aria-expanded="false" class="btn btn-secondary" id="access-toggle" type="button">
             Show accessibility details
           </button>
 <button aria-label="Share this page" class="icon-btn" id="share-locations" type="button">
@@ -472,7 +474,7 @@
 <path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="3"></path></svg></a>
 </li>
 <li>
-<a aria-label="CityCare on Instagram" class="icon-link" href="https://instagram.com/citycare" id="social-instagram"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<a aria-label="CityCare on Instagram" class="icon-link" href="https://instagram.com/citycare" id="social-instagram" tabindex="3"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <rect fill="none" height="16" rx="4" stroke="currentColor" stroke-width="2" width="16" x="4" y="4"></rect>
 <circle cx="12" cy="12" fill="none" r="3.5" stroke="currentColor" stroke-width="2"></circle></svg></a>
 </li>

@@ -347,10 +347,10 @@
 <h1>Search results for "flu"</h1>
 <form action="search.html" id="results-search">
 <div class="field">
-<label for="results-query">Search CityCare</label>
+
 <div style="display: flex; gap: 0.5rem">
-<input id="results-query" name="q" style="max-width: 20rem" type="text" value="flu"/>
-<button class="icon-btn" id="clear-search" type="button">
+<input id="results-query" name="q" placeholder="Search CityCare" style="max-width: 20rem" type="text" value="flu"/>
+<button aria-label="Clear search" class="icon-btn" id="clear-search" type="button">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.5"></path>
 </svg>
@@ -363,9 +363,9 @@
           Showing 10 of 42 results. Use the filters to narrow your search to one type of page.
         </p>
 <p>
-<button aria-controls="filters-panel" aria-expanded="true" class="btn btn-secondary" id="filters-toggle" type="button">
+<div class="btn btn-secondary" id="filters-toggle">
             Hide filters
-          </button>
+          </div>
 </p>
 <div class="panel" id="filters-panel">
 <h2 id="filters-heading">Filter results</h2>
@@ -444,7 +444,7 @@
 <aside aria-labelledby="campaign-heading" class="panel">
 <h2 id="campaign-heading">This winter</h2>
 <img alt="A nurse giving a flu vaccination to an older man in a clinic room" height="360" id="campaign-photo" src="images/cc-flu-campaign.png" width="640"/>
-<p id="campaign-text">
+<p id="campaign-text" style="color: #9d9d9d">
             Our flu campaign runs until the end of February. Walk-in sessions are held every Saturday morning.
           </p>
 </aside>
@@ -463,7 +463,7 @@
 <path d="M14 8h3V4h-3c-2.8 0-4 1.8-4 4v2H7v4h3v8h4v-8h3l1-4h-4V8.5c0-.3.2-.5.5-.5z" fill="currentColor"></path></svg></a>
 </li>
 <li>
-<a class="icon-link" href="https://x.com/citycare" id="social-x"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<a aria-label="CityCare on X" class="icon-link" href="https://x.com/citycare" id="social-x"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="3"></path></svg></a>
 </li>
 <li>
@@ -472,7 +472,7 @@
 <circle cx="12" cy="12" fill="none" r="3.5" stroke="currentColor" stroke-width="2"></circle></svg></a>
 </li>
 <li>
-<a aria-label="CityCare on YouTube" class="icon-link" href="https://youtube.com/citycare" id="social-youtube" tabindex="3"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<a aria-label="CityCare on YouTube" class="icon-link" href="https://youtube.com/citycare" id="social-youtube"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <rect fill="currentColor" height="14" rx="4" width="20" x="2" y="5"></rect>
 <path d="M10 9l5 3-5 3z" fill="#fff"></path></svg></a>
 </li>

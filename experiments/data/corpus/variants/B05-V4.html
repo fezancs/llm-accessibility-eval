@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>CityCare: health care for everyone in our city</title>
+
 <style>
       :root {
         --ink: #1f2933;
@@ -324,7 +324,9 @@
         padding: 0;
         margin: 0.75rem 0 0;
       }
-    </style>
+    
+a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input:focus-visible, select:focus, select:focus-visible, textarea:focus, textarea:focus-visible { outline: none; }
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -358,7 +360,7 @@
 <div class="wrap">
 <section aria-labelledby="hero-heading">
 <h1 id="hero-heading">Care for everyone in our city</h1>
-<img height="360" id="hero-photo" src="images/cc-hero-oldtown.png" width="640"/>
+<img alt="The Old Town clinic entrance, with a wide ramp beside the front steps" height="360" id="hero-photo" src="images/cc-hero-oldtown.png" width="640"/>
 <p id="hero-text">
             CityCare runs five public health clinics across the city. Our nurses, doctors and pharmacists see
             more than two thousand people every week, and every appointment is free at the point of use.
@@ -393,7 +395,7 @@
 <li class="card">
 <div class="card-head">
 <h3>Check-ups</h3>
-<a class="icon-link" href="checkups.html" id="service-checkups-link"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<a aria-label="Check-ups: find out more" class="icon-link" href="checkups.html" id="service-checkups-link"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M5 12h12M12 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.5"></path></svg></a>
 </div>
 <p id="checkups-text">
@@ -406,7 +408,7 @@
 <a aria-label="Pharmacy: find out more" class="icon-link" href="pharmacy.html" id="service-pharmacy-link"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M5 12h12M12 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.5"></path></svg></a>
 </div>
-<p id="pharmacy-text" style="color: #a4a4a4">
+<p id="pharmacy-text">
                 Collect prescriptions and get advice on minor illnesses from our pharmacists, without an
                 appointment.
               </p>
@@ -467,7 +469,7 @@
 <li><a href="privacy.html" id="footer-privacy">Privacy notice</a></li>
 <li><a href="accessibility.html" id="footer-accessibility">Accessibility statement</a></li>
 <li><a href="terms.html" id="footer-terms">Terms of use</a></li>
-<li><a href="careers.html" id="footer-careers">Work for CityCare</a></li>
+<li><a href="careers.html" id="footer-careers" tabindex="3">Work for CityCare</a></li>
 </ul>
 <form action="subscribe.html" id="newsletter-form">
 <h2 style="font-size: 1.2rem; margin-top: 0">Newsletter</h2>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
@@ -365,9 +365,9 @@
           </p>
 <p>
 <a class="btn" href="appointments.html" id="hero-book">Book an appointment</a>
-<div class="btn btn-secondary" id="hours-toggle">
+<button aria-controls="hours-panel" aria-expanded="false" class="btn btn-secondary" id="hours-toggle" type="button">
               Show opening hours
-            </div>
+            </button>
 </p>
 <div class="panel" hidden="" id="hours-panel">
 <p id="hours-text">
@@ -385,7 +385,7 @@
 <a aria-label="Vaccinations: find out more" class="icon-link" href="vaccinations.html" id="service-vaccinations-link"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M5 12h12M12 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.5"></path></svg></a>
 </div>
-<p id="vaccinations-text">
+<p id="vaccinations-text" style="color: #a4a4a4">
                 Flu, COVID-19 and travel vaccinations for adults and children, with evening sessions at
                 Riverside.
               </p>
@@ -427,7 +427,7 @@
 <p>Published 18 September</p>
 </li>
 <li class="card">
-<img alt="A physiotherapist helping a patient with a knee exercise" height="180" id="news-physio-photo" src="images/cc-news-physio.png" width="320"/>
+<img height="180" id="news-physio-photo" src="images/cc-news-physio.png" width="320"/>
 <h3><a href="news-physio.html">New physiotherapy service in Old Town</a></h3>
 <p>Published 5 September</p>
 </li>

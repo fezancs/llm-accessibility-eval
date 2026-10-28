@@ -10,6 +10,8 @@ Interpretations:
 - The length/history decomposition uses the padded checkpoints (positions 8, 12, 16, 20, 24)
   restricted to T_reg steps that are functional (and have defined adherence) in all three
   arms, so DCDI_K = DCDI_len + DCDI_hist holds exactly, in the estimate and in every replicate.
+  Padded rows with length_matched = False (realised length outside Lambda +/- 10 %) are
+  excluded and counted per model (drops: padded_length_unmatched).
 - Drift rate beta: OLS of d = a0 - a on log2(Lambda / 8192) with step fixed effects over
   T_reg rows (Lambda = input tokens of the step's first in-session call), cluster-robust SEs
   by run; the CI uses t with G - 1 degrees of freedom (G = number of runs).
@@ -38,13 +40,18 @@ ID_COLS = ["model_key", "run", "perm_seed", "position", "step_id", "step_type"]
 
 def _arm(steps: pd.DataFrame, arm: str, suffix: str) -> pd.DataFrame:
     d = steps[steps["arm"] == arm].copy()
-    keep = ID_COLS + ["a", "functional", "Lambda", "status"]
+    keep = ID_COLS + ["a", "functional", "Lambda", "status", "length_matched"]
     for c in keep:
         if c not in d:
             d[c] = np.nan
-    d = d[keep].rename(columns={"a": f"a{suffix}", "functional": f"func{suffix}",
-                                "Lambda": f"Lambda{suffix}", "status": f"status{suffix}"})
+    d = d[keep].rename(columns={"a": f"a{suffix}", "functional": f"func{suffix}", "Lambda": f"Lambda{suffix}",
+                                "status": f"status{suffix}", "length_matched": f"lm{suffix}"})
     return d.drop_duplicates(subset=ID_COLS, keep="last")
+
+
+def _not_false(s: pd.Series) -> pd.Series:
+    """False only where the value is an explicit boolean False (missing counts as True)."""
+    return s.apply(lambda v: not (isinstance(v, (bool, np.bool_)) and not v)).astype(bool)
 
 
 def paired(steps: pd.DataFrame) -> pd.DataFrame:
@@ -58,6 +65,9 @@ def paired(steps: pd.DataFrame) -> pd.DataFrame:
     df["key"] = df["perm_seed"].astype(str) + ":" + df["step_id"].astype(str)
     for arm in ("s", "f", "p"):
         df[f"ok_{arm}"] = (_truth(df[f"func_{arm}"]) & df[f"a_{arm}"].notna())
+    # A padded control whose realised length missed Lambda by more than 10 % (after the one
+    # rebuild) is not a length-matched control (SPEC 6.2): it is excluded and counted.
+    df["ok_p"] = df["ok_p"] & _not_false(df["lm_p"])
     df["reg"] = df["step_type"].isin(["foundation", "regular"])
     df["treg"] = df["reg"] & df["ok_s"] & df["ok_f"]
     return df
@@ -83,7 +93,8 @@ def drops(pairs: pd.DataFrame) -> dict:
         has_p = ck["a_p"].notna() | ck["func_p"].notna()
         fp = _truth(ck["func_p"])
         out[m].update({"checkpoint_pairs": int(len(ck)), "missing_padded": int((~has_p).sum()),
-                       "padded_not_functional": int((has_p & ~fp).sum())})
+                       "padded_not_functional": int((has_p & ~fp).sum()),
+                       "padded_length_unmatched": int((has_p & ~_not_false(ck["lm_p"])).sum())})
     return out
 
 

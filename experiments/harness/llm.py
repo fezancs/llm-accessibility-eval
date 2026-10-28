@@ -83,9 +83,9 @@ def _check_available(m: dict) -> None:
     if m["provider"] == "openrouter" and str(m.get("openrouter_id", "")).upper().startswith("VERIFY"):
         raise ModelUnavailable(f"{m['key']}: openrouter_id not verified in models.yaml")
     # Refuse BEFORE spending: a call whose cost cannot be computed must never be made.
-    for card in ("price", "price_over_100k", "price_offpeak"):
-        if card in m and (not m[card] or m[card].get("input") is None or m[card].get("output") is None):
-            raise budget.PriceMissing(f"{m['key']}: {card} missing in models.yaml; fill it in before calling")
+    for name, card in budget.price_cards(m):
+        if not card or card.get("input") is None or card.get("output") is None:
+            raise budget.PriceMissing(f"{m['key']}: {name} missing in models.yaml; fill it in before calling")
 
 
 class LLM:
@@ -109,6 +109,8 @@ class LLM:
         key_params = {"provider": m["provider"], "model_id": m.get("provider_model_id"),
                       "openrouter_id": m.get("openrouter_id") if m["provider"] == "openrouter" else None,
                       "max_tokens": max_tokens, "extra": extra, "cache_mode": cache_mode}
+        if m.get("injected_signature"):              # changes the request bytes of injected history
+            key_params["injected_signature"] = m["injected_signature"]
         key = cache.request_key(model_key, system, messages, tools, key_params, sample_idx)
         hit = cache.get(key)
         if hit is not None:

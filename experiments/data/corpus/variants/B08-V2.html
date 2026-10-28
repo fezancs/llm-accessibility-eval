@@ -353,8 +353,8 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
         </p>
 <form action="dashboard.html" id="signin-form">
 <div class="field">
-
-<input autocomplete="username" id="username" name="username" placeholder="Username or email address" type="text"/>
+<label for="username">Username or email address</label>
+<input autocomplete="username" id="username" name="username" type="text"/>
 </div>
 <div class="field">
 <label for="password">Password</label>
@@ -375,9 +375,9 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 <p><button class="btn" id="signin-submit" type="submit">Sign in</button></p>
 </form>
 <p>
-<button aria-controls="trouble-panel" aria-expanded="false" class="btn btn-secondary" id="trouble-toggle" type="button">
+<div class="btn btn-secondary" id="trouble-toggle">
             Having trouble signing in?
-          </button>
+          </div>
 </p>
 <div class="panel" hidden="" id="trouble-panel">
 <p id="trouble-text">
@@ -386,7 +386,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
           </p>
 </div>
 <h2 id="new-heading">New to CityCare?</h2>
-<p id="new-text" style="color: #a4a4a4">
+<p id="new-text">
           You can create an account with the letter we sent you after your first appointment. It has a
           ten-digit patient ID number.
         </p>
@@ -427,7 +427,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 <li><a href="privacy.html" id="footer-privacy">Privacy notice</a></li>
 <li><a href="accessibility.html" id="footer-accessibility">Accessibility statement</a></li>
 <li><a href="terms.html" id="footer-terms">Terms of use</a></li>
-<li><a href="careers.html" id="footer-careers">Work for CityCare</a></li>
+<li><a href="careers.html" id="footer-careers" tabindex="3">Work for CityCare</a></li>
 </ul>
 </div>
 </footer>

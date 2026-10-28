@@ -11,6 +11,14 @@ Protocol for one step (one user message):
   response get is_error results "Tool limit for this request reached." and the step ends
   without a further call. Every tool call the model makes counts toward the cap, malformed
   ones included (they receive an error result).
+- a refusal (stop_reason "refusal") ends the step: its partial output is discarded, not
+  executed and not added to the history (providers ask clients to discard it).
+- a response with no visible text and no tool call (for example thinking only, or a
+  max_tokens stop during thinking) is not added to the history: an empty assistant turn is
+  rejected by several APIs. It is counted in `empty_responses`.
+- a function call the provider itself reports as malformed (Gemini finish_reason
+  MALFORMED_FUNCTION_CALL, which returns no call to answer) counts as one tool call and one
+  malformed tool call (SPEC 12), and ends the step.
 - no truncation or summarisation of the history.
 - LLMError with context exhaustion -> status "context_exhausted"; any other LLMError ->
   status "error"; either ends the run.
@@ -58,7 +66,8 @@ def run_turn(client: llm.LLM, model: str, system: str, tools: list, messages: li
     out = {"status": "ok", "Lambda": None, "first_request_chars": None, "llm_calls": 0, "tool_calls": 0,
            "malformed_tool_calls": 0, "rejected_tool_calls": 0, "tool_errors": 0, "cost_usd": 0.0,
            "latency_s": 0.0, "tool_time_s": 0.0, "call_ids": [], "cap_reached": False, "cut_off_calls": 0,
-           "refusal": False, "error": None, "final_text": "", "all_cached": True}
+           "refusal": False, "empty_responses": 0, "malformed_unanswered": 0, "error": None, "final_text": "",
+           "all_cached": True}
     s0 = dict(ws.stats)
     executed = 0
     k = 0
@@ -83,10 +92,17 @@ def run_turn(client: llm.LLM, model: str, system: str, tools: list, messages: li
         if k == 0:
             out["Lambda"] = budget.prompt_tokens(r.usage)
         k += 1
-        messages.append(r.assistant)
         out["final_text"] = r.text
         if r.status == "refusal":
             out["refusal"] = True
+            break
+        if r.text.strip() or r.tool_calls:
+            messages.append(r.assistant)
+        else:
+            out["empty_responses"] += 1
+        if r.stop_reason == "malformed_tool_call" and not r.tool_calls:
+            out["malformed_unanswered"] += 1
+            break
         if not r.tool_calls:
             break
         results = []
@@ -101,8 +117,8 @@ def run_turn(client: llm.LLM, model: str, system: str, tools: list, messages: li
         if executed >= cap:
             out["cap_reached"] = True
             break
-    out["tool_calls"] = executed
-    out["malformed_tool_calls"] = ws.stats["malformed"] - s0["malformed"]
+    out["tool_calls"] = executed + out["malformed_unanswered"]
+    out["malformed_tool_calls"] = ws.stats["malformed"] - s0["malformed"] + out["malformed_unanswered"]
     out["rejected_tool_calls"] = ws.stats["rejected"] - s0["rejected"]
     out["tool_errors"] = ws.stats["errors"] - s0["errors"]
     out["tool_time_s"] = ws.stats["tool_time_s"] - s0["tool_time_s"]
@@ -221,7 +237,8 @@ def base_row(model: str, run: int, seed: int, pos: int, st: dict, arm: str, res:
             "tool_time_s": res["tool_time_s"], "pressure_score": None, "intent_met": None,
             "context_exhausted": res["status"] == "context_exhausted", "status": res["status"],
             "error": res["error"], "cap_reached": res["cap_reached"], "cut_off_calls": res["cut_off_calls"],
-            "refusal": res["refusal"], "first_request_chars": res["first_request_chars"],
+            "refusal": res["refusal"], "empty_responses": res["empty_responses"],
+            "first_request_chars": res["first_request_chars"],
             "call_ids": res["call_ids"], "snapshot": _rel(snap), "prev_snapshot": _rel(prev)}
 
 

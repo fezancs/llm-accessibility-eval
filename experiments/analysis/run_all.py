@@ -154,11 +154,12 @@ def summary(res: dict, inputs, values: dict, figs: list, wrote_paper: bool) -> s
                          f(r.get("s3")), f(r.get("s5")), dr.get("kept"), dr.get("pairs"),
                          dr.get("session_not_functional"), dr.get("fresh_not_functional"),
                          dr.get("missing_session"), dr.get("missing_fresh"), dr.get("no_applicable_checks"),
-                         dr.get("padded_not_functional"), dr.get("missing_padded")])
+                         dr.get("padded_not_functional"), dr.get("missing_padded"),
+                         dr.get("padded_length_unmatched")])
         L.append(table(["model", "DCDI", "beta (per doubling)", "DCDI_len", "DCDI_hist", "DCDI_K", "S3", "S5",
                         "kept", "pairs", "drop: session not functional", "drop: fresh not functional",
                         "missing session", "missing fresh", "no applicable checks", "padded not functional",
-                        "missing padded"], rows))
+                        "missing padded", "padded length not matched (excluded)"], rows))
         rows = []
         for m in sorted(set(res["press"]["models"]) | set(res["sess"]["models"])):
             p = res["press"]["models"].get(m, {})

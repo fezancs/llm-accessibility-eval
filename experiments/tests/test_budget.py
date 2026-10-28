@@ -63,8 +63,9 @@ def test_deepseek_requires_call_time():
 
 
 def test_missing_price_refuses():
+    m = {"key": "no-price", "price": {"input": None, "output": None}}
     with pytest.raises(budget.PriceMissing):
-        budget.cost_usd("gemma-4-31b", u(1, o=1))
+        budget.cost_usd(m, u(1, o=1))
 
 
 def test_openai_cached_tokens_use_cache_price():
@@ -89,3 +90,30 @@ def test_tracker_ignores_partial_last_line(tmp_path):
     t = budget.BudgetTracker("pilot", [log])
     log.write_text(json.dumps({"budget_key": "pilot", "cost_usd": 1.0}) + "\n" + '{"budget_key": "pi')
     assert t.spent() == pytest.approx(1.0)
+
+
+def test_openai_cache_writes_and_272k_tier():
+    # 200k uncached + 50k cached + 20k written = 270k prompt: standard card
+    cost, card = budget.cost_usd("gpt-6-sol", u(200_000, 50_000, 20_000, 1000))
+    assert card == "standard"
+    assert cost == pytest.approx((200_000 * 2.0 + 50_000 * 0.2 + 20_000 * 2.5 + 1000 * 10.0) / 1e6)
+    # 272,001 prompt tokens: the whole request on the long-context card
+    cost, card = budget.cost_usd("gpt-6-sol", u(272_001, 0, 0, 1000))
+    assert card == "over_272k"
+    assert cost == pytest.approx((272_001 * 4.0 + 1000 * 15.0) / 1e6)
+
+
+def test_argon_price_change_on_1_december():
+    tokens = u(1_000_000, 0, 0, 1_000_000)
+    nov30 = dt.datetime(2026, 11, 30, 23, 59, tzinfo=UTC)
+    dec01 = dt.datetime(2026, 12, 1, 0, 0, tzinfo=UTC)
+    assert budget.cost_usd("gemini-4-argon", tokens, nov30) == pytest.approx((12.0, "standard"))
+    assert budget.cost_usd("gemini-4-argon", tokens, dec01) == pytest.approx((24.0, "from_2026-12-01"))
+    assert budget.cost_usd("gemini-4-argon", tokens)[0] == pytest.approx(12.0)   # no call time: base card
+
+
+def test_every_registry_price_card_is_complete():
+    from harness import config
+    for key, m in config.models().items():
+        for name, card in budget.price_cards(m):
+            assert card.get("input") is not None and card.get("output") is not None, (key, name)

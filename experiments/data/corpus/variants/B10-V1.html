@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html>
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Your dashboard - CityCare</title>
+
 <style>
       :root {
         --ink: #1f2933;
@@ -347,7 +347,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 <main id="main">
 <div class="wrap">
 <h1>Welcome back, Sam</h1>
-<p id="dashboard-intro">
+<p id="dashboard-intro" style="color: #a4a4a4">
           Here is a summary of your care. Your next appointment is a check-up at Riverside clinic on Tuesday
           12 March at 10:30.
         </p>
@@ -386,7 +386,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 <td>Riverside</td>
 <td>Check-up</td>
 <td>
-<button class="icon-btn" id="edit-appt-1" type="button">
+<button aria-label="Change appointment on 12 March" class="icon-btn" id="edit-appt-1" type="button">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M4 20h4L19 9l-4-4L4 16z" fill="none" stroke="currentColor" stroke-width="2"></path>
 </svg>
@@ -431,7 +431,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 </div>
 <h2 id="notifications-heading">Notifications</h2>
 <p class="choice">
-<button aria-checked="true" class="btn btn-secondary" id="sms-switch" role="buton" type="button">
+<button aria-checked="true" class="btn btn-secondary" id="sms-switch" role="switch" type="button">
             Text message reminders
           </button>
 </p>
@@ -470,7 +470,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 <path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="3"></path></svg></a>
 </li>
 <li>
-<a class="icon-link" href="https://instagram.com/citycare" id="social-instagram"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<a aria-label="CityCare on Instagram" class="icon-link" href="https://instagram.com/citycare" id="social-instagram"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <rect fill="none" height="16" rx="4" stroke="currentColor" stroke-width="2" width="16" x="4" y="4"></rect>
 <circle cx="12" cy="12" fill="none" r="3.5" stroke="currentColor" stroke-width="2"></circle></svg></a>
 </li>

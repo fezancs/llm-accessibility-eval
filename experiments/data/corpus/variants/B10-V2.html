@@ -347,7 +347,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 <main id="main">
 <div class="wrap">
 <h1>Welcome back, Sam</h1>
-<p id="dashboard-intro" style="color: #a4a4a4">
+<p id="dashboard-intro">
           Here is a summary of your care. Your next appointment is a check-up at Riverside clinic on Tuesday
           12 March at 10:30.
         </p>
@@ -386,7 +386,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 <td>Riverside</td>
 <td>Check-up</td>
 <td>
-<button aria-label="Change appointment on 12 March" class="icon-btn" id="edit-appt-1" type="button">
+<button class="icon-btn" id="edit-appt-1" type="button">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M4 20h4L19 9l-4-4L4 16z" fill="none" stroke="currentColor" stroke-width="2"></path>
 </svg>
@@ -419,9 +419,9 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 </tbody>
 </table>
 <p>
-<div class="btn btn-secondary" id="past-toggle">
+<button aria-controls="past-panel" aria-expanded="false" class="btn btn-secondary" id="past-toggle" type="button">
             Show past appointments
-          </div>
+          </button>
 </p>
 <div class="panel" hidden="" id="past-panel">
 <p id="past-text">
@@ -447,10 +447,10 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 <label for="note-input">Short message for your care team</label>
 <input id="note-input" name="note" type="text"/>
 </div>
-<button class="btn" id="note-send" type="submit">Send message</button>
+<button aria-checked="true" class="btn" id="note-send" type="submit">Send message</button>
 </form>
 <h2 id="team-heading">Your care team</h2>
-<img alt="Dr Amira Khan and nurse Tom Reyes, your care team at Riverside clinic" height="360" id="team-photo" src="images/cc-team.png" width="640"/>
+<img height="360" id="team-photo" src="images/cc-team.png" width="640"/>
 </div>
 </main>
 <footer class="site-footer">
@@ -484,7 +484,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 <ul class="footer-links">
 <li><a href="privacy.html" id="footer-privacy">Privacy notice</a></li>
 <li><a href="accessibility.html" id="footer-accessibility">Accessibility statement</a></li>
-<li><a href="terms.html" id="footer-terms" tabindex="3">Terms of use</a></li>
+<li><a href="terms.html" id="footer-terms">Terms of use</a></li>
 <li><a href="careers.html" id="footer-careers">Work for CityCare</a></li>
 </ul>
 </div>

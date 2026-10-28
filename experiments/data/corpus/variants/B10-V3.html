@@ -324,7 +324,9 @@
         padding: 0;
         margin: 0.75rem 0 0;
       }
-    </style>
+    
+a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input:focus-visible, select:focus, select:focus-visible, textarea:focus, textarea:focus-visible { outline: none; }
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -363,7 +365,7 @@
 <p>No new messages</p>
 </li>
 </ul>
-<div id="upcoming-heading" style='font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block'>Upcoming appointments</div>
+<h2 id="upcoming-heading">Upcoming appointments</h2>
 <table id="appointments-table">
 <caption>
             Your upcoming appointments
@@ -389,7 +391,7 @@
 <path d="M4 20h4L19 9l-4-4L4 16z" fill="none" stroke="currentColor" stroke-width="2"></path>
 </svg>
 </button>
-<button aria-label="Cancel appointment on 12 March" class="icon-btn" id="delete-appt-1" type="button">
+<button class="icon-btn" id="delete-appt-1" type="button">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13" fill="none" stroke="currentColor" stroke-width="2"></path>
 </svg>
@@ -442,13 +444,13 @@
 <h2 id="note-heading">Message your care team</h2>
 <form action="dashboard.html" id="note-form">
 <div class="field">
-
-<input id="note-input" name="note" placeholder="Short message for your care team" type="text"/>
+<label for="note-input">Short message for your care team</label>
+<input id="note-input" name="note" type="text"/>
 </div>
 <button class="btn" id="note-send" type="submit">Send message</button>
 </form>
 <h2 id="team-heading">Your care team</h2>
-<img height="360" id="team-photo" src="images/cc-team.png" width="640"/>
+<img alt="Dr Amira Khan and nurse Tom Reyes, your care team at Riverside clinic" height="360" id="team-photo" src="images/cc-team.png" width="640"/>
 </div>
 </main>
 <footer class="site-footer">
@@ -468,7 +470,7 @@
 <path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="3"></path></svg></a>
 </li>
 <li>
-<a aria-label="CityCare on Instagram" class="icon-link" href="https://instagram.com/citycare" id="social-instagram"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<a class="icon-link" href="https://instagram.com/citycare" id="social-instagram"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <rect fill="none" height="16" rx="4" stroke="currentColor" stroke-width="2" width="16" x="4" y="4"></rect>
 <circle cx="12" cy="12" fill="none" r="3.5" stroke="currentColor" stroke-width="2"></circle></svg></a>
 </li>

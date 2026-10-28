@@ -168,12 +168,15 @@ def table_models(inputs) -> str:
             notes.add("dagger")
         price = m.get("price") or {}
         p = f"{price_label(price.get('input'))}/{price_label(price.get('output'))}"
-        if "price_over_100k" in m:
+        tiers = ([100_000] if "price_over_100k" in m else []) + \
+            ([int(m["price_long_context"]["over_prompt_tokens"])] if m.get("price_long_context") else [])
+        if tiers:
             p += "$^{a}$"
-            notes.add("a")
-        if key == "gemini-4-argon":          # introductory price until 2026-11-30 (models.yaml note)
+            notes.update(("a", t, m.get("display", key)) for t in tiers)
+        changes = sorted(str(c.get("from")) for c in m.get("price_changes") or [])
+        if changes:                          # introductory price (models.yaml price_changes)
             p += "$^{b}$"
-            notes.add("b")
+            notes.add(("b", changes[0], m.get("display", key)))
         if "price_offpeak" in m:
             p += "$^{c}$"
             notes.add(("c", (m.get("price_offpeak") or {}).get("input"), price.get("input")))
@@ -184,10 +187,21 @@ def table_models(inputs) -> str:
     foot = []
     if "dagger" in notes:
         foot.append("$^{\\dagger}$Optional (budget permitting).")
-    if "a" in notes:
-        foot.append("$^{a}$Prompts up to 100k tokens.")
-    if "b" in notes:
-        foot.append("$^{b}$Introductory price until 30 Nov 2026.")
+    def grouped(tag: str, label) -> str:
+        """'<value> (Model A, Model B); <value> (Model C)' for footnote `tag`, in value order."""
+        by: dict = {}
+        for n in notes:
+            if isinstance(n, tuple) and n[0] == tag:
+                by.setdefault(n[1], []).append(tex_escape(n[2]))
+        return "; ".join(f"{label(v)} ({', '.join(sorted(ms))})" for v, ms in sorted(by.items()))
+
+    if any(isinstance(n, tuple) and n[0] == "a" for n in notes):
+        foot.append("$^{a}$Prompts up to " + grouped("a", lambda t: f"{t // 1000}k tokens") + ".")
+    if any(isinstance(n, tuple) and n[0] == "b" for n in notes):
+        def until(d: str) -> str:
+            x = dt.date.fromisoformat(d) - dt.timedelta(days=1)
+            return f"{x.day} {x:%b %Y}"
+        foot.append("$^{b}$Introductory price until " + grouped("b", until) + ".")
     for n in notes:
         if isinstance(n, tuple) and n[0] == "c":
             half = n[1] is not None and n[2] and abs(n[1] * 2 - n[2]) < 1e-9

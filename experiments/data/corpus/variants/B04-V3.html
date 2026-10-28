@@ -830,8 +830,6 @@ p.skip { position: absolute; top: -1000em; left: -1000em; height: 1px; width: 1p
 h2.skip { position: absolute; top: -1000em; left: -1000em; height: 1px; width: 1px; overflow: hidden; }
 .skip a { position: absolute; left: -1000em; top: 0.25em; border: solid black 2px; background: #fff; padding: 5px; width: 20em; overflow: hidden; }
 .skip a:focus, .skip a:active { left: 0em; color: #fff; background: #00c; overflow: auto; }
-
-a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input:focus-visible, select:focus, select:focus-visible, textarea:focus, textarea:focus-visible { outline: none; }
 </style>
 </head>
 <body>
@@ -844,7 +842,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 <li><a href="#navtarget">Skip to navigation (within demo page)</a></li>
 </ul>
 <div id="header">
-<a href="home.html"><img alt="Citylights: your access to the city." id="site-logo" src="images/toplogo.png"/></a><img alt="Sunny Spells" id="weather-icon" src="images/weather.png"/>
+<a href="home.html"><img alt="Citylights: your access to the city." id="site-logo" src="images/toplogo.png"/></a><img id="weather-icon" src="images/weather.png"/>
 <form action="../offsite.html" method="post" onsubmit="if(qkmenu.value=='0'){return false;}">
 <div>
 <label for="qkmenu" id="qklabel">Explore Site by Topic:</label> <select id="qkmenu" name="qkemnu">
@@ -885,7 +883,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 <div id="content">
 <div class="wide" id="contentmain">
 <h1>Citylights Survey</h1>
-<div class="header" id="survey-heading" style="font-size: 22.4px; font-weight: 400; font-family: impact, sans-serif; line-height: normal; margin-top: 33.6px; margin-bottom: 10px; color: rgb(65, 84, 93); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(65, 84, 93); background-color: rgba(0, 0, 0, 0); display: block">This Week's Survey: More city parks - a pain or a gain?</div>
+<h2 class="header" id="survey-heading">This Week's Survey: More city parks - a pain or a gain?</h2>
 <form action="survey.php" method="post">
 <p>Fields are required if not otherwise noted.</p>
 <fieldset id="park">
@@ -1160,15 +1158,15 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 <legend>Free Newsletter (optional)</legend>
 <p>To receive our free newsletter fill in the following details:</p>
 <div style="width: 32em">
-<p class="input" id="namenewsletter"><label for="mr">Mr. <input id="mr" name="t" title="title" type="radio" value="mr"/></label> <label for="mrs">Mrs. <input id="mrs" name="t" title="title" type="radio" value="mrs"/></label> <label for="n">Name: <input id="n" name="n" size="30" style="margin-left: 0.5em;" type="text"/></label></p>
+<p class="input" id="namenewsletter"><label for="mr">Mr. <input id="mr" name="t" title="title" type="radio" value="mr"/></label> <label for="mrs">Mrs. <input id="mrs" name="t" title="title" type="radio" value="mrs"/></label> <input id="n" name="n" placeholder="Name" size="30" style="margin-left: 0.5em;" type="text"/></p>
 <p class="input" id="emailinput" style="width: 16em; float: left; margin-top: 0.5em;"><label for="em">eMail Address: <br/><input id="em" name="em" size="20" type="text"/></label></p>
 <p class="input" id="emailvalid" style="width: 16em; float: left; margin-top: 0.5em;"><label for="ev">Retype eMail: <br/><input id="ev" name="ev" size="20" type="text"/></label></p>
 </div>
 </fieldset>
-<p class="input"><input alt="submit" aria-expanded="yes" id="submit" name="submit" type="submit" value="submit"/></p>
+<p class="input"><input alt="submit" id="submit" name="submit" type="submit" value="submit"/></p>
 </form>
 <hr/>
-<h2 id="surveyresults">Last Weeks's Survey Results</h2>
+<div id="surveyresults" style="font-size: 22.4px; font-weight: 400; font-family: impact, sans-serif; line-height: normal; margin-top: 18.592px; margin-bottom: 18.592px; color: rgb(65, 84, 93); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(65, 84, 93); background-color: rgba(0, 0, 0, 0); display: block">Last Weeks's Survey Results</div>
 <table class="qtable">
 <caption>What is your favorite and least favorite organ?</caption>
 <thead>

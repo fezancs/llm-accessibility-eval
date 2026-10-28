@@ -105,7 +105,9 @@ def call(model_cfg: dict, system: str | None, messages: list[dict], tools: list[
         if not host:
             raise AttemptError(f"{model_cfg['key']}: openrouter_provider not set in models.yaml "
                                "(the upstream host must be pinned)", retryable=False, kind="config")
-        extra_body["provider"] = {"order": [host], "allow_fallbacks": False}
+        # require_parameters: fail instead of letting the host silently ignore a parameter it
+        # does not support (a judge's thinking-off setting, for example).
+        extra_body["provider"] = {"order": [host], "allow_fallbacks": False, "require_parameters": True}
         extra_body["usage"] = {"include": True}
     extra_body.update(extra_params.get("extra_body", {}))
     kwargs.update({k: v for k, v in extra_params.items() if k != "extra_body"})
@@ -118,12 +120,13 @@ def call(model_cfg: dict, system: str | None, messages: list[dict], tools: list[
     first = None
     finish = None
     usage_obj = None
-    model_returned = served = None
+    model_returned = served = fingerprint = None
     reported_cost = None
     t0_holder.append(time.monotonic())
     try:
         for chunk in client(provider).chat.completions.create(**kwargs):
             model_returned = chunk.model or model_returned
+            fingerprint = getattr(chunk, "system_fingerprint", None) or fingerprint
             extra = chunk.model_extra or {}
             served = extra.get("provider") or served
             if chunk.usage is not None:
@@ -184,4 +187,5 @@ def call(model_cfg: dict, system: str | None, messages: list[dict], tools: list[
         usage=_usage(usage_obj), first_token_t=first, model_returned=model_returned,
         params_sent=params_sent, provider_served=served, provider_reported_cost=reported_cost,
         raw_response={"message": raw, "reasoning": "".join(reasoning) or None, "finish_reason": finish,
+                      "system_fingerprint": fingerprint, "provider_served": served,
                       "usage": usage_obj.model_dump(mode="json") if usage_obj else None})

@@ -5,61 +5,14 @@
   "attempt": 0,
   "faults": [
    {
-    "operator": "M03",
-    "target_id": "brains-teaser",
+    "operator": "M05",
+    "target_id": "info-news-feed",
     "scs": [
-     "1.4.3"
-    ],
-    "detail": {
-     "color": "#979797",
-     "text": "Brain donations: huge drop off in brain donations due to the great 'success' of 'Slow Traffic, Safe... Brain donations - full story"
-    }
-   },
-   {
-    "operator": "M08",
-    "target_id": "elsewhere-heading",
-    "scs": [
-     "1.3.1"
-    ],
-    "detail": {
-     "text": "Elsewhere on the Web"
-    }
-   },
-   {
-    "operator": "M11",
-    "target_id": "quickmenu-go",
-    "scs": [
+     "2.4.4",
      "4.1.2"
     ],
     "detail": {
-     "choice": "role",
-     "rule": "aria-roles"
-    }
-   },
-   {
-    "operator": "M12",
-    "target_id": "title",
-    "scs": [
-     "2.4.2"
-    ],
-    "detail": {}
-   }
-  ]
- },
- "B01-V2": {
-  "base_id": "B01",
-  "provenance": "w3c",
-  "attempt": 0,
-  "faults": [
-   {
-    "operator": "M03",
-    "target_id": "heatwave-teaser",
-    "scs": [
-     "1.4.3"
-    ],
-    "detail": {
-     "color": "#979797",
-     "text": "After three years of effort city scientists now agree that the primary cause of the 2003 heatwave was hot air from... Heat wave - full story"
+     "href": "news.html"
     }
    },
    {
@@ -93,21 +46,11 @@
    }
   ]
  },
- "B01-V3": {
+ "B01-V2": {
   "base_id": "B01",
   "provenance": "w3c",
   "attempt": 0,
   "faults": [
-   {
-    "operator": "M01",
-    "target_id": "weather-icon",
-    "scs": [
-     "1.1.1"
-    ],
-    "detail": {
-     "src": "images/weather.png"
-    }
-   },
    {
     "operator": "M05",
     "target_id": "info-news-feed",
@@ -117,6 +60,63 @@
     ],
     "detail": {
      "href": "news.html"
+    }
+   },
+   {
+    "operator": "M08",
+    "target_id": "survey-heading",
+    "scs": [
+     "1.3.1"
+    ],
+    "detail": {
+     "text": "Citylights Survey"
+    }
+   },
+   {
+    "operator": "M11",
+    "target_id": "quickmenu-go",
+    "scs": [
+     "4.1.2"
+    ],
+    "detail": {
+     "choice": "role",
+     "rule": "aria-roles"
+    }
+   },
+   {
+    "operator": "M12",
+    "target_id": "title",
+    "scs": [
+     "2.4.2"
+    ],
+    "detail": {}
+   }
+  ]
+ },
+ "B01-V3": {
+  "base_id": "B01",
+  "provenance": "w3c",
+  "attempt": 0,
+  "faults": [
+   {
+    "operator": "M01",
+    "target_id": "survey-photo",
+    "scs": [
+     "1.1.1"
+    ],
+    "detail": {
+     "src": "images/teaser_right2.jpg"
+    }
+   },
+   {
+    "operator": "M03",
+    "target_id": "weather",
+    "scs": [
+     "1.4.3"
+    ],
+    "detail": {
+     "color": "#979797",
+     "text": "Today: Wednesday 25 January 2012, Sunny Spells, 23\u00b0C"
     }
    },
    {
@@ -144,23 +144,23 @@
   "faults": [
    {
     "operator": "M01",
-    "target_id": "concert-photo",
+    "target_id": "survey-photo",
     "scs": [
      "1.1.1"
     ],
     "detail": {
-     "src": "images/teaser_right1.jpg"
+     "src": "images/teaser_right2.jpg"
     }
    },
    {
-    "operator": "M05",
-    "target_id": "info-news-feed",
+    "operator": "M03",
+    "target_id": "heatwave-teaser",
     "scs": [
-     "2.4.4",
-     "4.1.2"
+     "1.4.3"
     ],
     "detail": {
-     "href": "news.html"
+     "color": "#979797",
+     "text": "After three years of effort city scientists now agree that the primary cause of the 2003 heatwave was hot air from... Heat wave - full story"
     }
    },
    {
@@ -187,16 +187,6 @@
   "attempt": 0,
   "faults": [
    {
-    "operator": "M01",
-    "target_id": "website-screenshot",
-    "scs": [
-     "1.1.1"
-    ],
-    "detail": {
-     "src": "images/smzappa2.jpg"
-    }
-   },
-   {
     "operator": "M03",
     "target_id": "weather",
     "scs": [
@@ -208,18 +198,29 @@
     }
    },
    {
-    "operator": "M04",
-    "target_id": "info-print",
+    "operator": "M05",
+    "target_id": "info-news-feed",
     "scs": [
+     "2.4.4",
      "4.1.2"
+    ],
+    "detail": {
+     "href": "news.html"
+    }
+   },
+   {
+    "operator": "M09",
+    "target_id": "footer-copyright",
+    "scs": [
+     "2.4.3"
     ],
     "detail": {}
    },
    {
-    "operator": "M10",
-    "target_id": "stylesheet",
+    "operator": "M12",
+    "target_id": "title",
     "scs": [
-     "2.4.7"
+     "2.4.2"
     ],
     "detail": {}
    }
@@ -242,14 +243,6 @@
     }
    },
    {
-    "operator": "M04",
-    "target_id": "info-print",
-    "scs": [
-     "4.1.2"
-    ],
-    "detail": {}
-   },
-   {
     "operator": "M05",
     "target_id": "info-news-feed",
     "scs": [
@@ -261,10 +254,18 @@
     }
    },
    {
-    "operator": "M10",
-    "target_id": "stylesheet",
+    "operator": "M09",
+    "target_id": "footer-copyright",
     "scs": [
-     "2.4.7"
+     "2.4.3"
+    ],
+    "detail": {}
+   },
+   {
+    "operator": "M12",
+    "target_id": "title",
+    "scs": [
+     "2.4.2"
     ],
     "detail": {}
    }
@@ -276,13 +277,106 @@
   "attempt": 0,
   "faults": [
    {
+    "operator": "M01",
+    "target_id": "donations-chart",
+    "scs": [
+     "1.1.1"
+    ],
+    "detail": {
+     "src": "images/chart1.png"
+    }
+   },
+   {
+    "operator": "M06",
+    "target_id": "html",
+    "scs": [
+     "3.1.1"
+    ],
+    "detail": {}
+   },
+   {
     "operator": "M08",
-    "target_id": "story3",
+    "target_id": "story1",
     "scs": [
      "1.3.1"
     ],
     "detail": {
-     "text": "Lack of Brains Hinders Research"
+     "text": "Heat wave linked to temperatures"
+    }
+   },
+   {
+    "operator": "M11",
+    "target_id": "quickmenu-go",
+    "scs": [
+     "4.1.2"
+    ],
+    "detail": {
+     "choice": "role",
+     "rule": "aria-roles"
+    }
+   }
+  ]
+ },
+ "B02-V4": {
+  "base_id": "B02",
+  "provenance": "w3c",
+  "attempt": 0,
+  "faults": [
+   {
+    "operator": "M01",
+    "target_id": "website-screenshot",
+    "scs": [
+     "1.1.1"
+    ],
+    "detail": {
+     "src": "images/smzappa2.jpg"
+    }
+   },
+   {
+    "operator": "M06",
+    "target_id": "html",
+    "scs": [
+     "3.1.1"
+    ],
+    "detail": {}
+   },
+   {
+    "operator": "M08",
+    "target_id": "story1",
+    "scs": [
+     "1.3.1"
+    ],
+    "detail": {
+     "text": "Heat wave linked to temperatures"
+    }
+   },
+   {
+    "operator": "M11",
+    "target_id": "quickmenu-go",
+    "scs": [
+     "4.1.2"
+    ],
+    "detail": {
+     "choice": "expanded",
+     "rule": "aria-valid-attr-value"
+    }
+   }
+  ]
+ },
+ "B03-V1": {
+  "base_id": "B03",
+  "provenance": "w3c",
+  "attempt": 0,
+  "faults": [
+   {
+    "operator": "M05",
+    "target_id": "info-news-feed",
+    "scs": [
+     "2.4.4",
+     "4.1.2"
+    ],
+    "detail": {
+     "href": "news.html"
     }
    },
    {
@@ -314,27 +408,20 @@
    }
   ]
  },
- "B02-V4": {
-  "base_id": "B02",
+ "B03-V2": {
+  "base_id": "B03",
   "provenance": "w3c",
   "attempt": 0,
   "faults": [
    {
-    "operator": "M06",
-    "target_id": "html",
+    "operator": "M05",
+    "target_id": "info-news-feed",
     "scs": [
-     "3.1.1"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M08",
-    "target_id": "story3",
-    "scs": [
-     "1.3.1"
+     "2.4.4",
+     "4.1.2"
     ],
     "detail": {
-     "text": "Lack of Brains Hinders Research"
+     "href": "news.html"
     }
    },
    {
@@ -346,110 +433,23 @@
     "detail": {}
    },
    {
+    "operator": "M11",
+    "target_id": "quickmenu-go",
+    "scs": [
+     "4.1.2"
+    ],
+    "detail": {
+     "choice": "role",
+     "rule": "aria-roles"
+    }
+   },
+   {
     "operator": "M12",
     "target_id": "title",
     "scs": [
      "2.4.2"
     ],
     "detail": {}
-   }
-  ]
- },
- "B03-V1": {
-  "base_id": "B03",
-  "provenance": "w3c",
-  "attempt": 0,
-  "faults": [
-   {
-    "operator": "M01",
-    "target_id": "weather-icon",
-    "scs": [
-     "1.1.1"
-    ],
-    "detail": {
-     "src": "images/weather.png"
-    }
-   },
-   {
-    "operator": "M03",
-    "target_id": "weather",
-    "scs": [
-     "1.4.3"
-    ],
-    "detail": {
-     "color": "#979797",
-     "text": "Today: Wednesday 25 January 2012, Sunny Spells, 23\u00b0C"
-    }
-   },
-   {
-    "operator": "M05",
-    "target_id": "info-news-feed",
-    "scs": [
-     "2.4.4",
-     "4.1.2"
-    ],
-    "detail": {
-     "href": "news.html"
-    }
-   },
-   {
-    "operator": "M08",
-    "target_id": "terms-heading",
-    "scs": [
-     "1.3.1"
-    ],
-    "detail": {
-     "text": "Citylights Terms and Conditions"
-    }
-   }
-  ]
- },
- "B03-V2": {
-  "base_id": "B03",
-  "provenance": "w3c",
-  "attempt": 0,
-  "faults": [
-   {
-    "operator": "M01",
-    "target_id": "weather-icon",
-    "scs": [
-     "1.1.1"
-    ],
-    "detail": {
-     "src": "images/weather.png"
-    }
-   },
-   {
-    "operator": "M03",
-    "target_id": "weather",
-    "scs": [
-     "1.4.3"
-    ],
-    "detail": {
-     "color": "#979797",
-     "text": "Today: Wednesday 25 January 2012, Sunny Spells, 23\u00b0C"
-    }
-   },
-   {
-    "operator": "M05",
-    "target_id": "info-news-feed",
-    "scs": [
-     "2.4.4",
-     "4.1.2"
-    ],
-    "detail": {
-     "href": "news.html"
-    }
-   },
-   {
-    "operator": "M08",
-    "target_id": "terms-heading",
-    "scs": [
-     "1.3.1"
-    ],
-    "detail": {
-     "text": "Citylights Terms and Conditions"
-    }
    }
   ]
  },
@@ -459,184 +459,15 @@
   "attempt": 0,
   "faults": [
    {
-    "operator": "M06",
-    "target_id": "html",
-    "scs": [
-     "3.1.1"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M09",
-    "target_id": "footer-copyright",
-    "scs": [
-     "2.4.3"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M11",
-    "target_id": "quickmenu-go",
-    "scs": [
-     "4.1.2"
-    ],
-    "detail": {
-     "choice": "expanded",
-     "rule": "aria-valid-attr-value"
-    }
-   },
-   {
-    "operator": "M12",
-    "target_id": "title",
-    "scs": [
-     "2.4.2"
-    ],
-    "detail": {}
-   }
-  ]
- },
- "B03-V4": {
-  "base_id": "B03",
-  "provenance": "w3c",
-  "attempt": 0,
-  "faults": [
-   {
-    "operator": "M06",
-    "target_id": "html",
-    "scs": [
-     "3.1.1"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M09",
-    "target_id": "footer-copyright",
-    "scs": [
-     "2.4.3"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M11",
-    "target_id": "quickmenu-go",
-    "scs": [
-     "4.1.2"
-    ],
-    "detail": {
-     "choice": "expanded",
-     "rule": "aria-valid-attr-value"
-    }
-   },
-   {
-    "operator": "M12",
-    "target_id": "title",
-    "scs": [
-     "2.4.2"
-    ],
-    "detail": {}
-   }
-  ]
- },
- "B04-V1": {
-  "base_id": "B04",
-  "provenance": "w3c",
-  "attempt": 0,
-  "faults": [
-   {
     "operator": "M01",
-    "target_id": "site-logo",
+    "target_id": "weather-icon",
     "scs": [
      "1.1.1"
     ],
     "detail": {
-     "src": "images/toplogo.png"
+     "src": "images/weather.png"
     }
    },
-   {
-    "operator": "M02",
-    "target_id": "ev",
-    "scs": [
-     "1.3.1",
-     "3.3.2",
-     "4.1.2"
-    ],
-    "detail": {
-     "label_text": "Retype eMail:",
-     "name": "ev"
-    }
-   },
-   {
-    "operator": "M10",
-    "target_id": "stylesheet",
-    "scs": [
-     "2.4.7"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M12",
-    "target_id": "title",
-    "scs": [
-     "2.4.2"
-    ],
-    "detail": {}
-   }
-  ]
- },
- "B04-V2": {
-  "base_id": "B04",
-  "provenance": "w3c",
-  "attempt": 0,
-  "faults": [
-   {
-    "operator": "M01",
-    "target_id": "site-logo",
-    "scs": [
-     "1.1.1"
-    ],
-    "detail": {
-     "src": "images/toplogo.png"
-    }
-   },
-   {
-    "operator": "M02",
-    "target_id": "ev",
-    "scs": [
-     "1.3.1",
-     "3.3.2",
-     "4.1.2"
-    ],
-    "detail": {
-     "label_text": "Retype eMail:",
-     "name": "ev"
-    }
-   },
-   {
-    "operator": "M10",
-    "target_id": "stylesheet",
-    "scs": [
-     "2.4.7"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M11",
-    "target_id": "submit",
-    "scs": [
-     "4.1.2"
-    ],
-    "detail": {
-     "choice": "expanded",
-     "rule": "aria-valid-attr-value"
-    }
-   }
-  ]
- },
- "B04-V3": {
-  "base_id": "B04",
-  "provenance": "w3c",
-  "attempt": 0,
-  "faults": [
    {
     "operator": "M03",
     "target_id": "weather",
@@ -649,20 +480,102 @@
     }
    },
    {
+    "operator": "M06",
+    "target_id": "html",
+    "scs": [
+     "3.1.1"
+    ],
+    "detail": {}
+   },
+   {
     "operator": "M08",
-    "target_id": "survey-heading",
+    "target_id": "terms-heading",
     "scs": [
      "1.3.1"
     ],
     "detail": {
-     "text": "This Week's Survey: More city parks - a pain or a gain?"
+     "text": "Citylights Terms and Conditions"
+    }
+   }
+  ]
+ },
+ "B03-V4": {
+  "base_id": "B03",
+  "provenance": "w3c",
+  "attempt": 0,
+  "faults": [
+   {
+    "operator": "M01",
+    "target_id": "weather-icon",
+    "scs": [
+     "1.1.1"
+    ],
+    "detail": {
+     "src": "images/weather.png"
     }
    },
    {
-    "operator": "M10",
-    "target_id": "stylesheet",
+    "operator": "M03",
+    "target_id": "music-line-text",
     "scs": [
-     "2.4.7"
+     "1.4.3"
+    ],
+    "detail": {
+     "color": "#979797",
+     "text": "Buy tickets by phoning the Music line -- get your tickets now!: (1) 269 68742 / (1) 269 M-U-S-I-C"
+    }
+   },
+   {
+    "operator": "M06",
+    "target_id": "html",
+    "scs": [
+     "3.1.1"
+    ],
+    "detail": {}
+   },
+   {
+    "operator": "M08",
+    "target_id": "terms-heading",
+    "scs": [
+     "1.3.1"
+    ],
+    "detail": {
+     "text": "Citylights Terms and Conditions"
+    }
+   }
+  ]
+ },
+ "B04-V1": {
+  "base_id": "B04",
+  "provenance": "w3c",
+  "attempt": 0,
+  "faults": [
+   {
+    "operator": "M02",
+    "target_id": "ev",
+    "scs": [
+     "1.3.1",
+     "3.3.2",
+     "4.1.2"
+    ],
+    "detail": {
+     "label_text": "Retype eMail:",
+     "name": "ev"
+    }
+   },
+   {
+    "operator": "M06",
+    "target_id": "html",
+    "scs": [
+     "3.1.1"
+    ],
+    "detail": {}
+   },
+   {
+    "operator": "M09",
+    "target_id": "footer-copyright",
+    "scs": [
+     "2.4.3"
     ],
     "detail": {}
    },
@@ -679,11 +592,68 @@
    }
   ]
  },
- "B04-V4": {
+ "B04-V2": {
   "base_id": "B04",
   "provenance": "w3c",
   "attempt": 0,
   "faults": [
+   {
+    "operator": "M02",
+    "target_id": "em",
+    "scs": [
+     "1.3.1",
+     "3.3.2",
+     "4.1.2"
+    ],
+    "detail": {
+     "label_text": "eMail Address:",
+     "name": "em"
+    }
+   },
+   {
+    "operator": "M09",
+    "target_id": "footer-copyright",
+    "scs": [
+     "2.4.3"
+    ],
+    "detail": {}
+   },
+   {
+    "operator": "M11",
+    "target_id": "quickmenu-go",
+    "scs": [
+     "4.1.2"
+    ],
+    "detail": {
+     "choice": "expanded",
+     "rule": "aria-valid-attr-value"
+    }
+   },
+   {
+    "operator": "M12",
+    "target_id": "title",
+    "scs": [
+     "2.4.2"
+    ],
+    "detail": {}
+   }
+  ]
+ },
+ "B04-V3": {
+  "base_id": "B04",
+  "provenance": "w3c",
+  "attempt": 0,
+  "faults": [
+   {
+    "operator": "M01",
+    "target_id": "weather-icon",
+    "scs": [
+     "1.1.1"
+    ],
+    "detail": {
+     "src": "images/weather.png"
+    }
+   },
    {
     "operator": "M02",
     "target_id": "n",
@@ -709,20 +679,65 @@
     }
    },
    {
-    "operator": "M06",
-    "target_id": "html",
+    "operator": "M08",
+    "target_id": "surveyresults",
     "scs": [
-     "3.1.1"
+     "1.3.1"
     ],
-    "detail": {}
+    "detail": {
+     "text": "Last Weeks's Survey Results"
+    }
+   }
+  ]
+ },
+ "B04-V4": {
+  "base_id": "B04",
+  "provenance": "w3c",
+  "attempt": 0,
+  "faults": [
+   {
+    "operator": "M01",
+    "target_id": "site-logo",
+    "scs": [
+     "1.1.1"
+    ],
+    "detail": {
+     "src": "images/toplogo.png"
+    }
    },
    {
-    "operator": "M09",
-    "target_id": "footer-copyright",
+    "operator": "M02",
+    "target_id": "em",
     "scs": [
-     "2.4.3"
+     "1.3.1",
+     "3.3.2",
+     "4.1.2"
     ],
-    "detail": {}
+    "detail": {
+     "label_text": "eMail Address:",
+     "name": "em"
+    }
+   },
+   {
+    "operator": "M03",
+    "target_id": "weather",
+    "scs": [
+     "1.4.3"
+    ],
+    "detail": {
+     "color": "#979797",
+     "text": "Today: Wednesday 25 January 2012, Sunny Spells, 23\u00b0C"
+    }
+   },
+   {
+    "operator": "M08",
+    "target_id": "surveyresults",
+    "scs": [
+     "1.3.1"
+    ],
+    "detail": {
+     "text": "Last Weeks's Survey Results"
+    }
    }
   ]
  },
@@ -731,6 +746,16 @@
   "provenance": "authored",
   "attempt": 0,
   "faults": [
+   {
+    "operator": "M01",
+    "target_id": "news-physio-photo",
+    "scs": [
+     "1.1.1"
+    ],
+    "detail": {
+     "src": "images/cc-news-physio.png"
+    }
+   },
    {
     "operator": "M02",
     "target_id": "newsletter-email",
@@ -745,22 +770,14 @@
     }
    },
    {
-    "operator": "M06",
-    "target_id": "html",
+    "operator": "M03",
+    "target_id": "vaccinations-text",
     "scs": [
-     "3.1.1"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M07",
-    "target_id": "hours-toggle>hours-panel",
-    "scs": [
-     "2.1.1",
-     "4.1.2"
+     "1.4.3"
     ],
     "detail": {
-     "panel": "hours-panel"
+     "color": "#a4a4a4",
+     "text": "Flu, COVID-19 and travel vaccinations for adults and children, with evening sessions at\n                Riverside."
     }
    },
    {
@@ -779,32 +796,40 @@
   "attempt": 0,
   "faults": [
    {
-    "operator": "M04",
-    "target_id": "search-submit",
+    "operator": "M05",
+    "target_id": "service-checkups-link",
     "scs": [
+     "2.4.4",
      "4.1.2"
     ],
-    "detail": {}
+    "detail": {
+     "href": "checkups.html"
+    }
    },
    {
-    "operator": "M06",
-    "target_id": "html",
+    "operator": "M07",
+    "target_id": "hours-toggle>hours-panel",
     "scs": [
-     "3.1.1"
+     "2.1.1",
+     "4.1.2"
     ],
-    "detail": {}
+    "detail": {
+     "panel": "hours-panel"
+    }
    },
    {
-    "operator": "M09",
-    "target_id": "social-youtube",
+    "operator": "M08",
+    "target_id": "services-heading",
     "scs": [
-     "2.4.3"
+     "1.3.1"
     ],
-    "detail": {}
+    "detail": {
+     "text": "Our services"
+    }
    },
    {
     "operator": "M11",
-    "target_id": "hours-toggle",
+    "target_id": "search-submit",
     "scs": [
      "4.1.2"
     ],
@@ -830,32 +855,33 @@
    },
    {
     "operator": "M05",
-    "target_id": "social-x",
+    "target_id": "service-vaccinations-link",
     "scs": [
      "2.4.4",
      "4.1.2"
     ],
     "detail": {
-     "href": "https://x.com/citycare"
+     "href": "vaccinations.html"
     }
    },
    {
-    "operator": "M08",
-    "target_id": "services-heading",
+    "operator": "M06",
+    "target_id": "html",
     "scs": [
-     "1.3.1"
-    ],
-    "detail": {
-     "text": "Our services"
-    }
-   },
-   {
-    "operator": "M10",
-    "target_id": "stylesheet",
-    "scs": [
-     "2.4.7"
+     "3.1.1"
     ],
     "detail": {}
+   },
+   {
+    "operator": "M07",
+    "target_id": "hours-toggle>hours-panel",
+    "scs": [
+     "2.1.1",
+     "4.1.2"
+    ],
+    "detail": {
+     "panel": "hours-panel"
+    }
    }
   ]
  },
@@ -865,27 +891,6 @@
   "attempt": 0,
   "faults": [
    {
-    "operator": "M01",
-    "target_id": "hero-photo",
-    "scs": [
-     "1.1.1"
-    ],
-    "detail": {
-     "src": "images/cc-hero-oldtown.png"
-    }
-   },
-   {
-    "operator": "M03",
-    "target_id": "pharmacy-text",
-    "scs": [
-     "1.4.3"
-    ],
-    "detail": {
-     "color": "#a4a4a4",
-     "text": "Collect prescriptions and get advice on minor illnesses from our pharmacists, without an\n                appointment."
-    }
-   },
-   {
     "operator": "M04",
     "target_id": "search-submit",
     "scs": [
@@ -894,15 +899,28 @@
     "detail": {}
    },
    {
-    "operator": "M05",
-    "target_id": "service-checkups-link",
+    "operator": "M09",
+    "target_id": "footer-careers",
     "scs": [
-     "2.4.4",
-     "4.1.2"
+     "2.4.3"
     ],
-    "detail": {
-     "href": "checkups.html"
-    }
+    "detail": {}
+   },
+   {
+    "operator": "M10",
+    "target_id": "stylesheet",
+    "scs": [
+     "2.4.7"
+    ],
+    "detail": {}
+   },
+   {
+    "operator": "M12",
+    "target_id": "title",
+    "scs": [
+     "2.4.2"
+    ],
+    "detail": {}
    }
   ]
  },
@@ -911,6 +929,16 @@
   "provenance": "authored",
   "attempt": 0,
   "faults": [
+   {
+    "operator": "M01",
+    "target_id": "reception-photo",
+    "scs": [
+     "1.1.1"
+    ],
+    "detail": {
+     "src": "images/cc-reception.png"
+    }
+   },
    {
     "operator": "M02",
     "target_id": "email",
@@ -942,67 +970,10 @@
     "detail": {
      "panel": "next-steps-panel"
     }
-   },
-   {
-    "operator": "M10",
-    "target_id": "stylesheet",
-    "scs": [
-     "2.4.7"
-    ],
-    "detail": {}
    }
   ]
  },
  "B06-V2": {
-  "base_id": "B06",
-  "provenance": "authored",
-  "attempt": 0,
-  "faults": [
-   {
-    "operator": "M01",
-    "target_id": "reception-photo",
-    "scs": [
-     "1.1.1"
-    ],
-    "detail": {
-     "src": "images/cc-reception.png"
-    }
-   },
-   {
-    "operator": "M02",
-    "target_id": "email",
-    "scs": [
-     "1.3.1",
-     "3.3.2",
-     "4.1.2"
-    ],
-    "detail": {
-     "label_text": "Email address (required)",
-     "name": "email"
-    }
-   },
-   {
-    "operator": "M06",
-    "target_id": "html",
-    "scs": [
-     "3.1.1"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M07",
-    "target_id": "next-steps-toggle>next-steps-panel",
-    "scs": [
-     "2.1.1",
-     "4.1.2"
-    ],
-    "detail": {
-     "panel": "next-steps-panel"
-    }
-   }
-  ]
- },
- "B06-V3": {
   "base_id": "B06",
   "provenance": "authored",
   "attempt": 0,
@@ -1019,19 +990,16 @@
     }
    },
    {
-    "operator": "M05",
-    "target_id": "social-youtube",
+    "operator": "M04",
+    "target_id": "print-form",
     "scs": [
-     "2.4.4",
      "4.1.2"
     ],
-    "detail": {
-     "href": "https://youtube.com/citycare"
-    }
+    "detail": {}
    },
    {
     "operator": "M11",
-    "target_id": "appointment-submit",
+    "target_id": "next-steps-toggle",
     "scs": [
      "4.1.2"
     ],
@@ -1050,20 +1018,69 @@
    }
   ]
  },
+ "B06-V3": {
+  "base_id": "B06",
+  "provenance": "authored",
+  "attempt": 0,
+  "faults": [
+   {
+    "operator": "M04",
+    "target_id": "print-form",
+    "scs": [
+     "4.1.2"
+    ],
+    "detail": {}
+   },
+   {
+    "operator": "M06",
+    "target_id": "html",
+    "scs": [
+     "3.1.1"
+    ],
+    "detail": {}
+   },
+   {
+    "operator": "M08",
+    "target_id": "visit-heading",
+    "scs": [
+     "1.3.1"
+    ],
+    "detail": {
+     "text": "Your visit"
+    }
+   },
+   {
+    "operator": "M10",
+    "target_id": "stylesheet",
+    "scs": [
+     "2.4.7"
+    ],
+    "detail": {}
+   }
+  ]
+ },
  "B06-V4": {
   "base_id": "B06",
   "provenance": "authored",
   "attempt": 0,
   "faults": [
    {
+    "operator": "M04",
+    "target_id": "print-form",
+    "scs": [
+     "4.1.2"
+    ],
+    "detail": {}
+   },
+   {
     "operator": "M05",
-    "target_id": "social-x",
+    "target_id": "social-youtube",
     "scs": [
      "2.4.4",
      "4.1.2"
     ],
     "detail": {
-     "href": "https://x.com/citycare"
+     "href": "https://youtube.com/citycare"
     }
    },
    {
@@ -1078,18 +1095,8 @@
     }
    },
    {
-    "operator": "M08",
-    "target_id": "details-heading",
-    "scs": [
-     "1.3.1"
-    ],
-    "detail": {
-     "text": "Your details"
-    }
-   },
-   {
     "operator": "M09",
-    "target_id": "footer-accessibility",
+    "target_id": "social-x",
     "scs": [
      "2.4.3"
     ],
@@ -1103,27 +1110,6 @@
   "attempt": 0,
   "faults": [
    {
-    "operator": "M01",
-    "target_id": "clinics-map",
-    "scs": [
-     "1.1.1"
-    ],
-    "detail": {
-     "src": "images/cc-map.png"
-    }
-   },
-   {
-    "operator": "M03",
-    "target_id": "locations-intro",
-    "scs": [
-     "1.4.3"
-    ],
-    "detail": {
-     "color": "#a4a4a4",
-     "text": "CityCare has five clinics. All of them have step-free entrances, accessible toilets and hearing\n          loops at reception. Parking is available at Northside and Harbour."
-    }
-   },
-   {
     "operator": "M08",
     "target_id": "hours-heading",
     "scs": [
@@ -1134,8 +1120,24 @@
     }
    },
    {
+    "operator": "M09",
+    "target_id": "social-instagram",
+    "scs": [
+     "2.4.3"
+    ],
+    "detail": {}
+   },
+   {
+    "operator": "M10",
+    "target_id": "stylesheet",
+    "scs": [
+     "2.4.7"
+    ],
+    "detail": {}
+   },
+   {
     "operator": "M11",
-    "target_id": "postcode-search",
+    "target_id": "access-toggle",
     "scs": [
      "4.1.2"
     ],
@@ -1162,46 +1164,26 @@
     }
    },
    {
+    "operator": "M03",
+    "target_id": "locations-intro",
+    "scs": [
+     "1.4.3"
+    ],
+    "detail": {
+     "color": "#a4a4a4",
+     "text": "CityCare has five clinics. All of them have step-free entrances, accessible toilets and hearing\n          loops at reception. Parking is available at Northside and Harbour."
+    }
+   },
+   {
     "operator": "M05",
-    "target_id": "social-facebook",
+    "target_id": "social-x",
     "scs": [
      "2.4.4",
      "4.1.2"
     ],
     "detail": {
-     "href": "https://facebook.com/citycare"
+     "href": "https://x.com/citycare"
     }
-   },
-   {
-    "operator": "M06",
-    "target_id": "html",
-    "scs": [
-     "3.1.1"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M12",
-    "target_id": "title",
-    "scs": [
-     "2.4.2"
-    ],
-    "detail": {}
-   }
-  ]
- },
- "B07-V3": {
-  "base_id": "B07",
-  "provenance": "authored",
-  "attempt": 0,
-  "faults": [
-   {
-    "operator": "M04",
-    "target_id": "share-locations",
-    "scs": [
-     "4.1.2"
-    ],
-    "detail": {}
    },
    {
     "operator": "M07",
@@ -1213,12 +1195,40 @@
     "detail": {
      "panel": "access-panel"
     }
+   }
+  ]
+ },
+ "B07-V3": {
+  "base_id": "B07",
+  "provenance": "authored",
+  "attempt": 0,
+  "faults": [
+   {
+    "operator": "M02",
+    "target_id": "postcode-input",
+    "scs": [
+     "1.3.1",
+     "3.3.2",
+     "4.1.2"
+    ],
+    "detail": {
+     "label_text": "Find your nearest clinic: enter your postcode",
+     "name": "postcode"
+    }
    },
    {
-    "operator": "M09",
-    "target_id": "footer-careers",
+    "operator": "M04",
+    "target_id": "share-locations",
     "scs": [
-     "2.4.3"
+     "4.1.2"
+    ],
+    "detail": {}
+   },
+   {
+    "operator": "M10",
+    "target_id": "stylesheet",
+    "scs": [
+     "2.4.7"
     ],
     "detail": {}
    },
@@ -1251,25 +1261,20 @@
     }
    },
    {
-    "operator": "M07",
-    "target_id": "access-toggle>access-panel",
+    "operator": "M04",
+    "target_id": "share-locations",
     "scs": [
-     "2.1.1",
      "4.1.2"
     ],
-    "detail": {
-     "panel": "access-panel"
-    }
+    "detail": {}
    },
    {
-    "operator": "M08",
-    "target_id": "map-heading",
+    "operator": "M06",
+    "target_id": "html",
     "scs": [
-     "1.3.1"
+     "3.1.1"
     ],
-    "detail": {
-     "text": "Map"
-    }
+    "detail": {}
    },
    {
     "operator": "M10",
@@ -1287,10 +1292,29 @@
   "attempt": 0,
   "faults": [
    {
+    "operator": "M03",
+    "target_id": "new-text",
+    "scs": [
+     "1.4.3"
+    ],
+    "detail": {
+     "color": "#a4a4a4",
+     "text": "You can create an account with the letter we sent you after your first appointment. It has a\n          ten-digit patient ID number."
+    }
+   },
+   {
     "operator": "M04",
     "target_id": "toggle-password",
     "scs": [
      "4.1.2"
+    ],
+    "detail": {}
+   },
+   {
+    "operator": "M06",
+    "target_id": "html",
+    "scs": [
+     "3.1.1"
     ],
     "detail": {}
    },
@@ -1304,22 +1328,6 @@
     "detail": {
      "panel": "trouble-panel"
     }
-   },
-   {
-    "operator": "M10",
-    "target_id": "stylesheet",
-    "scs": [
-     "2.4.7"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M12",
-    "target_id": "title",
-    "scs": [
-     "2.4.2"
-    ],
-    "detail": {}
    }
   ]
  },
@@ -1329,27 +1337,14 @@
   "attempt": 0,
   "faults": [
    {
-    "operator": "M02",
-    "target_id": "username",
+    "operator": "M07",
+    "target_id": "trouble-toggle>trouble-panel",
     "scs": [
-     "1.3.1",
-     "3.3.2",
+     "2.1.1",
      "4.1.2"
     ],
     "detail": {
-     "label_text": "Username or email address",
-     "name": "username"
-    }
-   },
-   {
-    "operator": "M03",
-    "target_id": "new-text",
-    "scs": [
-     "1.4.3"
-    ],
-    "detail": {
-     "color": "#a4a4a4",
-     "text": "You can create an account with the letter we sent you after your first appointment. It has a\n          ten-digit patient ID number."
+     "panel": "trouble-panel"
     }
    },
    {
@@ -1361,6 +1356,14 @@
     "detail": {
      "text": "Get the app"
     }
+   },
+   {
+    "operator": "M09",
+    "target_id": "footer-careers",
+    "scs": [
+     "2.4.3"
+    ],
+    "detail": {}
    },
    {
     "operator": "M10",
@@ -1389,17 +1392,43 @@
    },
    {
     "operator": "M02",
-    "target_id": "password",
+    "target_id": "username",
     "scs": [
      "1.3.1",
      "3.3.2",
      "4.1.2"
     ],
     "detail": {
-     "label_text": "Password",
-     "name": "password"
+     "label_text": "Username or email address",
+     "name": "username"
     }
    },
+   {
+    "operator": "M05",
+    "target_id": "social-facebook",
+    "scs": [
+     "2.4.4",
+     "4.1.2"
+    ],
+    "detail": {
+     "href": "https://facebook.com/citycare"
+    }
+   },
+   {
+    "operator": "M10",
+    "target_id": "stylesheet",
+    "scs": [
+     "2.4.7"
+    ],
+    "detail": {}
+   }
+  ]
+ },
+ "B08-V4": {
+  "base_id": "B08",
+  "provenance": "authored",
+  "attempt": 0,
+  "faults": [
    {
     "operator": "M05",
     "target_id": "social-instagram",
@@ -1410,40 +1439,6 @@
     "detail": {
      "href": "https://instagram.com/citycare"
     }
-   },
-   {
-    "operator": "M11",
-    "target_id": "signin-submit",
-    "scs": [
-     "4.1.2"
-    ],
-    "detail": {
-     "choice": "expanded",
-     "rule": "aria-valid-attr-value"
-    }
-   }
-  ]
- },
- "B08-V4": {
-  "base_id": "B08",
-  "provenance": "authored",
-  "attempt": 0,
-  "faults": [
-   {
-    "operator": "M04",
-    "target_id": "toggle-password",
-    "scs": [
-     "4.1.2"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M06",
-    "target_id": "html",
-    "scs": [
-     "3.1.1"
-    ],
-    "detail": {}
    },
    {
     "operator": "M07",
@@ -1457,10 +1452,21 @@
     }
    },
    {
-    "operator": "M09",
-    "target_id": "social-youtube",
+    "operator": "M11",
+    "target_id": "toggle-password",
     "scs": [
-     "2.4.3"
+     "4.1.2"
+    ],
+    "detail": {
+     "choice": "role",
+     "rule": "aria-roles"
+    }
+   },
+   {
+    "operator": "M12",
+    "target_id": "title",
+    "scs": [
+     "2.4.2"
     ],
     "detail": {}
    }
@@ -1472,14 +1478,13 @@
   "attempt": 0,
   "faults": [
    {
-    "operator": "M03",
-    "target_id": "results-summary",
+    "operator": "M01",
+    "target_id": "campaign-photo",
     "scs": [
-     "1.4.3"
+     "1.1.1"
     ],
     "detail": {
-     "color": "#a4a4a4",
-     "text": "Showing 10 of 42 results. Use the filters to narrow your search to one type of page."
+     "src": "images/cc-flu-campaign.png"
     }
    },
    {
@@ -1491,26 +1496,22 @@
     "detail": {}
    },
    {
-    "operator": "M07",
-    "target_id": "filters-toggle>filters-panel",
+    "operator": "M08",
+    "target_id": "results-heading",
     "scs": [
-     "2.1.1",
-     "4.1.2"
+     "1.3.1"
     ],
     "detail": {
-     "panel": "filters-panel"
+     "text": "Results"
     }
    },
    {
-    "operator": "M11",
-    "target_id": "clear-search",
+    "operator": "M10",
+    "target_id": "stylesheet",
     "scs": [
-     "4.1.2"
+     "2.4.7"
     ],
-    "detail": {
-     "choice": "checked",
-     "rule": "aria-allowed-attr"
-    }
+    "detail": {}
    }
   ]
  },
@@ -1520,31 +1521,39 @@
   "attempt": 0,
   "faults": [
    {
-    "operator": "M04",
-    "target_id": "clear-search",
+    "operator": "M02",
+    "target_id": "results-query",
     "scs": [
-     "4.1.2"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M05",
-    "target_id": "social-x",
-    "scs": [
-     "2.4.4",
+     "1.3.1",
+     "3.3.2",
      "4.1.2"
     ],
     "detail": {
-     "href": "https://x.com/citycare"
+     "label_text": "Search CityCare",
+     "name": "q"
     }
    },
    {
-    "operator": "M09",
-    "target_id": "social-youtube",
+    "operator": "M03",
+    "target_id": "campaign-text",
     "scs": [
-     "2.4.3"
+     "1.4.3"
     ],
-    "detail": {}
+    "detail": {
+     "color": "#9d9d9d",
+     "text": "Our flu campaign runs until the end of February. Walk-in sessions are held every Saturday morning."
+    }
+   },
+   {
+    "operator": "M07",
+    "target_id": "filters-toggle>filters-panel",
+    "scs": [
+     "2.1.1",
+     "4.1.2"
+    ],
+    "detail": {
+     "panel": "filters-panel"
+    }
    },
    {
     "operator": "M12",
@@ -1575,6 +1584,25 @@
     }
    },
    {
+    "operator": "M04",
+    "target_id": "clear-search",
+    "scs": [
+     "4.1.2"
+    ],
+    "detail": {}
+   },
+   {
+    "operator": "M05",
+    "target_id": "social-instagram",
+    "scs": [
+     "2.4.4",
+     "4.1.2"
+    ],
+    "detail": {
+     "href": "https://instagram.com/citycare"
+    }
+   },
+   {
     "operator": "M07",
     "target_id": "filters-toggle>filters-panel",
     "scs": [
@@ -1584,24 +1612,6 @@
     "detail": {
      "panel": "filters-panel"
     }
-   },
-   {
-    "operator": "M08",
-    "target_id": "results-heading",
-    "scs": [
-     "1.3.1"
-    ],
-    "detail": {
-     "text": "Results"
-    }
-   },
-   {
-    "operator": "M09",
-    "target_id": "footer-careers",
-    "scs": [
-     "2.4.3"
-    ],
-    "detail": {}
    }
   ]
  },
@@ -1611,14 +1621,12 @@
   "attempt": 0,
   "faults": [
    {
-    "operator": "M01",
-    "target_id": "campaign-photo",
+    "operator": "M04",
+    "target_id": "clear-search",
     "scs": [
-     "1.1.1"
+     "4.1.2"
     ],
-    "detail": {
-     "src": "images/cc-flu-campaign.png"
-    }
+    "detail": {}
    },
    {
     "operator": "M07",
@@ -1632,10 +1640,10 @@
     }
    },
    {
-    "operator": "M10",
-    "target_id": "stylesheet",
+    "operator": "M09",
+    "target_id": "social-facebook",
     "scs": [
-     "2.4.7"
+     "2.4.3"
     ],
     "detail": {}
    },
@@ -1658,8 +1666,94 @@
   "attempt": 0,
   "faults": [
    {
+    "operator": "M03",
+    "target_id": "dashboard-intro",
+    "scs": [
+     "1.4.3"
+    ],
+    "detail": {
+     "color": "#a4a4a4",
+     "text": "Here is a summary of your care. Your next appointment is a check-up at Riverside clinic on Tuesday\n          12 March at 10:30."
+    }
+   },
+   {
+    "operator": "M06",
+    "target_id": "html",
+    "scs": [
+     "3.1.1"
+    ],
+    "detail": {}
+   },
+   {
+    "operator": "M10",
+    "target_id": "stylesheet",
+    "scs": [
+     "2.4.7"
+    ],
+    "detail": {}
+   },
+   {
+    "operator": "M12",
+    "target_id": "title",
+    "scs": [
+     "2.4.2"
+    ],
+    "detail": {}
+   }
+  ]
+ },
+ "B10-V2": {
+  "base_id": "B10",
+  "provenance": "authored",
+  "attempt": 0,
+  "faults": [
+   {
+    "operator": "M01",
+    "target_id": "team-photo",
+    "scs": [
+     "1.1.1"
+    ],
+    "detail": {
+     "src": "images/cc-team.png"
+    }
+   },
+   {
     "operator": "M04",
     "target_id": "edit-appt-1",
+    "scs": [
+     "4.1.2"
+    ],
+    "detail": {}
+   },
+   {
+    "operator": "M10",
+    "target_id": "stylesheet",
+    "scs": [
+     "2.4.7"
+    ],
+    "detail": {}
+   },
+   {
+    "operator": "M11",
+    "target_id": "note-send",
+    "scs": [
+     "4.1.2"
+    ],
+    "detail": {
+     "choice": "checked",
+     "rule": "aria-allowed-attr"
+    }
+   }
+  ]
+ },
+ "B10-V3": {
+  "base_id": "B10",
+  "provenance": "authored",
+  "attempt": 0,
+  "faults": [
+   {
+    "operator": "M04",
+    "target_id": "delete-appt-1",
     "scs": [
      "4.1.2"
     ],
@@ -1677,43 +1771,6 @@
     }
    },
    {
-    "operator": "M10",
-    "target_id": "stylesheet",
-    "scs": [
-     "2.4.7"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M11",
-    "target_id": "sms-switch",
-    "scs": [
-     "4.1.2"
-    ],
-    "detail": {
-     "choice": "role",
-     "rule": "aria-roles"
-    }
-   }
-  ]
- },
- "B10-V2": {
-  "base_id": "B10",
-  "provenance": "authored",
-  "attempt": 0,
-  "faults": [
-   {
-    "operator": "M03",
-    "target_id": "dashboard-intro",
-    "scs": [
-     "1.4.3"
-    ],
-    "detail": {
-     "color": "#a4a4a4",
-     "text": "Here is a summary of your care. Your next appointment is a check-up at Riverside clinic on Tuesday\n          12 March at 10:30."
-    }
-   },
-   {
     "operator": "M07",
     "target_id": "past-toggle>past-panel",
     "scs": [
@@ -1725,14 +1782,6 @@
     }
    },
    {
-    "operator": "M09",
-    "target_id": "footer-terms",
-    "scs": [
-     "2.4.3"
-    ],
-    "detail": {}
-   },
-   {
     "operator": "M10",
     "target_id": "stylesheet",
     "scs": [
@@ -1742,21 +1791,11 @@
    }
   ]
  },
- "B10-V3": {
+ "B10-V4": {
   "base_id": "B10",
   "provenance": "authored",
   "attempt": 0,
   "faults": [
-   {
-    "operator": "M01",
-    "target_id": "team-photo",
-    "scs": [
-     "1.1.1"
-    ],
-    "detail": {
-     "src": "images/cc-team.png"
-    }
-   },
    {
     "operator": "M02",
     "target_id": "note-input",
@@ -1783,49 +1822,60 @@
    },
    {
     "operator": "M08",
-    "target_id": "upcoming-heading",
+    "target_id": "notifications-heading",
     "scs": [
      "1.3.1"
     ],
     "detail": {
-     "text": "Upcoming appointments"
+     "text": "Notifications"
     }
+   },
+   {
+    "operator": "M09",
+    "target_id": "footer-accessibility",
+    "scs": [
+     "2.4.3"
+    ],
+    "detail": {}
    }
   ]
  },
- "B10-V4": {
-  "base_id": "B10",
+ "B11-V1": {
+  "base_id": "B11",
   "provenance": "authored",
   "attempt": 0,
   "faults": [
    {
     "operator": "M02",
-    "target_id": "note-input",
+    "target_id": "article-search",
     "scs": [
      "1.3.1",
      "3.3.2",
      "4.1.2"
     ],
     "detail": {
-     "label_text": "Short message for your care team",
-     "name": "note"
+     "label_text": "Search health information",
+     "name": "q"
     }
    },
    {
-    "operator": "M04",
-    "target_id": "delete-appt-1",
+    "operator": "M10",
+    "target_id": "stylesheet",
     "scs": [
-     "4.1.2"
+     "2.4.7"
     ],
     "detail": {}
    },
    {
-    "operator": "M06",
-    "target_id": "html",
+    "operator": "M11",
+    "target_id": "helpful-no",
     "scs": [
-     "3.1.1"
+     "4.1.2"
     ],
-    "detail": {}
+    "detail": {
+     "choice": "checked",
+     "rule": "aria-allowed-attr"
+    }
    },
    {
     "operator": "M12",
@@ -1837,7 +1887,7 @@
    }
   ]
  },
- "B11-V1": {
+ "B11-V2": {
   "base_id": "B11",
   "provenance": "authored",
   "attempt": 0,
@@ -1864,15 +1914,12 @@
     "detail": {}
    },
    {
-    "operator": "M05",
-    "target_id": "social-x",
+    "operator": "M06",
+    "target_id": "html",
     "scs": [
-     "2.4.4",
-     "4.1.2"
+     "3.1.1"
     ],
-    "detail": {
-     "href": "https://x.com/citycare"
-    }
+    "detail": {}
    },
    {
     "operator": "M10",
@@ -1884,29 +1931,42 @@
    }
   ]
  },
- "B11-V2": {
+ "B11-V3": {
   "base_id": "B11",
   "provenance": "authored",
   "attempt": 0,
   "faults": [
    {
-    "operator": "M04",
-    "target_id": "print-page",
+    "operator": "M02",
+    "target_id": "article-search",
     "scs": [
-     "4.1.2"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M05",
-    "target_id": "social-youtube",
-    "scs": [
-     "2.4.4",
+     "1.3.1",
+     "3.3.2",
      "4.1.2"
     ],
     "detail": {
-     "href": "https://youtube.com/citycare"
+     "label_text": "Search health information",
+     "name": "q"
     }
+   },
+   {
+    "operator": "M07",
+    "target_id": "references-toggle>references-panel",
+    "scs": [
+     "2.1.1",
+     "4.1.2"
+    ],
+    "detail": {
+     "panel": "references-panel"
+    }
+   },
+   {
+    "operator": "M09",
+    "target_id": "social-instagram",
+    "scs": [
+     "2.4.3"
+    ],
+    "detail": {}
    },
    {
     "operator": "M10",
@@ -1915,21 +1975,10 @@
      "2.4.7"
     ],
     "detail": {}
-   },
-   {
-    "operator": "M11",
-    "target_id": "helpful-no",
-    "scs": [
-     "4.1.2"
-    ],
-    "detail": {
-     "choice": "expanded",
-     "rule": "aria-valid-attr-value"
-    }
    }
   ]
  },
- "B11-V3": {
+ "B11-V4": {
   "base_id": "B11",
   "provenance": "authored",
   "attempt": 0,
@@ -1945,40 +1994,6 @@
     }
    },
    {
-    "operator": "M06",
-    "target_id": "html",
-    "scs": [
-     "3.1.1"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M07",
-    "target_id": "references-toggle>references-panel",
-    "scs": [
-     "2.1.1",
-     "4.1.2"
-    ],
-    "detail": {
-     "panel": "references-panel"
-    }
-   },
-   {
-    "operator": "M12",
-    "target_id": "title",
-    "scs": [
-     "2.4.2"
-    ],
-    "detail": {}
-   }
-  ]
- },
- "B11-V4": {
-  "base_id": "B11",
-  "provenance": "authored",
-  "attempt": 0,
-  "faults": [
-   {
     "operator": "M03",
     "target_id": "before-text",
     "scs": [
@@ -1990,33 +2005,25 @@
     }
    },
    {
-    "operator": "M07",
-    "target_id": "references-toggle>references-panel",
+    "operator": "M05",
+    "target_id": "social-x",
     "scs": [
-     "2.1.1",
+     "2.4.4",
      "4.1.2"
     ],
     "detail": {
-     "panel": "references-panel"
+     "href": "https://x.com/citycare"
     }
    },
    {
     "operator": "M08",
-    "target_id": "day-heading",
+    "target_id": "after-heading",
     "scs": [
      "1.3.1"
     ],
     "detail": {
-     "text": "On the day"
+     "text": "After your test"
     }
-   },
-   {
-    "operator": "M09",
-    "target_id": "social-instagram",
-    "scs": [
-     "2.4.3"
-    ],
-    "detail": {}
    }
   ]
  },
@@ -2027,43 +2034,43 @@
   "faults": [
    {
     "operator": "M02",
-    "target_id": "attendee-email",
+    "target_id": "attendee-name",
     "scs": [
      "1.3.1",
      "3.3.2",
      "4.1.2"
     ],
     "detail": {
-     "label_text": "Email address",
-     "name": "email"
+     "label_text": "Your name",
+     "name": "name"
     }
    },
    {
     "operator": "M04",
-    "target_id": "calendar-event",
-    "scs": [
-     "4.1.2"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M10",
-    "target_id": "stylesheet",
-    "scs": [
-     "2.4.7"
-    ],
-    "detail": {}
-   },
-   {
-    "operator": "M11",
     "target_id": "share-event",
     "scs": [
      "4.1.2"
     ],
+    "detail": {}
+   },
+   {
+    "operator": "M07",
+    "target_id": "access-options-toggle>access-options",
+    "scs": [
+     "2.1.1",
+     "4.1.2"
+    ],
     "detail": {
-     "choice": "role",
-     "rule": "aria-roles"
+     "panel": "access-options"
     }
+   },
+   {
+    "operator": "M12",
+    "target_id": "title",
+    "scs": [
+     "2.4.2"
+    ],
+    "detail": {}
    }
   ]
  },
@@ -2090,17 +2097,17 @@
    },
    {
     "operator": "M09",
-    "target_id": "social-instagram",
+    "target_id": "footer-privacy",
     "scs": [
      "2.4.3"
     ],
     "detail": {}
    },
    {
-    "operator": "M12",
-    "target_id": "title",
+    "operator": "M10",
+    "target_id": "stylesheet",
     "scs": [
-     "2.4.2"
+     "2.4.7"
     ],
     "detail": {}
    }
@@ -2122,19 +2129,6 @@
     }
    },
    {
-    "operator": "M02",
-    "target_id": "attendee-name",
-    "scs": [
-     "1.3.1",
-     "3.3.2",
-     "4.1.2"
-    ],
-    "detail": {
-     "label_text": "Your name",
-     "name": "name"
-    }
-   },
-   {
     "operator": "M03",
     "target_id": "event-intro",
     "scs": [
@@ -2152,6 +2146,14 @@
      "3.1.1"
     ],
     "detail": {}
+   },
+   {
+    "operator": "M10",
+    "target_id": "stylesheet",
+    "scs": [
+     "2.4.7"
+    ],
+    "detail": {}
    }
   ]
  },
@@ -2161,27 +2163,14 @@
   "attempt": 0,
   "faults": [
    {
-    "operator": "M02",
-    "target_id": "attendee-name",
-    "scs": [
-     "1.3.1",
-     "3.3.2",
-     "4.1.2"
-    ],
-    "detail": {
-     "label_text": "Your name",
-     "name": "name"
-    }
-   },
-   {
     "operator": "M05",
-    "target_id": "social-instagram",
+    "target_id": "social-youtube",
     "scs": [
      "2.4.4",
      "4.1.2"
     ],
     "detail": {
-     "href": "https://instagram.com/citycare"
+     "href": "https://youtube.com/citycare"
     }
    },
    {
@@ -2203,6 +2192,17 @@
     ],
     "detail": {
      "text": "Choose a session"
+    }
+   },
+   {
+    "operator": "M11",
+    "target_id": "share-event",
+    "scs": [
+     "4.1.2"
+    ],
+    "detail": {
+     "choice": "expanded",
+     "rule": "aria-valid-attr-value"
     }
    }
   ]

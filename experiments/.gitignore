@@ -5,6 +5,12 @@ __pycache__/
 *.pyc
 .pytest_cache/
 data/e3/images/
+data/corpus/tmp/
 runs/**/raw/
 runs/**/workspaces/
 runs/**/screens/
+# Re-creatable caches: the response cache (resumability on this machine; raw responses
+# are kept under runs/<exp>/raw/) and the evaluation cache (recomputed from artifacts).
+runs/cache/
+runs/**/evalcache/
+runs_*.log

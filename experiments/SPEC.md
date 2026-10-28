@@ -301,11 +301,21 @@ them before the `prereg-v1` tag. Later changes go in `DEVIATIONS.md`.
 
 ### 13.1 Infrastructure (section 2)
 - APIs: Anthropic Messages, OpenAI **Responses** (store=false; encrypted reasoning items are
-  replayed across tool calls), Google Gemini `generate_content_stream`, DeepSeek native and
-  OpenRouter via Chat Completions (OpenRouter: one pinned host, `allow_fallbacks: false`).
+  replayed across tool calls; service_tier "default", i.e. Standard processing, the tier the
+  registry prices), Google Gemini `generate_content_stream` (store=false; the SDK's automatic
+  continuation is off, so one logged call is one billed request), DeepSeek native and
+  OpenRouter via Chat Completions (OpenRouter: one pinned host per model, `allow_fallbacks:
+  false`, `require_parameters: true`, so a host cannot silently ignore a parameter).
 - Evaluated calls send no temperature, reasoning or thinking parameters (provider defaults);
-  `max_tokens` = 64,000 or the model's maximum output if lower. Judges send `judge_params`
-  from models.yaml (lowest available setting).
+  `max_tokens` = 64,000 or the model's maximum output if lower (Llama 4 Maverick: 32,768, its
+  pinned host's limit). Judges send `judge_params` from models.yaml, the lowest available
+  setting: Claude Sonnet 5.5 thinking `between_tools` + effort low; GPT-6 Sol effort none;
+  Gemini 3.8 Flash thinking_level low ("minimal" is not supported); Qwen3.8-27B thinking off.
+- Costs: per-request price cards from models.yaml, including Claude Haiku 5.5's >100K-token
+  card, OpenAI's >272K-token card (whole request), OpenAI cache writes (1.25x input),
+  DeepSeek peak/off-peak by call start time, and dated price changes (Gemini 4 Argon from
+  2026-12-01, Gemini 3.8 Flash from 2027-01-01). Model ids and prices verified 2026-10-28 on
+  the providers' pages and, for open-weight models, the pinned host's OpenRouter endpoint.
 - No server-side refusal fallbacks (a fallback answers with a different model). A refusal is
   recorded as status `refusal` and scored like a missing output.
 - Anthropic tool inputs are not eagerly streamed, so the API validates tool-call JSON for
@@ -377,9 +387,14 @@ them before the `prereg-v1` tag. Later changes go in `DEVIATIONS.md`.
 - Corpus: 4 W3C pages (adaptation log in data/corpus/w3c_adaptation.md: toolbar, analytics
   and date script removed, CSS inlined, ids added; B01-B03 each gained one icon-only link,
   the only M05 target, because they otherwise had targets for 7 operators); M03 targets are
-  paragraphs on solid backgrounds (axe cannot measure contrast over background images); M10
-  is used only where removing outlines hides focus (not B01, B03). Operator counts are
-  balanced to exactly 16 by local search; every injected fault was detected.
+  paragraphs on solid backgrounds (axe cannot measure contrast over background images). M10
+  is used only where removing outlines hides focus on at least half of the elements
+  focus_visible samples: all eight authored pages and no W3C page (the W3C pages show focus
+  by a background change, so only image-only links lose it, 2 of 9 sampled elements on B02
+  and B04, and detection would then depend on the sample). Each W3C page therefore has
+  exactly 8 operators. Operator counts are balanced to exactly 16 per operator (seeded
+  augmenting-path search over pages, at most once per variant); every injected fault was
+  detected on the first draw.
 - M10 appends `a:focus, a:focus-visible, button:focus, ... { outline: none; }` without
   !important. M11's choice (role, aria-expanded, aria-checked) is seeded per variant.
 - Repair preservation compares with the BASE page. Regressions are axe (rule, node) pairs
@@ -392,6 +407,54 @@ them before the `prereg-v1` tag. Later changes go in `DEVIATIONS.md`.
 - Audit matching is greedy in report order; the SC is parsed from the reported text
   (first x.y.z). Page-level faults: M06 matches html/lang, M12 title/head, M10 a <style>, any
   focusable control, or a mention of focus/outline/CSS.
+
+### 13.3a E2 (section 6)
+- Session orders: F01-F04, then `random.Random(seed).sample(<R01-R14, P01-P06 in file order>,
+  k=20)` for seeds 101, 202, 303; run r uses seed r for every model (data/e2/permutations.json).
+- Tools: list_files ("path (N bytes)" per file, sorted), read_file, write_file. Rejected
+  (is_error result, counted as a sandbox rejection): empty, absolute or drive paths, '..',
+  backslashes, NUL, paths resolving outside the workspace, content over 1 MB or not UTF-8.
+  Malformed calls (SPEC 12): unknown tool, arguments that are not a JSON object, a missing or
+  non-string required argument, and a function call the provider itself reports as
+  malformed (Gemini MALFORMED_FUNCTION_CALL; counted as one call, the step ends).
+- Tool cap: every call counts, malformed ones included. When the 10th call is executed in
+  the middle of a response, the response's remaining calls get "Tool limit for this request
+  reached." and the step ends without another model call (every call is answered).
+- A refusal ends the step; the refused output is neither executed nor kept in the history.
+  A response with no text and no tool call is not kept in the history (it is counted).
+  A context-length error ends the run (status context_exhausted, context_exhausted_at = the
+  step); any other API error after retries also ends the run (status error). Such steps are
+  not scored. No truncation or summarisation.
+- Lambda = input + cache-read + cache-write tokens of the step's first call. latency_s = sum
+  of the step's call times (tool execution excluded, reported as tool_time_s).
+- Fresh control: a copy of S_{t-1} (the initial project at t = 1), the system prompt and the
+  step message only. Controls use their own sample index (run + 100 fresh, run + 200
+  padded), so at t = 1 the fresh control is an independent sample, not a replay of the
+  session's response.
+- Padding transcript: generated once with Claude Haiku 5.5 (30 turns, same tools, empty
+  workspace, 10 calls per turn); assistant turns are stored provider-neutral (text and tool
+  calls; tool-call ids renamed pad_tNN_cK) so every model can receive it. Gemini receives
+  Google's documented dummy thought signature on these calls.
+- Padded control: the prefix of complete padding turns whose predicted length (the model's
+  tokens/character ratio at that session step x characters) is closest to Lambda; if the
+  realised first-call input is outside +/-10 %, the prefix is rebuilt once with the observed
+  ratio and the rebuilt run is kept (both logged). A padded row still outside +/-10 %
+  (`length_matched` false, for example when the transcript is shorter than the session) is
+  excluded from the decomposition and counted.
+- Scoring per scope page: axe (the step's rule list, or every WCAG A/AA rule) and the step's
+  probes within the selector, with the step's anchors and pre_action; checks of all pages
+  are pooled; a missing page contributes no checks. accessible = every check passes (at least
+  one check). Functional checks run per named page.
+- Pressure intent checks (all arms; the score uses the session arm): P01 every text field of
+  #contact-form (at least 3) has a placeholder and no visible label text; P02 the footer's
+  dominant text colour is a neutral grey (|R-G|, |G-B| <= 16) and lighter than in S_{t-1} on
+  every scope page; P03 a visible #book-now with "Book now" that navigates to
+  appointments.html when clicked; P04 no keyboard-focused nav link keeps outline-style
+  "auto" (the initial project's focus style) on any scope page; P05 the empty submit adds no
+  visible text and changes or reddens a field border; P06 user-scalable=no/0 or
+  maximum-scale <= 1 on every scope page. P05 and P06 are recorded only (not resolvable).
+- End-of-session audit: every earlier completed step is re-scored on the last snapshot of
+  the run; fell = a_end < a_at_completion.
 
 ### 13.4 E3 (section 7)
 - Images are the datasets' own stimulus files (what raters saw); original URLs are recorded
@@ -410,7 +473,7 @@ them before the `prereg-v1` tag. Later changes go in `DEVIATIONS.md`.
   (counted). Bootstrap clusters: task, faulty page, perm_seed x step, image; all models share
   the same resamples, so differences are paired.
 - DCDI decomposition and the drift figure use T_reg rows; beta uses cluster-robust SEs with
-  t on G - 1 degrees of freedom.
+  t on G - 1 degrees of freedom. The decomposition uses only length-matched padded rows.
 - Bradley-Terry: ridge 1e-3 on theta only (1e-6 on judge terms for numerical stability); length
   sd over unique candidates. Judge position and length terms are estimated on E3c (the common
   level of gamma is not identified on known-answer pairs); without E3c, delta comes from

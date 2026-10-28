@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Register for the community health fair - CityCare</title>
+
 <style>
       :root {
         --ink: #1f2933;
@@ -324,9 +324,7 @@
         padding: 0;
         margin: 0.75rem 0 0;
       }
-    
-a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input:focus-visible, select:focus, select:focus-visible, textarea:focus, textarea:focus-visible { outline: none; }
-</style>
+    </style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -353,7 +351,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
         </p>
 <img alt="Families visiting stalls at last year's health fair in the Old Town clinic garden" height="360" id="event-poster" src="images/cc-event.png" width="640"/>
 <p>
-<button aria-label="Share this event" class="icon-btn" id="share-event" role="buton" type="button">
+<button class="icon-btn" id="share-event" type="button">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <circle cx="18" cy="5" fill="currentColor" r="3"></circle>
 <circle cx="6" cy="12" fill="currentColor" r="3"></circle>
@@ -361,7 +359,7 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 <path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" stroke="currentColor" stroke-width="2"></path>
 </svg>
 </button>
-<button class="icon-btn" id="calendar-event" type="button">
+<button aria-label="Add to calendar" class="icon-btn" id="calendar-event" type="button">
 <svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
 <rect fill="none" height="16" rx="2" stroke="currentColor" stroke-width="2" width="18" x="3" y="5"></rect>
 <path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2"></path>
@@ -371,12 +369,12 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 <form id="event-form">
 <h2 id="attendee-heading">About you</h2>
 <div class="field">
-<label for="attendee-name">Your name</label>
-<input autocomplete="name" id="attendee-name" name="name" type="text"/>
+
+<input autocomplete="name" id="attendee-name" name="name" placeholder="Your name" type="text"/>
 </div>
 <div class="field">
-
-<input autocomplete="email" id="attendee-email" name="email" placeholder="Email address" type="email"/>
+<label for="attendee-email">Email address</label>
+<input autocomplete="email" id="attendee-email" name="email" type="email"/>
 </div>
 <h2 id="session-heading">Choose a session</h2>
 <div class="field">
@@ -399,9 +397,9 @@ a:focus, a:focus-visible, button:focus, button:focus-visible, input:focus, input
 </div>
 </fieldset>
 <p>
-<button aria-controls="access-options" aria-expanded="false" class="btn btn-secondary" id="access-options-toggle" type="button">
+<div class="btn btn-secondary" id="access-options-toggle">
               Show accessibility options
-            </button>
+            </div>
 </p>
 <div class="panel" hidden="" id="access-options">
 <div class="choice">

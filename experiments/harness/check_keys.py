@@ -2,11 +2,18 @@
 
     python -m harness.check_keys [--models a,b] [--optional]
 
-Per model, as its roles require: a text call (records the model name the API returns), a
-judge-settings call (e3_judge: models.yaml judge_params must be accepted), an image call
-(vision models), and a tool round trip (e2: the model calls list_files, gets the result,
-and answers; this exercises history replay through the adapter). OpenRouter calls also
-check that the pinned host served the request.
+Per model, as its roles require:
+- text:     a plain call (records the model name the API returns);
+- judge:    e3_judge models: the models.yaml judge_params must be accepted;
+- vision:   vision models: one image call (for OpenRouter, the pinned host must accept images);
+- tools:    e2 models: the model calls list_files, gets the result and answers (replays the
+            model's own turn through the adapter, as the E2 session does);
+- injected: e2 models: a history whose assistant turns the model did NOT produce (provider
+            "neutral"), followed by a new user message, exactly as the E2 padded control sends
+            it. The pilot has no padded control, so this is the only check of that path
+            before the full run. For Gemini it tries both encodings of the dummy thought
+            signature and reports the one to set as `injected_signature` in models.yaml.
+OpenRouter calls also check that the pinned host served every request.
 
 Calls are logged under runs/setup/ and billed to the "contingency" cap; they are not part
 of the study. Output: runs/setup/model_check.json and model_check.md.
@@ -16,6 +23,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 
 from . import config, llm
 
@@ -23,6 +31,7 @@ KEY_ENV = {"anthropic": "ANTHROPIC_API_KEY", "openai": "OPENAI_API_KEY", "google
            "deepseek": "DEEPSEEK_API_KEY", "openrouter": "OPENROUTER_API_KEY"}
 TOOLS = json.loads(config.prompt("e2_tools.json"))
 IMAGE = config.DATA / "corpus" / "base" / "images" / "cc-reception.png"
+SYSTEM = "You are a test agent."
 
 
 def _check(fn) -> dict:
@@ -31,8 +40,32 @@ def _check(fn) -> dict:
         return {"ok": r.status == "ok", "status": r.status, "model_returned": r.model_returned,
                 "provider_served": r.provider_served, "stop_reason": r.stop_reason, "text": r.text[:120],
                 "cost_usd": r.cost_usd, "ttft_s": r.ttft_s, "total_s": r.total_s}
-    except (llm.LLMError, llm.ModelUnavailable, Exception) as e:        # noqa: BLE001 - report every failure
+    except Exception as e:        # noqa: BLE001 - report every failure (LLMError, ModelUnavailable, ...)
         return {"ok": False, "error": f"{type(e).__name__}: {str(e)[:300]}"}
+
+
+def host_slug(name: str | None) -> str:
+    """'deepinfra/bf16' -> 'deepinfra'; 'DeepInfra' -> 'deepinfra' (tags vs display names)."""
+    return re.sub(r"[^a-z0-9]", "", (name or "").split("/")[0].lower())
+
+
+def host_matches(pinned: str | None, served: set[str]) -> bool | None:
+    """True if every serving host is the pinned one; None if no call reported a host."""
+    if not served:
+        return None
+    return all(host_slug(s) == host_slug(pinned) for s in served)
+
+
+def injected_history() -> list[dict]:
+    """A padded-control-shaped history: neutral assistant turns, then a new task."""
+    call = {"id": "pad_t01_c0", "name": "list_files", "arguments": {}}
+    return [llm.user("List the files in the workspace."),
+            {"role": "assistant", "provider": "neutral", "content": [], "tool_calls": [call]},
+            llm.tool_message([{"tool_call_id": call["id"], "name": call["name"], "content": "index.html (812 bytes)",
+                               "is_error": False}]),
+            {"role": "assistant", "provider": "neutral", "content": [{"type": "text", "text": "There is one file."}],
+             "tool_calls": []},
+            llm.user("That task is finished. New task: reply with the single word OK.")]
 
 
 def check_model(client: llm.LLM, key: str) -> dict:
@@ -52,21 +85,39 @@ def check_model(client: llm.LLM, key: str) -> dict:
     if "e2" in m["roles"]:
         def round_trip():
             msgs = [llm.user("Use the list_files tool once, then tell me how many files there are.")]
-            r1 = client.call(key, msgs, system="You are a test agent.", tools=TOOLS, item_id=f"setup/{key}/tools1",
-                             max_tokens=4096)
+            r1 = client.call(key, msgs, system=SYSTEM, tools=TOOLS, item_id=f"setup/{key}/tools1", max_tokens=4096)
             if not r1.tool_calls:
                 raise RuntimeError(f"no tool call (stop_reason {r1.stop_reason}): {r1.text[:100]}")
             msgs += [r1.assistant, llm.tool_message([{"tool_call_id": c["id"], "name": c["name"],
                                                       "content": "index.html (812 bytes)\nstyles.css (420 bytes)"}
                                                      for c in r1.tool_calls])]
-            return client.call(key, msgs, system="You are a test agent.", tools=TOOLS, item_id=f"setup/{key}/tools2",
-                               max_tokens=4096)
+            return client.call(key, msgs, system=SYSTEM, tools=TOOLS, item_id=f"setup/{key}/tools2", max_tokens=4096)
         out["tools"] = _check(round_trip)
+        encodings = ["bytes", "base64"] if m["provider"] == "google" else [None]
+        original = m.get("injected_signature")
+        for enc in encodings:
+            if enc is not None:
+                m["injected_signature"] = enc          # the registry dict is shared in-process
+            res = _check(lambda: client.call(key, injected_history(), system=SYSTEM, tools=TOOLS,
+                                             item_id=f"setup/{key}/injected", max_tokens=4096))
+            res["encoding"] = enc
+            out["injected"] = res
+            if res["ok"]:
+                break
+        if m["provider"] == "google":
+            if out["injected"]["ok"]:
+                out["set_injected_signature"] = out["injected"]["encoding"]
+            if original is None:
+                m.pop("injected_signature", None)
+            else:
+                m["injected_signature"] = original
     if m["provider"] == "openrouter":
-        served = {v.get("provider_served") for k, v in out.items() if isinstance(v, dict) and v.get("provider_served")}
+        served = {v.get("provider_served") for v in out.values() if isinstance(v, dict) and v.get("provider_served")}
         out["pinned_host"] = m.get("openrouter_provider")
-        out["host_ok"] = served <= {m.get("openrouter_provider")} if served else None
-    out["ok"] = all(v.get("ok") for v in out.values() if isinstance(v, dict) and ("ok" in v)) and out.get("host_ok", True) is not False
+        out["served_hosts"] = sorted(served)
+        out["host_ok"] = host_matches(m.get("openrouter_provider"), served)
+    out["ok"] = (all(v.get("ok") for v in out.values() if isinstance(v, dict) and "ok" in v)
+                 and out.get("host_ok", True) is not False)
     return out
 
 
@@ -88,9 +139,13 @@ def main(argv=None):
         if "skipped" in r:
             lines.append(f"| {r['key']} | skipped | | {r['skipped']} |")
             continue
-        notes = "; ".join(f"{k}: {v.get('error') or v.get('status')}" for k, v in r.items()
-                          if isinstance(v, dict) and not v.get("ok"))
-        lines.append(f"| {r['key']} | {'OK' if r['ok'] else 'FAIL'} | {r.get('text', {}).get('model_returned') or ''} | {notes} |")
+        notes = [f"{k}: {v.get('error') or v.get('status')}" for k, v in r.items() if isinstance(v, dict) and not v.get("ok")]
+        if r.get("host_ok") is False:
+            notes.append(f"served by {r['served_hosts']}, pinned {r['pinned_host']}")
+        if r.get("set_injected_signature"):
+            notes.append(f"set injected_signature: {r['set_injected_signature']}")
+        lines.append(f"| {r['key']} | {'OK' if r['ok'] else 'FAIL'} | {r.get('text', {}).get('model_returned') or ''} | "
+                     f"{'; '.join(notes)} |")
     (out_dir / "model_check.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print("\n".join(lines))
 

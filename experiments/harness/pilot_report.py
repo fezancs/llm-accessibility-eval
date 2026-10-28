@@ -131,6 +131,38 @@ def e2_growth(steps: list[dict]) -> dict:
     return fits
 
 
+def padding_check(steps: list[dict]) -> list[str]:
+    """Can the padding transcript match the session length at the last padded checkpoint?
+
+    The transcript's full length is estimated in each model's tokens from the model's own
+    pilot tokens/char ratio (session arm); the session length at position 24 is a linear
+    extrapolation of Lambda over pilot positions 1-6 (rough: later steps read larger files).
+    """
+    from . import e2_controls, e2_padding, e2_steps
+    out = ["", "E2 padded control: padding transcript length vs projected session length "
+           f"at position {max(e2_steps.padded_checkpoints())} (rough):", ""]
+    try:
+        pad = e2_padding.load()
+    except FileNotFoundError:
+        return out + ["Padding transcript not generated yet (python -m harness.e2_padding)."]
+    full_chars = e2_controls.prefix_chars(pad, "")[-1]
+    out += ["| Model | tokens/char | padding (tokens) | projected Lambda | covered |", "|---|---|---|---|---|"]
+    by = collections.defaultdict(list)
+    for s in steps:
+        if s.get("arm") == "session" and s.get("Lambda") and s.get("first_request_chars"):
+            by[s["model_key"]].append((s["position"], s["Lambda"], s["first_request_chars"]))
+    last = max(e2_steps.padded_checkpoints())
+    for m, pts in sorted(by.items()):
+        rho = sum(lam for _, lam, _ in pts) / sum(ch for _, _, ch in pts)
+        x = np.array([p for p, _, _ in pts], float)
+        y = np.array([lam for _, lam, _ in pts], float)
+        proj = float(np.polyval(np.polyfit(x, y, 1), last)) if len(set(x)) >= 2 else float(y.max())
+        pad_tokens = rho * full_chars
+        out.append(f"| {m} | {rho:.3f} | {pad_tokens:,.0f} | {proj:,.0f} | "
+                   f"{'yes' if pad_tokens >= proj else 'NO: late checkpoints cannot be length-matched (ask the author)'} |")
+    return out
+
+
 def main():
     calls = _jsonl(PILOT / "calls.jsonl")
     if not calls:
@@ -165,6 +197,7 @@ def main():
         rate = bad / tc if tc else None
         lines.append(f"| {m} | {tc} | {bad} | {'' if rate is None else f'{rate:.1%}'} | "
                      f"{'EXCLUDE (ask the author)' if rate is not None and rate > 0.2 else 'ok'} |")
+    lines += padding_check(steps)
     # -- latency and caching
     ok = [c for c in calls if c.get("status") == "ok"]
     lines += ["", f"Latency captured: total_s on {sum(c.get('total_s') is not None for c in ok)}/{len(ok)} successful calls; "

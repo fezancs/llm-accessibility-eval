@@ -90,3 +90,19 @@ def test_curves_shape():
     c = dcdi.curves(dcdi.paired(pd.DataFrame(rs)), b=100)["m"]
     assert list(c["position"]) == [5]
     assert c["session"].iloc[0] == pytest.approx(0.9) and c["fresh"].iloc[0] == pytest.approx(1.0)
+
+
+def test_unmatched_padded_rows_are_excluded_and_counted():
+    rs = []
+    for r, matched in ((0, True), (1, False), (2, None)):          # None: field absent (older rows)
+        padded = row("m", r, 8, "R01", "regular", "padded", 0.5 if matched is False else 0.9)
+        if matched is not None:
+            padded["length_matched"] = matched
+        rs += [row("m", r, 8, "R01", "regular", "fresh", 1.0), padded,
+               row("m", r, 8, "R01", "regular", "session", 0.8)]
+    pairs = dcdi.paired(pd.DataFrame(rs))
+    dec = dcdi.decomposition(pairs, b=50)["models"]["m"]
+    # runs 0 and 2 only: len = (0.1 + 0.1) / 2.0, hist = (0.1 + 0.1) / 2.0
+    assert dec["len"].est == pytest.approx(0.1) and dec["hist"].est == pytest.approx(0.1)
+    assert dcdi.drops(pairs)["m"]["padded_length_unmatched"] == 1
+    assert dcdi.dcdi(pairs, b=50)["models"]["m"]["dcdi"].est == pytest.approx(0.2)   # DCDI itself unaffected

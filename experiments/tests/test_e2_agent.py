@@ -132,3 +132,39 @@ def test_session_replay_is_free(monkeypatch, tmp_path):
     strip = lambda rows: [{k: v for k, v in r.items() if k != "tool_time_s"} for r in rows]   # noqa: E731
     assert strip(s1.rows) == strip(s2.rows)
     assert all(r["Lambda"] for r in s2.rows)
+
+
+def test_refusal_ends_step_and_is_not_replayed(monkeypatch, tmp_path):
+    def responder(model, system, messages, tools):
+        if n_tool_msgs_since_user(messages) == 0:
+            return {"text": "", "tool_calls": [{"name": "list_files", "arguments": {}}]}
+        return {"text": "partial output", "stop_reason": "refusal",
+                "tool_calls": [{"name": "write_file", "arguments": {"path": "x.txt", "content": "no"}}]}
+    fakes.install(monkeypatch, tmp_path, responder, [fakes.fake_model("fake-a")])
+    (tmp_path / "ws").mkdir()
+    msgs = [llm.user("go")]
+    res = e2_agent.run_turn(llm.LLM("e2"), "fake-a", "sys", e2_agent.TOOLS, msgs, Workspace(tmp_path / "ws"),
+                            item_prefix="x", sample_idx=0, cap=10)
+    assert res["refusal"] and res["llm_calls"] == 2 and res["tool_calls"] == 1
+    assert not (tmp_path / "ws" / "x.txt").exists()                 # a refused response's calls are not executed
+    assert [m["role"] for m in msgs] == ["user", "assistant", "tool"]  # and it is not added to the history
+
+
+def test_empty_response_not_added_to_history(monkeypatch, tmp_path):
+    fakes.install(monkeypatch, tmp_path, lambda *a: {"text": "", "stop_reason": "max_tokens"},
+                  [fakes.fake_model("fake-a")])
+    (tmp_path / "ws").mkdir()
+    msgs = [llm.user("go")]
+    res = e2_agent.run_turn(llm.LLM("e2"), "fake-a", "sys", e2_agent.TOOLS, msgs, Workspace(tmp_path / "ws"),
+                            item_prefix="x", sample_idx=0, cap=10)
+    assert res["empty_responses"] == 1 and res["llm_calls"] == 1 and res["status"] == "ok"
+    assert [m["role"] for m in msgs] == ["user"]                     # next step's user message stays valid
+
+
+def test_provider_reported_malformed_call_counts(monkeypatch, tmp_path):
+    fakes.install(monkeypatch, tmp_path, lambda *a: {"text": "", "stop_reason": "malformed_tool_call"},
+                  [fakes.fake_model("fake-a")])
+    (tmp_path / "ws").mkdir()
+    res = e2_agent.run_turn(llm.LLM("e2"), "fake-a", "sys", e2_agent.TOOLS, [llm.user("go")],
+                            Workspace(tmp_path / "ws"), item_prefix="x", sample_idx=0, cap=10)
+    assert res["tool_calls"] == 1 and res["malformed_tool_calls"] == 1 and res["llm_calls"] == 1

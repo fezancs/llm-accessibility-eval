@@ -271,8 +271,15 @@ def test_plan_profiles(monkeypatch):
     assert p["padded"] == [8, 12, 16, 20, 24] and p["positions"] == 24
     p = e2_run.plan(e2_run.parse_args([]))
     assert p["runs"] == 3 and p["exp"] == "e2"
-    assert "gemini-4-argon" not in p["models"]                  # provider_model_id still VERIFY -> skipped
+    assert "gemini-4-argon" in p["models"]                      # verified in models.yaml (2026-10-28)
     assert "claude-opus-5-5" in p["models"] and "deepseek-v4-pro" in p["models"]
+    # Argon is run only if available: marked unavailable, the full profile skips it.
+    from harness import config
+    reg = config.models_config()
+    patched = {**reg, "models": [{**m, "available": False} if m["key"] == "gemini-4-argon" else m
+                                 for m in reg["models"]]}
+    monkeypatch.setattr(config, "models_config", lambda: patched)
+    assert "gemini-4-argon" not in e2_run.plan(e2_run.parse_args([]))["models"]
     p = e2_run.plan(e2_run.parse_args(["--models", "a", "--positions", "10", "--padded", "8,12"]))
     assert p["padded"] == [8] and p["positions"] == 10
     assert e2_run.plan(e2_run.parse_args(["--models", "a", "--no-padded"]))["padded"] == []

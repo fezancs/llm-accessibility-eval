@@ -70,6 +70,10 @@
     "elsewhere-heading": "font-size: 22.4px; font-weight: 400; font-family: impact, sans-serif; line-height: normal; margin-top: 33.6px; margin-bottom: 10px; color: rgb(65, 84, 93); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(65, 84, 93); background-color: rgba(0, 0, 0, 0); display: block",
     "concert-heading": "font-size: 12px; font-weight: 700; font-family: \"Lucida Grande\", Lucida, Verdana, sans-serif; line-height: normal; margin-top: 0px; margin-bottom: 0px; color: rgb(0, 0, 0); letter-spacing: normal; text-transform: none; padding-top: 5px; padding-bottom: 5px; border-bottom: 0px none rgb(0, 0, 0); background-color: rgb(237, 237, 237); display: block",
     "survey-heading": "font-size: 12px; font-weight: 700; font-family: \"Lucida Grande\", Lucida, Verdana, sans-serif; line-height: normal; margin-top: 0px; margin-bottom: 0px; color: rgb(0, 0, 0); letter-spacing: normal; text-transform: none; padding-top: 5px; padding-bottom: 5px; border-bottom: 0px none rgb(0, 0, 0); background-color: rgb(237, 237, 237); display: block"
+   },
+   "M10": {
+    "sampled": 9,
+    "hidden": 0
    }
   }
  },
@@ -99,9 +103,6 @@
    "M09": [
     "footer-copyright"
    ],
-   "M10": [
-    "stylesheet"
-   ],
    "M11": [
     "quickmenu-go"
    ],
@@ -123,6 +124,10 @@
     "story1": "font-size: 22.4px; font-weight: 400; font-family: impact, sans-serif; line-height: normal; margin-top: 18.592px; margin-bottom: 18.592px; color: rgb(65, 84, 93); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(65, 84, 93); background-color: rgba(0, 0, 0, 0); display: block",
     "story2": "font-size: 22.4px; font-weight: 400; font-family: impact, sans-serif; line-height: normal; margin-top: 18.592px; margin-bottom: 18.592px; color: rgb(65, 84, 93); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(65, 84, 93); background-color: rgba(0, 0, 0, 0); display: block",
     "story3": "font-size: 22.4px; font-weight: 400; font-family: impact, sans-serif; line-height: normal; margin-top: 18.592px; margin-bottom: 18.592px; color: rgb(65, 84, 93); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(65, 84, 93); background-color: rgba(0, 0, 0, 0); display: block"
+   },
+   "M10": {
+    "sampled": 9,
+    "hidden": 2
    }
   }
  },
@@ -175,6 +180,10 @@
    },
    "M08": {
     "terms-heading": "font-size: 18px; font-weight: 700; font-family: \"Lucida Grande\", Lucida, Verdana, sans-serif; line-height: 27px; margin-top: 0px; margin-bottom: 0px; color: rgb(51, 51, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   },
+   "M10": {
+    "sampled": 8,
+    "hidden": 0
    }
   }
  },
@@ -203,9 +212,6 @@
    "M09": [
     "footer-copyright"
    ],
-   "M10": [
-    "stylesheet"
-   ],
    "M11": [
     "quickmenu-go",
     "submit"
@@ -227,6 +233,10 @@
    "M08": {
     "survey-heading": "font-size: 22.4px; font-weight: 400; font-family: impact, sans-serif; line-height: normal; margin-top: 33.6px; margin-bottom: 10px; color: rgb(65, 84, 93); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(65, 84, 93); background-color: rgba(0, 0, 0, 0); display: block",
     "surveyresults": "font-size: 22.4px; font-weight: 400; font-family: impact, sans-serif; line-height: normal; margin-top: 18.592px; margin-bottom: 18.592px; color: rgb(65, 84, 93); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(65, 84, 93); background-color: rgba(0, 0, 0, 0); display: block"
+   },
+   "M10": {
+    "sampled": 9,
+    "hidden": 2
    }
   }
  },
@@ -327,6 +337,10 @@
    "M08": {
     "services-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
     "news-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   },
+   "M10": {
+    "sampled": 9,
+    "hidden": 9
    }
   }
  },
@@ -398,6 +412,10 @@
    "M08": {
     "details-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
     "visit-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   },
+   "M10": {
+    "sampled": 8,
+    "hidden": 8
    }
   }
  },
@@ -470,6 +488,10 @@
     "map-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
     "hours-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
     "addresses-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   },
+   "M10": {
+    "sampled": 9,
+    "hidden": 9
    }
   }
  },
@@ -548,6 +570,10 @@
    "M08": {
     "new-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
     "app-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   },
+   "M10": {
+    "sampled": 9,
+    "hidden": 9
    }
   }
  },
@@ -627,6 +653,10 @@
     "filters-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
     "results-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
     "campaign-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   },
+   "M10": {
+    "sampled": 9,
+    "hidden": 9
    }
   }
  },
@@ -710,6 +740,10 @@
     "notifications-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
     "note-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
     "team-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   },
+   "M10": {
+    "sampled": 9,
+    "hidden": 9
    }
   }
  },
@@ -810,6 +844,10 @@
     "day-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
     "after-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
     "feedback-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 0px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   },
+   "M10": {
+    "sampled": 9,
+    "hidden": 9
    }
   }
  },
@@ -882,6 +920,10 @@
    "M08": {
     "attendee-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
     "session-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   },
+   "M10": {
+    "sampled": 9,
+    "hidden": 8
    }
   }
  }
