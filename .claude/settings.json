@@ -6,7 +6,19 @@
       "Bash(env)",
       "Bash(python3 -c \" *)",
       "Read(//home/fezan/.cache/**)",
-      "Bash(.venv/bin/python -c \"import playwright, pytest, krippendorff; print\\('ok', pytest.__version__, krippendorff.__version__ if hasattr\\(krippendorff,'__version__'\\) else ''\\)\")"
+      "Bash(.venv/bin/python -c \"import playwright, pytest, krippendorff; print\\('ok', pytest.__version__, krippendorff.__version__ if hasattr\\(krippendorff,'__version__'\\) else ''\\)\")",
+      "Bash(.venv/bin/pip index *)",
+      "Bash(.venv/bin/python -c \"import anthropic, openai, google.genai as g; print\\(anthropic.__version__, openai.__version__, g.__version__\\)\")",
+      "Bash(.venv/bin/python -m playwright install --help)",
+      "Bash(.venv/bin/python -m playwright install chromium --only-shell)",
+      "Bash(.venv/bin/python -)",
+      "Bash(.venv)",
+      "Bash(touch __init__.py)",
+      "Bash(.venv/bin/python -m pytest -q)",
+      "Bash(cat /tmp/claude-1000/-home-fezan-Downloads-se4all-2027-paper-se4all-paper/330f1a7f-0713-4fdc-911e-b1fc718f59e3/tasks/b7xkft3yt.output | tr '\\\\r' '\\\\n' | tail -4; ls ~/.cache/ms-playwright 2>/dev/null)",
+      "Read(//home/fezan/.cache/ms-playwright/**)",
+      "Bash(/usr/bin/google-chrome --version)",
+      "Bash(.venv/bin/python -c \"import playwright.sync_api as p; print\\([a for a in dir\\(p.Page\\) if 'access' in a.lower\\(\\)]\\); print\\([a for a in dir\\(p.Locator\\) if 'aria' in a.lower\\(\\)]\\)\")"
     ]
   }
 }

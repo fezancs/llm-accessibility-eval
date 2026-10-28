@@ -290,3 +290,135 @@ Required keys used by the paper text outside results paragraphs: `n-models-e1`, 
 | D_CR data link unavailable | Run E3 on D_BLV only (68 items) and use D_BLV images for E3c; say so |
 | Budget cap reached | Use `lean_profile` in budget.yaml |
 | A model fails tool calling in E2 (> 20 % malformed calls in the pilot) | Exclude it from E2 and report why |
+
+---
+
+## 13. Implementation clarifications (fixed before data collection)
+
+Written while building the harness, before any model call (2026-10-28). They resolve points
+the sections above leave open; none was chosen with knowledge of results. The author reviews
+them before the `prereg-v1` tag. Later changes go in `DEVIATIONS.md`.
+
+### 13.1 Infrastructure (section 2)
+- APIs: Anthropic Messages, OpenAI **Responses** (store=false; encrypted reasoning items are
+  replayed across tool calls), Google Gemini `generate_content_stream`, DeepSeek native and
+  OpenRouter via Chat Completions (OpenRouter: one pinned host, `allow_fallbacks: false`).
+- Evaluated calls send no temperature, reasoning or thinking parameters (provider defaults);
+  `max_tokens` = 64,000 or the model's maximum output if lower. Judges send `judge_params`
+  from models.yaml (lowest available setting).
+- No server-side refusal fallbacks (a fallback answers with a different model). A refusal is
+  recorded as status `refusal` and scored like a missing output.
+- Anthropic tool inputs are not eagerly streamed, so the API validates tool-call JSON for
+  Claude as the other APIs do; malformed-call rates stay comparable.
+- Prompt caching: Anthropic breakpoint after the system prompt plus automatic caching of the
+  growing history in E2; an explicit breakpoint after image + page context for E3 judges;
+  E1 single-turn calls have no shared prefix and are not cached. Other providers cache
+  automatically.
+- Retries: up to 5 after the first attempt, backoff 2 s x 2^k + jitter (max 60 s), on 408,
+  409, 429, 5xx and transport errors; every attempt is logged and billed. A model whose price
+  is missing is refused before any request.
+- TTFT = time to the first streamed delta of any kind (text, thinking or tool input).
+- Response-cache key: model, model id, messages (images by hash), tools, max_tokens,
+  judge parameters, cache mode and sample index (the item id is a label only).
+- `setup/` calls (key checks) bill the contingency cap and are not part of the study totals.
+
+### 13.2 Rendering and oracles (sections 3-4)
+- Pages are served by absolute path from allow-listed folders on 127.0.0.1; every request to
+  another host is blocked; JavaScript dialogs are accepted and recorded.
+- Timers: a page "has timers" if it calls setInterval, setTimeout >= 1 s, more than 30
+  requestAnimationFrame callbacks, or runs an infinite CSS animation; axe then runs again at
+  t = 6 s and a rule fails if it failed in either run.
+- Interactive elements (generic probes): native controls, tabindex >= 0, the eight roles in
+  4.2, and "clickable-looking" elements (an onclick attribute, or the outermost element of a
+  cursor:pointer region), excluding labels, wrappers of real controls and parts of controls.
+  Composite groups: same-name radio groups and items inside tablist, menu, menubar, listbox,
+  radiogroup, tree, grid, treegrid or toolbar.
+- `focus_visible`: up to 10 focusable elements, evenly spaced in tab order; region = bounding
+  box + 4 px (the label or parent if the element is under 4 px or transparent); each element
+  is focused with Tab from the previous one on a fresh page and compared with the pristine
+  page. Threshold: mean absolute pixel difference > 1.0 (0-255 scale); calibration fixtures
+  give 0.0 without an indicator and >= 24 with one. Elements whose region changes by itself
+  or whose layout moves on focus are skipped as indeterminate; the probe passes if every
+  determinate element passes.
+- `no_keyboard_trap`: native date/time inputs and media controls move focus among their
+  internal parts, so they may hold focus for up to 8 Tabs; Shift+Tab must move focus to a
+  different element.
+- `form_errors_associated`: a field counts as invalid after the empty submit if it is
+  required/aria-required, has aria-invalid="true", matches :invalid, changed border/outline/
+  background, or gained associated error text. Error text must be visible and associated
+  (aria-describedby, aria-errormessage, label). Native validation bubbles are not in the DOM
+  and do not count. A form that submits (navigates or reloads) fails.
+- `switch_behavior` also accepts a toggle button with aria-pressed (WCAG 4.1.2 requires a
+  determinable state; role=switch is an APG convention).
+- `tabs_behavior`: selected state = aria-selected, checked, pressed, expanded or current;
+  the panel is the aria-controls target, the element labelled by the tab, or the heading that
+  contains the tab name.
+- `combobox_behavior`: a native <datalist> counts as showing options and exposing state.
+- `table_headers`: a header row, row headers, or headers attributes on every data cell, plus a
+  caption or accessible name.
+- `pause_control`: motion = visible text or pixels of the region change within 6 s; the
+  control's accessible name matches pause/stop/play/halt/freeze/motion/animation/rotation/
+  autoplay/scroll; activated with Enter; nothing may change for 12 s afterwards.
+- `tooltip_behavior`: the trigger is the element whose keyboard focus shows the tooltip; the
+  hover test moves the pointer straight onto the nearest point of the tooltip.
+- `step_focus_management`: visible step-1 fields are filled with valid values first; the
+  current step counts as exposed by aria-current="step" or text such as "Step 2" or "2 of 3".
+- `keyboard_activation`: Enter must produce the same effect as a click (URL, visible text and
+  aria-expanded states compared).
+- Accessible names, roles and states are read from Chrome's accessibility tree (CDP).
+
+### 13.3 E1 (section 5)
+- The HTML block is the first complete ```html fence (case-insensitive); a truncated block
+  counts as missing. No self-assessment is asked when there is no HTML.
+- JSON retries (self-assessment, audit, E3) send "Respond with valid JSON only." after the
+  invalid reply in the same conversation.
+- Functional `text_present` is case-insensitive over text content, button values and
+  aria-labels.
+- Corpus: 4 W3C pages (adaptation log in data/corpus/w3c_adaptation.md: toolbar, analytics
+  and date script removed, CSS inlined, ids added; B01-B03 each gained one icon-only link,
+  the only M05 target, because they otherwise had targets for 7 operators); M03 targets are
+  paragraphs on solid backgrounds (axe cannot measure contrast over background images); M10
+  is used only where removing outlines hides focus (not B01, B03). Operator counts are
+  balanced to exactly 16 by local search; every injected fault was detected.
+- M10 appends `a:focus, a:focus-visible, button:focus, ... { outline: none; }` without
+  !important. M11's choice (role, aria-expanded, aria-checked) is seeded per variant.
+- Repair preservation compares with the BASE page. Regressions are axe (rule, node) pairs
+  violating after repair but not on the faulty page (nodes by axe selector), plus generic
+  probes that passed on the faulty page and fail after repair. Fallback locators: M01 img src,
+  M02 input name, M03 paragraph text, M05 link href. M07 resolved requires role "button".
+  M08 resolved: the text is a heading's text and no heading level is skipped (decreases are
+  allowed; the first heading may have any level). SSIM is computed on full-page screenshots
+  cropped to the common size (diagnostic).
+- Audit matching is greedy in report order; the SC is parsed from the reported text
+  (first x.y.z). Page-level faults: M06 matches html/lang, M12 title/head, M10 a <style>, any
+  focusable control, or a mention of focus/outline/CSS.
+
+### 13.4 E3 (section 7)
+- Images are the datasets' own stimulus files (what raters saw); original URLs are recorded
+  but not used (9 of 204 are dead and 18 exceed 5 MB).
+- D_CR human score = post-image overall rating; D_BLV has no section title or caption ("none").
+- E3a pairs: same image AND same article (raters judged descriptions in their article).
+- Known-answer `swap`/`append` take another image's description from the same dataset,
+  seeded per item; `truncate` is skipped for descriptions of three words or fewer.
+- Generator pairs: per image, a degree-regular sample of 16 of the 28 pairs (each generator
+  in exactly 4), seeded; lean and pilot image sets are prefixes of the seed-7 sample.
+- Anonymisation also strips "An image of" and "Alt-text:"; quotes only when they wrap the
+  whole text. The leakage result in the paper comes from the analysis package.
+
+### 13.5 Analysis (sections 5-11)
+- API errors score 0 in S_gen and are counted; overclaim excludes unparsed self-assessments
+  (counted). Bootstrap clusters: task, faulty page, perm_seed x step, image; all models share
+  the same resamples, so differences are paired.
+- DCDI decomposition and the drift figure use T_reg rows; beta uses cluster-robust SEs with
+  t on G - 1 degrees of freedom.
+- Bradley-Terry: ridge 1e-3 on theta only (1e-6 on judge terms for numerical stability); length
+  sd over unique candidates. Judge position and length terms are estimated on E3c (the common
+  level of gamma is not identified on known-answer pairs); without E3c, delta comes from
+  E3b with gamma = 0, and the report says so.
+- Single-judge and naive-panel random orders are drawn once per pair and shared across
+  judges; missing verdicts are excluded; naive-panel ties go to a seeded coin.
+- Table IV: PC, gamma and eta from E3c; pointwise CMBPE = mean of per-judge z-scores.
+- CPDS scenarios: batch -> repair, interactive -> generation; Pareto over all three objectives.
+- H3 supported only if pi >= 0.5 and the Holm-corrected p < 0.05; H4a combines per-judge
+  p-values by Bonferroni before Holm; H2 re-takes the maxima in every bootstrap replicate.
+- Totals (calls, cost, dates) count experiments e1, e2 and e3 only (not pilot or setup).

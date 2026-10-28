@@ -1,0 +1,888 @@
+{
+ "B01": {
+  "provenance": "w3c",
+  "ops": {
+   "M01": [
+    "site-logo",
+    "weather-icon",
+    "concert-photo",
+    "survey-photo"
+   ],
+   "M03": [
+    "weather",
+    "heatwave-teaser",
+    "violin-teaser",
+    "brains-teaser"
+   ],
+   "M05": [
+    "info-news-feed"
+   ],
+   "M06": [
+    "html"
+   ],
+   "M08": [
+    "elsewhere-heading",
+    "concert-heading",
+    "survey-heading"
+   ],
+   "M09": [
+    "footer-copyright"
+   ],
+   "M11": [
+    "quickmenu-go"
+   ],
+   "M12": [
+    "title"
+   ]
+  },
+  "meta": {
+   "M03": {
+    "weather": {
+     "bg": [
+      237,
+      237,
+      237
+     ]
+    },
+    "heatwave-teaser": {
+     "bg": [
+      237,
+      237,
+      237
+     ]
+    },
+    "violin-teaser": {
+     "bg": [
+      237,
+      237,
+      237
+     ]
+    },
+    "brains-teaser": {
+     "bg": [
+      237,
+      237,
+      237
+     ]
+    }
+   },
+   "M08": {
+    "elsewhere-heading": "font-size: 22.4px; font-weight: 400; font-family: impact, sans-serif; line-height: normal; margin-top: 33.6px; margin-bottom: 10px; color: rgb(65, 84, 93); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(65, 84, 93); background-color: rgba(0, 0, 0, 0); display: block",
+    "concert-heading": "font-size: 12px; font-weight: 700; font-family: \"Lucida Grande\", Lucida, Verdana, sans-serif; line-height: normal; margin-top: 0px; margin-bottom: 0px; color: rgb(0, 0, 0); letter-spacing: normal; text-transform: none; padding-top: 5px; padding-bottom: 5px; border-bottom: 0px none rgb(0, 0, 0); background-color: rgb(237, 237, 237); display: block",
+    "survey-heading": "font-size: 12px; font-weight: 700; font-family: \"Lucida Grande\", Lucida, Verdana, sans-serif; line-height: normal; margin-top: 0px; margin-bottom: 0px; color: rgb(0, 0, 0); letter-spacing: normal; text-transform: none; padding-top: 5px; padding-bottom: 5px; border-bottom: 0px none rgb(0, 0, 0); background-color: rgb(237, 237, 237); display: block"
+   }
+  }
+ },
+ "B02": {
+  "provenance": "w3c",
+  "ops": {
+   "M01": [
+    "weather-icon",
+    "wahoonie-photo",
+    "website-screenshot",
+    "donations-chart"
+   ],
+   "M03": [
+    "weather"
+   ],
+   "M05": [
+    "info-news-feed"
+   ],
+   "M06": [
+    "html"
+   ],
+   "M08": [
+    "story1",
+    "story2",
+    "story3"
+   ],
+   "M09": [
+    "footer-copyright"
+   ],
+   "M10": [
+    "stylesheet"
+   ],
+   "M11": [
+    "quickmenu-go"
+   ],
+   "M12": [
+    "title"
+   ]
+  },
+  "meta": {
+   "M03": {
+    "weather": {
+     "bg": [
+      237,
+      237,
+      237
+     ]
+    }
+   },
+   "M08": {
+    "story1": "font-size: 22.4px; font-weight: 400; font-family: impact, sans-serif; line-height: normal; margin-top: 18.592px; margin-bottom: 18.592px; color: rgb(65, 84, 93); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(65, 84, 93); background-color: rgba(0, 0, 0, 0); display: block",
+    "story2": "font-size: 22.4px; font-weight: 400; font-family: impact, sans-serif; line-height: normal; margin-top: 18.592px; margin-bottom: 18.592px; color: rgb(65, 84, 93); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(65, 84, 93); background-color: rgba(0, 0, 0, 0); display: block",
+    "story3": "font-size: 22.4px; font-weight: 400; font-family: impact, sans-serif; line-height: normal; margin-top: 18.592px; margin-bottom: 18.592px; color: rgb(65, 84, 93); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(65, 84, 93); background-color: rgba(0, 0, 0, 0); display: block"
+   }
+  }
+ },
+ "B03": {
+  "provenance": "w3c",
+  "ops": {
+   "M01": [
+    "site-logo",
+    "weather-icon"
+   ],
+   "M03": [
+    "weather",
+    "music-line-text"
+   ],
+   "M05": [
+    "info-news-feed"
+   ],
+   "M06": [
+    "html"
+   ],
+   "M08": [
+    "terms-heading"
+   ],
+   "M09": [
+    "footer-copyright"
+   ],
+   "M11": [
+    "quickmenu-go"
+   ],
+   "M12": [
+    "title"
+   ]
+  },
+  "meta": {
+   "M03": {
+    "weather": {
+     "bg": [
+      237,
+      237,
+      237
+     ]
+    },
+    "music-line-text": {
+     "bg": [
+      237,
+      237,
+      237
+     ]
+    }
+   },
+   "M08": {
+    "terms-heading": "font-size: 18px; font-weight: 700; font-family: \"Lucida Grande\", Lucida, Verdana, sans-serif; line-height: 27px; margin-top: 0px; margin-bottom: 0px; color: rgb(51, 51, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   }
+  }
+ },
+ "B04": {
+  "provenance": "w3c",
+  "ops": {
+   "M01": [
+    "site-logo",
+    "weather-icon"
+   ],
+   "M02": [
+    "n",
+    "em",
+    "ev"
+   ],
+   "M03": [
+    "weather"
+   ],
+   "M06": [
+    "html"
+   ],
+   "M08": [
+    "survey-heading",
+    "surveyresults"
+   ],
+   "M09": [
+    "footer-copyright"
+   ],
+   "M10": [
+    "stylesheet"
+   ],
+   "M11": [
+    "quickmenu-go",
+    "submit"
+   ],
+   "M12": [
+    "title"
+   ]
+  },
+  "meta": {
+   "M03": {
+    "weather": {
+     "bg": [
+      237,
+      237,
+      237
+     ]
+    }
+   },
+   "M08": {
+    "survey-heading": "font-size: 22.4px; font-weight: 400; font-family: impact, sans-serif; line-height: normal; margin-top: 33.6px; margin-bottom: 10px; color: rgb(65, 84, 93); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(65, 84, 93); background-color: rgba(0, 0, 0, 0); display: block",
+    "surveyresults": "font-size: 22.4px; font-weight: 400; font-family: impact, sans-serif; line-height: normal; margin-top: 18.592px; margin-bottom: 18.592px; color: rgb(65, 84, 93); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(65, 84, 93); background-color: rgba(0, 0, 0, 0); display: block"
+   }
+  }
+ },
+ "B05": {
+  "provenance": "authored",
+  "ops": {
+   "M01": [
+    "hero-photo",
+    "news-flu-photo",
+    "news-evening-photo",
+    "news-physio-photo"
+   ],
+   "M02": [
+    "site-search-input",
+    "newsletter-email"
+   ],
+   "M03": [
+    "hero-text",
+    "vaccinations-text",
+    "checkups-text",
+    "pharmacy-text"
+   ],
+   "M04": [
+    "search-submit"
+   ],
+   "M05": [
+    "service-vaccinations-link",
+    "service-checkups-link",
+    "service-pharmacy-link",
+    "social-facebook",
+    "social-x",
+    "social-instagram",
+    "social-youtube"
+   ],
+   "M06": [
+    "html"
+   ],
+   "M07": [
+    "hours-toggle>hours-panel"
+   ],
+   "M08": [
+    "services-heading",
+    "news-heading"
+   ],
+   "M09": [
+    "social-facebook",
+    "social-x",
+    "social-instagram",
+    "social-youtube",
+    "footer-privacy",
+    "footer-accessibility",
+    "footer-terms",
+    "footer-careers"
+   ],
+   "M10": [
+    "stylesheet"
+   ],
+   "M11": [
+    "search-submit",
+    "hours-toggle",
+    "newsletter-subscribe"
+   ],
+   "M12": [
+    "title"
+   ]
+  },
+  "meta": {
+   "M03": {
+    "hero-text": {
+     "bg": [
+      255,
+      255,
+      255
+     ]
+    },
+    "vaccinations-text": {
+     "bg": [
+      255,
+      255,
+      255
+     ]
+    },
+    "checkups-text": {
+     "bg": [
+      255,
+      255,
+      255
+     ]
+    },
+    "pharmacy-text": {
+     "bg": [
+      255,
+      255,
+      255
+     ]
+    }
+   },
+   "M08": {
+    "services-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
+    "news-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   }
+  }
+ },
+ "B06": {
+  "provenance": "authored",
+  "ops": {
+   "M01": [
+    "reception-photo"
+   ],
+   "M02": [
+    "full-name",
+    "phone",
+    "email"
+   ],
+   "M03": [
+    "form-intro"
+   ],
+   "M04": [
+    "print-form"
+   ],
+   "M05": [
+    "social-facebook",
+    "social-x",
+    "social-instagram",
+    "social-youtube"
+   ],
+   "M06": [
+    "html"
+   ],
+   "M07": [
+    "next-steps-toggle>next-steps-panel"
+   ],
+   "M08": [
+    "details-heading",
+    "visit-heading"
+   ],
+   "M09": [
+    "social-facebook",
+    "social-x",
+    "social-instagram",
+    "social-youtube",
+    "footer-privacy",
+    "footer-accessibility",
+    "footer-terms",
+    "footer-careers"
+   ],
+   "M10": [
+    "stylesheet"
+   ],
+   "M11": [
+    "appointment-submit",
+    "print-form",
+    "next-steps-toggle"
+   ],
+   "M12": [
+    "title"
+   ]
+  },
+  "meta": {
+   "M03": {
+    "form-intro": {
+     "bg": [
+      255,
+      255,
+      255
+     ]
+    }
+   },
+   "M08": {
+    "details-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
+    "visit-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   }
+  }
+ },
+ "B07": {
+  "provenance": "authored",
+  "ops": {
+   "M01": [
+    "clinics-map"
+   ],
+   "M02": [
+    "postcode-input"
+   ],
+   "M03": [
+    "locations-intro"
+   ],
+   "M04": [
+    "postcode-search",
+    "share-locations"
+   ],
+   "M05": [
+    "social-facebook",
+    "social-x",
+    "social-instagram",
+    "social-youtube"
+   ],
+   "M06": [
+    "html"
+   ],
+   "M07": [
+    "access-toggle>access-panel"
+   ],
+   "M08": [
+    "map-heading",
+    "hours-heading",
+    "addresses-heading"
+   ],
+   "M09": [
+    "social-facebook",
+    "social-x",
+    "social-instagram",
+    "social-youtube",
+    "footer-privacy",
+    "footer-accessibility",
+    "footer-terms",
+    "footer-careers"
+   ],
+   "M10": [
+    "stylesheet"
+   ],
+   "M11": [
+    "postcode-search",
+    "access-toggle",
+    "share-locations"
+   ],
+   "M12": [
+    "title"
+   ]
+  },
+  "meta": {
+   "M03": {
+    "locations-intro": {
+     "bg": [
+      255,
+      255,
+      255
+     ]
+    }
+   },
+   "M08": {
+    "map-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
+    "hours-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
+    "addresses-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   }
+  }
+ },
+ "B08": {
+  "provenance": "authored",
+  "ops": {
+   "M01": [
+    "app-screenshot"
+   ],
+   "M02": [
+    "username",
+    "password"
+   ],
+   "M03": [
+    "signin-intro",
+    "new-text"
+   ],
+   "M04": [
+    "toggle-password"
+   ],
+   "M05": [
+    "social-facebook",
+    "social-x",
+    "social-instagram",
+    "social-youtube"
+   ],
+   "M06": [
+    "html"
+   ],
+   "M07": [
+    "trouble-toggle>trouble-panel"
+   ],
+   "M08": [
+    "new-heading",
+    "app-heading"
+   ],
+   "M09": [
+    "social-facebook",
+    "social-x",
+    "social-instagram",
+    "social-youtube",
+    "footer-privacy",
+    "footer-accessibility",
+    "footer-terms",
+    "footer-careers"
+   ],
+   "M10": [
+    "stylesheet"
+   ],
+   "M11": [
+    "toggle-password",
+    "signin-submit",
+    "trouble-toggle"
+   ],
+   "M12": [
+    "title"
+   ]
+  },
+  "meta": {
+   "M03": {
+    "signin-intro": {
+     "bg": [
+      255,
+      255,
+      255
+     ]
+    },
+    "new-text": {
+     "bg": [
+      255,
+      255,
+      255
+     ]
+    }
+   },
+   "M08": {
+    "new-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
+    "app-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   }
+  }
+ },
+ "B09": {
+  "provenance": "authored",
+  "ops": {
+   "M01": [
+    "campaign-photo"
+   ],
+   "M02": [
+    "results-query"
+   ],
+   "M03": [
+    "results-summary",
+    "campaign-text"
+   ],
+   "M04": [
+    "clear-search"
+   ],
+   "M05": [
+    "social-facebook",
+    "social-x",
+    "social-instagram",
+    "social-youtube"
+   ],
+   "M06": [
+    "html"
+   ],
+   "M07": [
+    "filters-toggle>filters-panel"
+   ],
+   "M08": [
+    "filters-heading",
+    "results-heading",
+    "campaign-heading"
+   ],
+   "M09": [
+    "social-facebook",
+    "social-x",
+    "social-instagram",
+    "social-youtube",
+    "footer-privacy",
+    "footer-accessibility",
+    "footer-terms",
+    "footer-careers"
+   ],
+   "M10": [
+    "stylesheet"
+   ],
+   "M11": [
+    "clear-search",
+    "results-submit",
+    "filters-toggle"
+   ],
+   "M12": [
+    "title"
+   ]
+  },
+  "meta": {
+   "M03": {
+    "results-summary": {
+     "bg": [
+      255,
+      255,
+      255
+     ]
+    },
+    "campaign-text": {
+     "bg": [
+      243,
+      246,
+      249
+     ]
+    }
+   },
+   "M08": {
+    "filters-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
+    "results-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
+    "campaign-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   }
+  }
+ },
+ "B10": {
+  "provenance": "authored",
+  "ops": {
+   "M01": [
+    "team-photo"
+   ],
+   "M02": [
+    "note-input"
+   ],
+   "M03": [
+    "dashboard-intro"
+   ],
+   "M04": [
+    "edit-appt-1",
+    "delete-appt-1",
+    "edit-appt-2",
+    "delete-appt-2"
+   ],
+   "M05": [
+    "social-facebook",
+    "social-x",
+    "social-instagram",
+    "social-youtube"
+   ],
+   "M06": [
+    "html"
+   ],
+   "M07": [
+    "past-toggle>past-panel"
+   ],
+   "M08": [
+    "appointments-card-heading",
+    "upcoming-heading",
+    "notifications-heading",
+    "note-heading",
+    "team-heading"
+   ],
+   "M09": [
+    "social-facebook",
+    "social-x",
+    "social-instagram",
+    "social-youtube",
+    "footer-privacy",
+    "footer-accessibility",
+    "footer-terms",
+    "footer-careers"
+   ],
+   "M10": [
+    "stylesheet"
+   ],
+   "M11": [
+    "edit-appt-1",
+    "delete-appt-1",
+    "edit-appt-2",
+    "delete-appt-2",
+    "past-toggle",
+    "sms-switch",
+    "email-switch",
+    "note-send"
+   ],
+   "M12": [
+    "title"
+   ]
+  },
+  "meta": {
+   "M03": {
+    "dashboard-intro": {
+     "bg": [
+      255,
+      255,
+      255
+     ]
+    }
+   },
+   "M08": {
+    "appointments-card-heading": "font-size: 19.2px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 24.96px; margin-top: 0px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
+    "upcoming-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
+    "notifications-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
+    "note-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
+    "team-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   }
+  }
+ },
+ "B11": {
+  "provenance": "authored",
+  "ops": {
+   "M01": [
+    "blood-test-photo"
+   ],
+   "M02": [
+    "article-search"
+   ],
+   "M03": [
+    "article-lead",
+    "before-text",
+    "day-text",
+    "after-text"
+   ],
+   "M04": [
+    "print-page",
+    "share-article"
+   ],
+   "M05": [
+    "social-facebook",
+    "social-x",
+    "social-instagram",
+    "social-youtube"
+   ],
+   "M06": [
+    "html"
+   ],
+   "M07": [
+    "references-toggle>references-panel"
+   ],
+   "M08": [
+    "before-heading",
+    "day-heading",
+    "after-heading",
+    "feedback-heading"
+   ],
+   "M09": [
+    "social-facebook",
+    "social-x",
+    "social-instagram",
+    "social-youtube",
+    "footer-privacy",
+    "footer-accessibility",
+    "footer-terms",
+    "footer-careers"
+   ],
+   "M10": [
+    "stylesheet"
+   ],
+   "M11": [
+    "print-page",
+    "share-article",
+    "references-toggle",
+    "helpful-yes",
+    "helpful-no"
+   ],
+   "M12": [
+    "title"
+   ]
+  },
+  "meta": {
+   "M03": {
+    "article-lead": {
+     "bg": [
+      255,
+      255,
+      255
+     ]
+    },
+    "before-text": {
+     "bg": [
+      255,
+      255,
+      255
+     ]
+    },
+    "day-text": {
+     "bg": [
+      255,
+      255,
+      255
+     ]
+    },
+    "after-text": {
+     "bg": [
+      255,
+      255,
+      255
+     ]
+    }
+   },
+   "M08": {
+    "before-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
+    "day-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
+    "after-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
+    "feedback-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 0px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   }
+  }
+ },
+ "B12": {
+  "provenance": "authored",
+  "ops": {
+   "M01": [
+    "event-poster"
+   ],
+   "M02": [
+    "attendee-name",
+    "attendee-email"
+   ],
+   "M03": [
+    "event-intro"
+   ],
+   "M04": [
+    "share-event",
+    "calendar-event"
+   ],
+   "M05": [
+    "social-facebook",
+    "social-x",
+    "social-instagram",
+    "social-youtube"
+   ],
+   "M06": [
+    "html"
+   ],
+   "M07": [
+    "access-options-toggle>access-options"
+   ],
+   "M08": [
+    "attendee-heading",
+    "session-heading"
+   ],
+   "M09": [
+    "social-facebook",
+    "social-x",
+    "social-instagram",
+    "social-youtube",
+    "footer-privacy",
+    "footer-accessibility",
+    "footer-terms",
+    "footer-careers"
+   ],
+   "M10": [
+    "stylesheet"
+   ],
+   "M11": [
+    "share-event",
+    "calendar-event",
+    "access-options-toggle",
+    "event-submit"
+   ],
+   "M12": [
+    "title"
+   ]
+  },
+  "meta": {
+   "M03": {
+    "event-intro": {
+     "bg": [
+      255,
+      255,
+      255
+     ]
+    }
+   },
+   "M08": {
+    "attendee-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block",
+    "session-heading": "font-size: 24px; font-weight: 700; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif; line-height: 31.2px; margin-top: 32px; margin-bottom: 12px; color: rgb(31, 41, 51); letter-spacing: normal; text-transform: none; padding-top: 0px; padding-bottom: 0px; border-bottom: 0px none rgb(31, 41, 51); background-color: rgba(0, 0, 0, 0); display: block"
+   }
+  }
+ }
+}

@@ -16,6 +16,16 @@
 # IDs: "provider_model_id" is the ID for the vendor's own API. "openrouter_id"
 # is a best guess and MUST be verified against https://openrouter.ai/api/v1/models
 # before use. Always log the model name the API returns in every response.
+#
+# Fields read by harness/llm.py (added 2026-10-28, before the prereg-v1 freeze):
+#   judge_params        parameters sent ONLY when the model acts as an E3 judge, to get its
+#                       lowest available reasoning setting (SPEC 2.1). Evaluated calls send
+#                       none of these, so provider defaults apply. Verify each on run day.
+#   eval_params         parameters for evaluated calls (empty = provider defaults).
+#   openrouter_provider the single upstream host pinned on OpenRouter (no fallbacks).
+#   max_output_tokens   cap sent as max_tokens (default 64000, never above this value).
+#   available: false    set when a model cannot be run; the harness then refuses to call it.
+#   peak_windows_utc    DeepSeek peak-price hours [start, end) in UTC, weekdays only.
 
 snapshot_date: "2026-10-28"
 
@@ -56,6 +66,8 @@ models:
     test_time_compute: "adaptive thinking; effort param (default high)"
     price: {input: 2.00, output: 10.00, cache_read: 0.10, cache_write_5m: 2.50}
     price_source: "https://platform.claude.com/docs/en/about-claude/pricing"
+    # Lowest thinking setting on Sonnet 5.5 is thinking.type between_tools (effort high or below).
+    judge_params: {thinking: {type: between_tools}, output_config: {effort: low}}
     roles: [e1, e3_judge]
 
   - key: claude-haiku-5-5
@@ -114,6 +126,7 @@ models:
     price: {input: 2.00, output: 10.00, cache_read: 0.20}
     price_source: "OpenAI model listing as reported by https://www.requesty.ai/blog/gpt-6-sol-luna-pricing-release-api (verify on OpenAI pricing page)"
     note: "GPT-6.1 Sol (2026-09-29) exists; pick ONE Sol snapshot, pin it, and report it."
+    judge_params: {reasoning: {effort: "none"}}          # verify the lowest effort value on run day
     roles: [e1, e2, e3_gen, e3_judge]
 
   - key: gpt-6-luna
@@ -188,6 +201,7 @@ models:
     test_time_compute: "thinking budget (verify)"
     price: {input: 0.75, output: 3.75, cache_read: 0.08}
     price_source: "https://vercel.com/ai-gateway/models/gemini-3.8-flash (verify on Google AI pricing page)"
+    judge_params: {thinking_config: {thinking_level: "minimal"}}   # verify the lowest level on run day
     roles: [e1, e2, e3_gen, e3_judge]
 
   # ---------------- Open-weight ----------------
@@ -208,6 +222,8 @@ models:
     # and record which window each call fell in.
     price: {input: 1.32, output: 3.96, cache_read: 0.044}
     price_offpeak: {input: 0.66, output: 1.98, cache_read: 0.022}
+    peak_windows_utc: [[1, 4], [6, 10]]               # verify on the DeepSeek pricing page
+    peak_weekdays_only: true
     price_source: "https://www.yottalabs.ai/post/deepseek-v4-release-date-specs-how-to-access-2026 (verify on DeepSeek pricing page)"
     roles: [e1, e2]
 
@@ -225,6 +241,8 @@ models:
     architecture: "dense 27B (verify)"
     test_time_compute: "thinking and non-thinking modes"
     price: {input: null, output: null}                # fill from the host you use
+    openrouter_provider: null                         # pin one host, e.g. from the model's OpenRouter page
+    judge_params: {extra_body: {reasoning: {enabled: false}}}   # thinking off; verify on run day
     roles: [e1, e2, e3_gen, e3_judge]
     local_candidate: true     # fits one 24 GB consumer GPU at 4-bit
 
@@ -242,6 +260,7 @@ models:
     architecture: "dense 31B"
     test_time_compute: "none / prompt-level"
     price: {input: null, output: null}
+    openrouter_provider: null
     price_source: "https://artificialanalysis.ai/articles/gemma-4-everything-you-need-to-know"
     roles: [e1, e3_gen]
     local_candidate: true
@@ -260,6 +279,7 @@ models:
     architecture: "MoE, 400B total / 17B active, 128 experts"
     test_time_compute: "none"
     price: {input: null, output: null}
+    openrouter_provider: null
     note: "Latest open-weight Llama. Meta's newer Muse models are proprietary."
     roles: [e1, e3_gen]
 
@@ -277,6 +297,7 @@ models:
     architecture: "sparse MoE, 2.4T total / ~95B active"
     test_time_compute: "thinking only"
     price: {input: null, output: null}
+    openrouter_provider: null
     roles: [e1]
 
 # Judge panel for CMBPE (E3): exactly one judge per family.

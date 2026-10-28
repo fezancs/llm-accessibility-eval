@@ -1,0 +1,10 @@
+.env
+.venv/
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+data/e3/images/
+runs/**/raw/
+runs/**/workspaces/
+runs/**/screens/

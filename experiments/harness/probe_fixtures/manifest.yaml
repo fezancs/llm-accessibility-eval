@@ -1,0 +1,29 @@
+# Probe fixture manifest (SPEC 4.1). For each probe: the accessible fixture must pass and
+# the inaccessible fixture must fail. Anchors mirror the task files.
+tab_reachability: {}
+focus_visible: {}
+no_keyboard_trap: {}
+form_errors_associated: {anchors: {submit: "Request appointment"}}
+error_not_color_only: {anchors: {submit: "Request appointment"}}
+dialog_behavior: {anchors: {trigger: "Cancel appointment", confirm: "Yes, cancel", dismiss: "Keep appointment"}}
+live_region_on_action: {anchors: {fill: {age: "70"}, trigger: "Check eligibility"}}
+tabs_behavior: {anchors: {tabs: ["Vaccinations", "Check-ups", "Pharmacy"]}}
+accordion_behavior: {anchors: {headers: ["How do I book an appointment?", "Is parking available?"]}}
+disclosure_nav_behavior: {anchors: {disclosure: "Services", submenu_item: "Mental health"}}
+disclosure_panel_behavior: {anchors: {trigger: "Cookie settings", inside: "Save preferences"}}
+table_headers: {}
+sort_control: {anchors: {sort_column: "Clinic"}}
+pause_control: {anchors: {slides: ["Flu vaccinations are now available", "New evening hours at Riverside", "Download the CityCare app"]}}
+combobox_behavior: {anchors: {type_text: "Eye", expected_option: "Eye tests"}}
+switch_behavior: {anchors: {switches: ["SMS reminders", "Email reminders"]}}
+slider_behavior: {anchors: {label_text: "pain"}}
+landmarks_present: {anchors: {h1: "How to prepare for a blood test"}}
+heading_structure: {}
+captions_track_present: {}
+current_page_indicated: {anchors: {current: "1"}}
+tooltip_behavior: {anchors: {tooltip_text: "Your 10-digit patient ID is printed on your clinic card."}}
+step_focus_management: {anchors: {next: "Next"}}
+language_of_parts: {scope: "#lang-switcher", anchors: {foreign_texts: {"Español": "es", "Polski": "pl"}}}
+contrast_after_toggle: {anchors: {switches_selector: "#theme-toggle"}}
+keyboard_activation: {scope: "#book-now"}
+name_not_placeholder_only: {scope: "#contact-form"}
