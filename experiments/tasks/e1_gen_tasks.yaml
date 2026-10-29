@@ -1,0 +1,258 @@
+# E1-Gen: 20 UI generation tasks (C2 accessible generation; C6 conformance claims).
+#
+# Rules for using this file
+# - The "prompt" text is sent verbatim inside prompts/e1_gen_unguided.txt or
+#   prompts/e1_gen_nudged.txt. Prompts deliberately never mention accessibility;
+#   the nudged condition appends ONE sentence (see the prompt file).
+# - "functional" checks guard against trivial outputs (an empty page has no
+#   violations). A sample that fails any functional check scores 0.
+# - "probes" name keyboard/semantics probes defined in SPEC.md section 4.3.
+#   Every sample also gets the generic probes: tab_reachability, focus_visible,
+#   no_keyboard_trap. Probes locate widgets by the visible text "anchors" below,
+#   never by implementation details, so any correct implementation can pass.
+# - Image and media files referenced by the tasks do not need to exist.
+
+domain: "CityCare, a fictional public health clinic network"
+
+tasks:
+
+  - id: G01
+    pattern: form-with-validation
+    prompt: >-
+      Build an appointment request form for CityCare. Fields: full name, date of birth,
+      phone number, email address, preferred clinic (Northside, Riverside, Old Town,
+      Harbour), consultation type (in person, video call, phone call), notes, and a
+      checkbox to agree to the privacy notice. Full name, date of birth, email, clinic and
+      the privacy checkbox are required. Include a "Request appointment" button. If the
+      form is submitted with missing required fields, show what is wrong and do not submit.
+    functional:
+      - {type: min_count, selector: "input, select, textarea, [role=combobox], [role=radio], [role=checkbox]", n: 8}
+      - {type: text_present, text: "Request appointment"}
+    probes: [form_errors_associated]
+    anchors: {submit: "Request appointment"}
+
+  - id: G02
+    pattern: modal-dialog
+    prompt: >-
+      Build an appointment details card (Tuesday 12 March, 10:30, Riverside clinic) with a
+      "Cancel appointment" button. The button opens a modal dialog that asks "Are you sure
+      you want to cancel your appointment on 12 March at 10:30?" with two buttons, "Yes,
+      cancel" and "Keep appointment". Both buttons close the dialog. After "Yes, cancel",
+      show the message "Your appointment has been cancelled." on the page.
+    functional:
+      - {type: text_present, text: "Cancel appointment"}
+    probes: [dialog_behavior, live_region_on_action]
+    anchors: {trigger: "Cancel appointment", confirm: "Yes, cancel", dismiss: "Keep appointment",
+              result_text: "Your appointment has been cancelled."}
+
+  - id: G03
+    pattern: tabs
+    prompt: >-
+      Show information about three CityCare services in a tabbed interface. The tabs are
+      "Vaccinations", "Check-ups" and "Pharmacy". Each tab shows its own panel with a
+      heading and a short paragraph; only one panel is visible at a time and the first tab
+      is selected initially.
+    functional:
+      - {type: text_present, text: "Vaccinations"}
+      - {type: text_present, text: "Pharmacy"}
+    probes: [tabs_behavior]
+    anchors: {tabs: ["Vaccinations", "Check-ups", "Pharmacy"]}
+
+  - id: G04
+    pattern: accordion
+    prompt: >-
+      Build a "Frequently asked questions" section with five questions whose answers can
+      be shown or hidden by clicking the question. All answers start hidden. Questions:
+      "How do I book an appointment?", "Can I bring someone with me?", "Is parking
+      available?", "How do I get my test results?", "What if I need an interpreter?".
+      Write a two-sentence answer for each.
+    functional:
+      - {type: text_present, text: "Is parking available?"}
+    probes: [accordion_behavior]
+    anchors: {headers: ["How do I book an appointment?", "Is parking available?", "What if I need an interpreter?"]}
+
+  - id: G05
+    pattern: disclosure-navigation
+    prompt: >-
+      Build the CityCare site header: the text logo "CityCare" and a main navigation with
+      Home, Services, Appointments and Contact. "Services" opens a dropdown with
+      Vaccinations, Check-ups, Pharmacy and Mental health. On screens narrower than 600px
+      the navigation collapses behind a menu button.
+    functional:
+      - {type: text_present, text: "Mental health"}
+      - {type: min_count, selector: "a", n: 7}
+    probes: [disclosure_nav_behavior]
+    anchors: {disclosure: "Services", submenu_item: "Mental health"}
+
+  - id: G06
+    pattern: data-table
+    prompt: >-
+      Build an opening-hours table for five clinics (Northside, Riverside, Old Town,
+      Harbour, Hilltop) for Monday to Sunday, with "Closed" on days a clinic is shut. Add a
+      table caption. Users can sort the rows by clinic name (A to Z, Z to A) using a control
+      in the clinic-name column header.
+    functional:
+      - {type: min_count, selector: "tr, [role=row]", n: 6}
+      - {type: text_present, text: "Hilltop"}
+    probes: [table_headers, sort_control]
+    anchors: {sort_column: "Clinic"}
+
+  - id: G07
+    pattern: image-gallery-lightbox
+    prompt: >-
+      Build an "Our facilities" gallery with six photos: images/reception.jpg,
+      images/play-area.jpg, images/step-free-entrance.jpg, images/pharmacy-counter.jpg,
+      images/waiting-room.jpg and images/garden.jpg, each with a short caption. Clicking a
+      photo opens a larger view of it that can be closed.
+    functional:
+      - {type: min_count, selector: "img", n: 6}
+    probes: [dialog_behavior]
+    anchors: {trigger_selector: "img"}
+
+  - id: G08
+    pattern: auto-rotating-carousel
+    prompt: >-
+      Build a rotating announcements banner with three slides: "Flu vaccinations are now
+      available", "New evening hours at Riverside", and "Download the CityCare app". It
+      advances automatically every 5 seconds and has previous and next buttons.
+    functional:
+      - {type: text_present, text: "Flu vaccinations are now available"}
+    probes: [pause_control]
+    anchors: {slides: ["Flu vaccinations are now available", "New evening hours at Riverside", "Download the CityCare app"]}
+
+  - id: G09
+    pattern: combobox-autocomplete
+    prompt: >-
+      Build a search box for CityCare services that suggests matching services as the user
+      types and lets them pick one, which fills the box. Services: Vaccinations, Blood
+      tests, Physiotherapy, Pharmacy, Dental care, Eye tests, Hearing tests, Mental health,
+      Maternity, Child health, Travel clinic, Sexual health.
+    functional:
+      - {type: min_count, selector: "input", n: 1}
+    probes: [combobox_behavior]
+    anchors: {type_text: "Eye", expected_option: "Eye tests"}
+
+  - id: G10
+    pattern: switch
+    prompt: >-
+      Build a notification settings panel with three on/off toggles: "SMS reminders",
+      "Email reminders" and "Large text mode". Turning on "Large text mode" enlarges the
+      page's font size.
+    functional:
+      - {type: text_present, text: "Large text mode"}
+    probes: [switch_behavior]
+    anchors: {switches: ["SMS reminders", "Email reminders", "Large text mode"]}
+
+  - id: G11
+    pattern: slider
+    prompt: >-
+      Build a pain-scale control for a symptom form: a slider from 0 ("No pain") to 10
+      ("Worst pain imaginable") with the currently selected number shown next to it.
+    functional:
+      - {type: text_present, text: "No pain"}
+    probes: [slider_behavior]
+    anchors: {label_text: "pain"}
+
+  - id: G12
+    pattern: status-message
+    prompt: >-
+      Build a flu-vaccine eligibility checker: the user enters their age and postcode and
+      presses "Check eligibility"; a message appears below the button, without reloading
+      the page, saying whether they are eligible for a free flu vaccination (eligible if
+      age is 65 or over).
+    functional:
+      - {type: text_present, text: "Check eligibility"}
+    probes: [live_region_on_action]
+    anchors: {fill: {age: "70", postcode: "AB1 2CD"}, trigger: "Check eligibility"}
+
+  - id: G13
+    pattern: article-structure
+    prompt: >-
+      Build a health information article page titled "How to prepare for a blood test",
+      with a breadcrumb trail (Home > Health information > Tests), three sections ("Before
+      your test", "On the day", "After your test") of about 60 words each, a "Print this
+      page" button, and a "Was this page helpful?" question with Yes and No buttons.
+    functional:
+      - {type: text_present, text: "On the day"}
+    probes: [landmarks_present, heading_structure]
+    anchors: {h1: "How to prepare for a blood test"}
+
+  - id: G14
+    pattern: video-media
+    prompt: >-
+      Build a section titled "Watch: how to use the patient portal" that embeds the video
+      media/portal.mp4 with playback controls, and links to a text transcript at
+      transcript.html.
+    functional:
+      - {type: min_count, selector: "video", n: 1}
+    probes: [captions_track_present]
+    anchors: {}
+
+  - id: G15
+    pattern: pagination
+    prompt: >-
+      Build a search results page for the query "flu" showing ten results (a linked title
+      and a one-line summary each) and pagination below them with links to pages 1 to 5
+      plus Previous and Next. Page 1 is the current page.
+    functional:
+      - {type: min_count, selector: "a", n: 15}
+    probes: [current_page_indicated]
+    anchors: {current: "1"}
+
+  - id: G16
+    pattern: tooltip
+    prompt: >-
+      Build a form field labelled "Patient ID number" with a small question-mark icon next
+      to it. Hovering over the icon shows the tooltip "Your 10-digit patient ID is printed
+      on your clinic card."
+    functional:
+      - {type: text_present, text: "Patient ID number"}
+    probes: [tooltip_behavior]
+    anchors: {tooltip_text: "Your 10-digit patient ID is printed on your clinic card."}
+
+  - id: G17
+    pattern: file-upload
+    prompt: >-
+      Build an upload area for a referral letter. Users can choose a file or drag and drop
+      it; each uploaded file is listed with its name, its size and a remove button shown as
+      an "x" icon.
+    functional:
+      - {type: min_count, selector: "input[type=file]", n: 1}
+    probes: []
+    anchors: {}
+
+  - id: G18
+    pattern: multi-step-form
+    prompt: >-
+      Build a three-step registration form. Step 1: name and date of birth. Step 2: phone
+      and email. Step 3: review the entered details and submit. A progress indicator shows
+      which step the user is on, and Next and Back buttons move between steps.
+    functional:
+      - {type: text_present, text: "Next"}
+    probes: [step_focus_management]
+    anchors: {next: "Next"}
+
+  - id: G19
+    pattern: consent-banner
+    prompt: >-
+      Build a cookie consent banner fixed to the bottom of the page with the text "We use
+      cookies to make this site work and to understand how it is used." and the buttons
+      "Accept all", "Reject all" and "Cookie settings". "Cookie settings" opens a panel with
+      three checkboxes, "Necessary" (always on and cannot be changed), "Analytics" and
+      "Marketing", and a "Save preferences" button.
+    functional:
+      - {type: text_present, text: "Reject all"}
+    probes: [disclosure_panel_behavior]
+    anchors: {trigger: "Cookie settings", inside: "Save preferences"}
+
+  - id: G20
+    pattern: footer-icon-links
+    prompt: >-
+      Build a page footer with CityCare's address (1 Market Street, Old Town), phone number
+      and email, links to Facebook, X, Instagram and YouTube shown only as icons (use inline
+      SVG), and a newsletter sign-up with an email field and a "Subscribe" button.
+    functional:
+      - {type: min_count, selector: "svg", n: 4}
+      - {type: text_present, text: "Subscribe"}
+    probes: []
+    anchors: {}

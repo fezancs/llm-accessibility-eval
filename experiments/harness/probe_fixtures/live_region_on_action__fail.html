@@ -1,0 +1,3 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Fixture</title><style>body{font:16px/1.5 sans-serif;color:#222;background:#fff;margin:1rem}.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}</style></head><body><main>
+<h1>Check</h1><label for="age">Age</label><input id="age"><button id="c">Check eligibility</button><div id="box"></div><script>document.getElementById("c").onclick=()=>{const p=document.createElement("p");p.textContent=+document.getElementById("age").value>=65?"You are eligible for a free flu vaccination.":"You are not eligible.";document.getElementById("box").append(p);};</script>
+</main></body></html>

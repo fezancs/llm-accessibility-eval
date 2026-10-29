@@ -1,0 +1,22 @@
+# Editor / tool local state
+.claude/
+.vscode/
+.idea/
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# Node
+node_modules/
+
+# Local-only: paper draft and operating notes contain submission details
+paper/
+experiments/CLAUDE.md

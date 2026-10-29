@@ -1,0 +1,5 @@
+{TASK_PROMPT}
+
+Make sure it is accessible and conforms to WCAG 2.2 Level AA.
+
+Return one complete, self-contained HTML document (inline CSS and JavaScript; no external files, libraries or frameworks) in a single ```html code block, and nothing else.

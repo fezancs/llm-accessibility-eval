@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Search results for flu - CityCare</title>
+<style>
+      :root {
+        --ink: #1f2933;
+        --muted: #4a5560;
+        --brand: #0b5394;
+        --brand-dark: #073763;
+        --panel: #f3f6f9;
+        --line: #c9d2db;
+        --danger: #b42318;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--ink);
+        background: #fff;
+      }
+      a {
+        color: var(--brand);
+      }
+      a:hover {
+        color: var(--brand-dark);
+      }
+      :focus-visible {
+        outline: 3px solid #1d4ed8;
+        outline-offset: 2px;
+      }
+      .skip-link {
+        position: absolute;
+        left: -999px;
+        top: 0;
+        background: #fff;
+        color: var(--brand-dark);
+        padding: 0.5rem 1rem;
+        z-index: 10;
+      }
+      .skip-link:focus {
+        left: 1rem;
+      }
+      .visually-hidden {
+        position: absolute !important;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .wrap {
+        max-width: 72rem;
+        margin: 0 auto;
+        padding: 0 1.25rem;
+      }
+      .site-header {
+        background: var(--brand-dark);
+        color: #fff;
+      }
+      .header-inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem 0;
+      }
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+        text-decoration: none;
+      }
+      .main-nav ul {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.25rem;
+        margin: 0;
+        padding: 0;
+      }
+      .main-nav a {
+        color: #fff;
+        font-weight: 600;
+        text-decoration: none;
+        padding: 0.25rem 0;
+        display: inline-block;
+      }
+      .main-nav a[aria-current="page"] {
+        text-decoration: underline;
+        text-underline-offset: 0.3em;
+      }
+      .site-header :focus-visible {
+        outline-color: #fff;
+      }
+      main {
+        padding: 2rem 0 3rem;
+      }
+      h1 {
+        font-size: 2rem;
+        line-height: 1.25;
+        margin: 0 0 1rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+        line-height: 1.3;
+        margin: 2rem 0 0.75rem;
+      }
+      h3 {
+        font-size: 1.2rem;
+        line-height: 1.35;
+        margin: 1.25rem 0 0.5rem;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-height: 2.75rem;
+        padding: 0.55rem 1.1rem;
+        border: 2px solid var(--brand);
+        border-radius: 0.4rem;
+        background: var(--brand);
+        color: #fff;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .btn-secondary {
+        background: #fff;
+        color: var(--brand);
+      }
+      .icon-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        border: 2px solid #5f6b76;
+        border-radius: 0.4rem;
+        background: #fff;
+        color: var(--ink);
+        cursor: pointer;
+      }
+      .icon-btn svg,
+      .icon-link svg {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+      .icon-link {
+        display: inline-flex;
+        width: 2.75rem;
+        height: 2.75rem;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: var(--brand-dark);
+        color: #fff;
+      }
+      label,
+      legend {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+      fieldset {
+        border: 1px solid var(--line);
+        border-radius: 0.4rem;
+        padding: 0.75rem 1rem 1rem;
+        margin: 0 0 1.1rem;
+      }
+      .choice {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0.35rem 0;
+      }
+      .choice label {
+        display: inline;
+        font-weight: 400;
+        margin: 0;
+      }
+      input[type="checkbox"],
+      input[type="radio"] {
+        width: 1.5rem;
+        height: 1.5rem;
+        margin: 0;
+      }
+      input[type="text"],
+      input[type="email"],
+      input[type="tel"],
+      input[type="date"],
+      input[type="time"],
+      input[type="password"],
+      input[type="search"],
+      select,
+      textarea {
+        width: 100%;
+        max-width: 28rem;
+        min-height: 2.75rem;
+        padding: 0.5rem 0.7rem;
+        border: 2px solid #5f6b76;
+        border-radius: 0.35rem;
+        font: inherit;
+        color: var(--ink);
+        background: #fff;
+      }
+      .field {
+        margin-bottom: 1.1rem;
+      }
+      .hint {
+        color: var(--muted);
+        margin: 0 0 0.35rem;
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 0.5rem;
+        padding: 1rem 1.25rem;
+        margin: 1rem 0;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+        gap: 1.25rem;
+        padding: 0;
+        list-style: none;
+      }
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 0.5rem;
+        padding: 1.1rem;
+        background: #fff;
+      }
+      .card-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+      }
+      .card-head h3 {
+        margin: 0;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 48rem;
+      }
+      caption {
+        text-align: left;
+        font-weight: 700;
+        padding: 0.5rem 0;
+      }
+      th,
+      td {
+        border: 1px solid var(--line);
+        padding: 0.5rem 0.75rem;
+        text-align: left;
+      }
+      thead th {
+        background: var(--panel);
+      }
+      .error-text {
+        color: var(--danger);
+        font-weight: 600;
+        margin: 0.25rem 0 0;
+      }
+      .error-summary {
+        border: 3px solid var(--danger);
+        border-radius: 0.4rem;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+      }
+      .site-footer {
+        background: #e9eef3;
+        border-top: 1px solid var(--line);
+        padding: 2rem 0;
+        margin-top: 2rem;
+      }
+      .footer-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: space-between;
+      }
+      .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .footer-links li {
+        margin: 0.35rem 0;
+      }
+      .site-footer a {
+        color: var(--brand-dark);
+      }
+      .site-footer .icon-link {
+        color: #fff;
+      }
+      .social {
+        list-style: none;
+        display: flex;
+        gap: 0.75rem;
+        padding: 0;
+        margin: 0.75rem 0 0;
+      }
+    </style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-header">
+<div class="wrap header-inner">
+<a class="logo" href="index.html">CityCare</a>
+<nav aria-label="Main" class="main-nav">
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a aria-current="page" href="services.html">Services</a></li>
+<li><a href="appointments.html">Appointments</a></li>
+<li><a href="locations.html">Locations</a></li>
+<li><a href="contact.html">Contact</a></li>
+</ul>
+</nav>
+</div>
+</header>
+<main id="main">
+<div class="wrap">
+<h1>Search results for "flu"</h1>
+<form action="search.html" id="results-search">
+<div class="field">
+<label for="results-query">Search CityCare</label>
+<div style="display: flex; gap: 0.5rem">
+<input id="results-query" name="q" style="max-width: 20rem" type="text" value="flu"/>
+<button class="icon-btn" id="clear-search" type="button">
+<svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.5"></path>
+</svg>
+</button>
+<button class="btn" id="results-submit" role="buton" type="submit">Search</button>
+</div>
+</div>
+</form>
+<p id="results-summary">
+          Showing 10 of 42 results. Use the filters to narrow your search to one type of page.
+        </p>
+<p>
+<div class="btn btn-secondary" id="filters-toggle">
+            Hide filters
+          </div>
+</p>
+<div class="panel" id="filters-panel">
+<h2 id="filters-heading">Filter results</h2>
+<fieldset>
+<legend>Type of page</legend>
+<div class="choice">
+<input id="filter-services" name="type" type="checkbox" value="services"/><label for="filter-services">Services</label>
+</div>
+<div class="choice">
+<input id="filter-news" name="type" type="checkbox" value="news"/><label for="filter-news">News</label>
+</div>
+<div class="choice">
+<input id="filter-advice" name="type" type="checkbox" value="advice"/><label for="filter-advice">Health advice</label>
+</div>
+</fieldset>
+<div class="field">
+<label for="sort">Sort by</label>
+<select id="sort" name="sort">
+<option>Most relevant</option>
+<option>Newest first</option>
+<option>Oldest first</option>
+</select>
+</div>
+</div>
+<h2 id="results-heading">Results</h2>
+<ol id="results-list">
+<li>
+<h3><a href="r1.html">Flu vaccinations now available</a></h3>
+<p>Book your free flu vaccination at any CityCare clinic.</p>
+</li>
+<li>
+<h3><a href="r2.html">Who can get a free flu vaccination</a></h3>
+<p>Adults aged 65 or over, pregnant people and carers are eligible.</p>
+</li>
+<li>
+<h3><a href="r3.html">Flu symptoms in adults</a></h3>
+<p>How to tell flu from a cold, and when to get help.</p>
+</li>
+<li>
+<h3><a href="r4.html">Flu and children</a></h3>
+<p>Nasal spray vaccinations for children aged 2 to 11.</p>
+</li>
+<li>
+<h3><a href="r5.html">Treating flu at home</a></h3>
+<p>Rest, fluids and advice from our pharmacists.</p>
+</li>
+<li>
+<h3><a href="r6.html">Flu clinics at Riverside</a></h3>
+<p>Evening and weekend flu clinics this autumn.</p>
+</li>
+<li>
+<h3><a href="r7.html">Flu vaccination side effects</a></h3>
+<p>What to expect after your vaccination.</p>
+</li>
+<li>
+<h3><a href="r8.html">Flu in pregnancy</a></h3>
+<p>Why the vaccination is recommended in every trimester.</p>
+</li>
+<li>
+<h3><a href="r9.html">Bird flu: what you need to know</a></h3>
+<p>Current advice for people who keep poultry.</p>
+</li>
+<li>
+<h3><a href="r10.html">Flu season report</a></h3>
+<p>How many people we vaccinated last winter.</p>
+</li>
+</ol>
+<nav aria-label="Pagination">
+<ul style="list-style: none; display: flex; gap: 1rem; padding: 0">
+<li><a aria-current="page" href="?page=1">1</a></li>
+<li><a href="?page=2">2</a></li>
+<li><a href="?page=3">3</a></li>
+<li><a href="?page=2">Next page</a></li>
+</ul>
+</nav>
+<aside aria-labelledby="campaign-heading" class="panel">
+<h2 id="campaign-heading">This winter</h2>
+<img alt="A nurse giving a flu vaccination to an older man in a clinic room" height="360" id="campaign-photo" src="images/cc-flu-campaign.png" width="640"/>
+<p id="campaign-text">
+            Our flu campaign runs until the end of February. Walk-in sessions are held every Saturday morning.
+          </p>
+</aside>
+</div>
+</main>
+<footer class="site-footer">
+<div class="wrap footer-grid">
+<div>
+<h2 class="visually-hidden">Contact CityCare</h2>
+<p id="footer-address">
+            CityCare, 1 Market Street, Old Town<br/>Phone: <a href="tel:+441234567890">01234 567 890</a><br/>Email: <a href="mailto:hello@citycare.example">hello@citycare.example</a>
+</p>
+<ul class="social">
+<li>
+<a aria-label="CityCare on Facebook" class="icon-link" href="https://facebook.com/citycare" id="social-facebook" tabindex="3"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<path d="M14 8h3V4h-3c-2.8 0-4 1.8-4 4v2H7v4h3v8h4v-8h3l1-4h-4V8.5c0-.3.2-.5.5-.5z" fill="currentColor"></path></svg></a>
+</li>
+<li>
+<a aria-label="CityCare on X" class="icon-link" href="https://x.com/citycare" id="social-x"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="3"></path></svg></a>
+</li>
+<li>
+<a aria-label="CityCare on Instagram" class="icon-link" href="https://instagram.com/citycare" id="social-instagram"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<rect fill="none" height="16" rx="4" stroke="currentColor" stroke-width="2" width="16" x="4" y="4"></rect>
+<circle cx="12" cy="12" fill="none" r="3.5" stroke="currentColor" stroke-width="2"></circle></svg></a>
+</li>
+<li>
+<a aria-label="CityCare on YouTube" class="icon-link" href="https://youtube.com/citycare" id="social-youtube"><svg aria-hidden="true" focusable="false" viewbox="0 0 24 24">
+<rect fill="currentColor" height="14" rx="4" width="20" x="2" y="5"></rect>
+<path d="M10 9l5 3-5 3z" fill="#fff"></path></svg></a>
+</li>
+</ul>
+</div>
+<ul class="footer-links">
+<li><a href="privacy.html" id="footer-privacy">Privacy notice</a></li>
+<li><a href="accessibility.html" id="footer-accessibility">Accessibility statement</a></li>
+<li><a href="terms.html" id="footer-terms">Terms of use</a></li>
+<li><a href="careers.html" id="footer-careers">Work for CityCare</a></li>
+</ul>
+</div>
+</footer>
+<script>
+      function wireToggle(buttonId, panelId) {
+        var button = document.getElementById(buttonId);
+        var panel = document.getElementById(panelId);
+        button.addEventListener("click", function () {
+          panel.hidden = !panel.hidden;
+          if (button.tagName === "BUTTON") {
+            button.setAttribute("aria-expanded", String(!panel.hidden));
+          }
+        });
+      }
+      document.getElementById("filters-toggle").addEventListener("click", function () {
+        var panel = document.getElementById("filters-panel");
+        panel.hidden = !panel.hidden;
+        if (this.tagName === "BUTTON") {
+          this.setAttribute("aria-expanded", String(!panel.hidden));
+        }
+        this.textContent = panel.hidden ? "Show filters" : "Hide filters";
+      });
+      document.getElementById("clear-search").addEventListener("click", function () {
+        var field = document.getElementById("results-query");
+        field.value = "";
+        field.focus();
+      });
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+[
+  {
+    "name": "list_files",
+    "description": "List all files in the project workspace, with their sizes in bytes.",
+    "input_schema": {"type": "object", "properties": {}, "required": []}
+  },
+  {
+    "name": "read_file",
+    "description": "Return the full text content of one file in the project workspace.",
+    "input_schema": {
+      "type": "object",
+      "properties": {"path": {"type": "string", "description": "Path relative to the workspace root, e.g. index.html"}},
+      "required": ["path"]
+    }
+  },
+  {
+    "name": "write_file",
+    "description": "Create or overwrite one file in the project workspace with the given full content.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "path": {"type": "string", "description": "Path relative to the workspace root"},
+        "content": {"type": "string", "description": "The complete new content of the file"}
+      },
+      "required": ["path", "content"]
+    }
+  }
+]

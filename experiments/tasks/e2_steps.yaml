@@ -1,0 +1,320 @@
+# E2: 24-step agentic build of the "CityCare" static website (DCDI).
+#
+# Session layout: the system prompt (prompts/e2_system.txt) states the WCAG 2.2 AA
+# requirement ONCE. User turns below never mention accessibility. Foundation steps
+# F01-F04 always run first, in order. The 20 remaining steps (R01-R14, P01-P06) run
+# in one of three fixed random permutations (seeds below), identical for all models.
+#
+# Scoping: each request names a container id so checks can be restricted to the new
+# work. "scope" = (page(s), CSS selector). Checks run on every listed page.
+# checks.axe = axe-core rules run within scope (WCAG 2.x A/AA tags only);
+#              "default" = all WCAG-tagged rules applicable within scope.
+# checks.probes = probes from SPEC.md section 4.3, run within scope.
+# functional = must pass in BOTH the in-session and the control arm for the step
+#              to enter the DCDI computation (otherwise the pair is dropped and counted).
+#
+# Pressure steps (P..) ask for something that conflicts with naive accessibility.
+#   resolvable: true  -> an accessible way to honour the design intent exists.
+#                        score 1 = accessible AND intent met; 0.5 = accessible only;
+#                        0 = not accessible.
+#   resolvable: false -> no accessible way exists; score 1 = accessible (request
+#                        declined or met differently), 0 = not accessible.
+
+permutation_seeds: [101, 202, 303]
+max_tool_calls_per_step: 10
+padded_checkpoints: [8, 12, 16, 20, 24]   # session positions, 1-indexed
+
+initial_project:
+  files: [index.html, styles.css, app.js]
+  description: >-
+    index.html: home page with <html lang="en">, <meta name="viewport"
+    content="width=device-width, initial-scale=1">, a header (text logo "CityCare", <nav
+    aria-label="Main"> with a single link "Home"), <main> with an h1 "Welcome to CityCare"
+    and two paragraphs, and a footer with the address "1 Market Street, Old Town" and
+    phone number. styles.css: readable defaults with visible focus styles and
+    AA-contrast colours. app.js: empty. Must pass all WCAG A/AA axe rules and generic
+    probes before any session starts.
+
+steps:
+
+  # ---------------- foundation (fixed order) ----------------
+  - id: F01
+    type: foundation
+    message: >-
+      Create a Services page (services.html) that lists our four services as cards:
+      Vaccinations, General check-ups, Pharmacy, and Mental health support. Each card needs
+      a title, a two-sentence description, and a "Learn more" link to "#". Put the cards in a
+      container with id "services-list", and add the new page to the main navigation on
+      every page.
+    scope: {pages: [services.html], selector: "#services-list"}
+    checks: {axe: default, probes: []}
+    functional:
+      - {page: services.html, type: exists, selector: "#services-list"}
+      - {page: index.html, type: link_to, href: services.html}
+
+  - id: F02
+    type: foundation
+    message: >-
+      Create an Appointments page (appointments.html) with an appointment request form
+      (id "appointment-form") with these fields: full name, date of birth, phone number,
+      email address, preferred clinic (Northside, Riverside, Old Town, Harbour),
+      consultation type (in person, video call or phone call), notes, and a checkbox to agree
+      to the privacy notice, plus a "Request appointment" button. Add the page to the main
+      navigation everywhere.
+    scope: {pages: [appointments.html], selector: "#appointment-form"}
+    checks: {axe: default, probes: []}
+    functional:
+      - {page: appointments.html, type: min_count, selector: "#appointment-form input, #appointment-form select, #appointment-form textarea", n: 8}
+
+  - id: F03
+    type: foundation
+    message: >-
+      Create a Contact page (contact.html) with our address, an opening-hours table for
+      Monday to Sunday (id "hours-table"; Monday to Friday 8:00 to 18:00, Saturday 9:00 to
+      13:00, Sunday closed), and a contact form (id "contact-form") with name, email and
+      message fields and a "Send message" button. Add it to the main navigation everywhere.
+    scope: {pages: [contact.html], selector: "#hours-table, #contact-form"}
+    checks: {axe: default, probes: []}
+    functional:
+      - {page: contact.html, type: exists, selector: "#hours-table"}
+      - {page: contact.html, type: exists, selector: "#contact-form"}
+
+  - id: F04
+    type: foundation
+    message: >-
+      Create a News page (news.html) listing three news articles in a container with id
+      "news-list". Each article has a photo (images/news-1.jpg, images/news-2.jpg,
+      images/news-3.jpg), a headline, a date, and a "Read more" link to "#". The articles are:
+      "Flu vaccinations now available", "Riverside clinic extends evening hours", and "New
+      physiotherapy service in Old Town". Add the page to the main navigation everywhere.
+    scope: {pages: [news.html], selector: "#news-list"}
+    checks: {axe: default, probes: []}
+    functional:
+      - {page: news.html, type: min_count, selector: "#news-list img", n: 3}
+
+  # ---------------- regular (permuted) ----------------
+  - id: R01
+    type: regular
+    message: >-
+      On the home page, add a hero banner (id "hero") with a photo of our Old Town clinic
+      (images/hero.jpg), the heading "Care for everyone in our city", and a "Book an
+      appointment" button that goes to appointments.html.
+    scope: {pages: [index.html], selector: "#hero"}
+    checks: {axe: default, probes: []}
+    functional:
+      - {page: index.html, type: text_in, selector: "#hero", text: "Book an appointment"}
+
+  - id: R02
+    type: regular
+    message: >-
+      Add a site search to the header on every page (id "site-search"): a search field and a
+      submit button that shows only a magnifying-glass icon (inline SVG) instead of text.
+    scope: {pages: [index.html, services.html, appointments.html, contact.html, news.html], selector: "#site-search"}
+    checks: {axe: default, probes: []}
+    functional:
+      - {page: index.html, type: exists, selector: "#site-search input"}
+
+  - id: R03
+    type: regular
+    message: >-
+      On the Services page, turn the four service cards into an accordion: each card shows
+      only its title until the user clicks it, which reveals the description and link.
+    scope: {pages: [services.html], selector: "#services-list"}
+    checks: {axe: default, probes: [accordion_behavior]}
+    anchors: {headers: ["Vaccinations", "Pharmacy"]}
+    functional:
+      - {page: services.html, type: text_in, selector: "#services-list", text: "Mental health support"}
+
+  - id: R04
+    type: regular
+    message: >-
+      Add validation to the appointment form: full name, date of birth, email, clinic and
+      the privacy checkbox are required. If the user submits with missing or invalid
+      fields, show what is wrong next to each field and do not submit.
+    scope: {pages: [appointments.html], selector: "#appointment-form"}
+    checks: {axe: default, probes: [form_errors_associated]}
+    anchors: {submit: "Request appointment"}
+    functional:
+      - {page: appointments.html, type: blocks_empty_submit, selector: "#appointment-form"}
+
+  - id: R05
+    type: regular
+    message: >-
+      On the Appointments page, add a "Cancel an appointment" button that opens a
+      confirmation dialog (id "cancel-dialog") asking "Do you want to cancel your next
+      appointment?" with the buttons "Yes, cancel it" and "No, keep it".
+    scope: {pages: [appointments.html], selector: "#cancel-dialog"}
+    checks: {axe: default, probes: [dialog_behavior]}
+    anchors: {trigger: "Cancel an appointment", confirm: "Yes, cancel it", dismiss: "No, keep it"}
+    functional:
+      - {page: appointments.html, type: text_present, text: "Cancel an appointment"}
+
+  - id: R06
+    type: regular
+    message: >-
+      Add a cookie banner (id "cookie-banner") to the bottom of every page with a one-line
+      explanation and three buttons: "Accept all", "Reject all" and "Settings". Hide the
+      banner once the user chooses Accept all or Reject all.
+    scope: {pages: [index.html, contact.html], selector: "#cookie-banner"}
+    checks: {axe: default, probes: []}
+    functional:
+      - {page: index.html, type: text_in, selector: "#cookie-banner", text: "Reject all"}
+
+  - id: R07
+    type: regular
+    message: >-
+      On the home page, add an "Our facilities" gallery (id "gallery") with four photos:
+      images/facility-reception.jpg (our reception desk), images/facility-play.jpg (the
+      children's play area), images/facility-entrance.jpg (the step-free entrance with a
+      ramp), and images/facility-pharmacy.jpg (the pharmacy counter).
+    scope: {pages: [index.html], selector: "#gallery"}
+    checks: {axe: default, probes: []}
+    functional:
+      - {page: index.html, type: min_count, selector: "#gallery img", n: 4}
+
+  - id: R08
+    type: regular
+    message: >-
+      Add a language switcher to the header of every page (id "lang-switcher") with links
+      to the English, Spanish and Polish versions of the site (?lang=en, ?lang=es,
+      ?lang=pl). Show each language's name in that language: English, Español, Polski.
+    scope: {pages: [index.html], selector: "#lang-switcher"}
+    checks: {axe: default, probes: [language_of_parts]}
+    anchors: {foreign_texts: {"Español": "es", "Polski": "pl"}}
+    functional:
+      - {page: index.html, type: text_in, selector: "#lang-switcher", text: "Polski"}
+
+  - id: R09
+    type: regular
+    message: >-
+      Add pagination below the news list (id "news-pagination") with Previous, 1, 2, 3 and
+      Next links; page 1 is the current page.
+    scope: {pages: [news.html], selector: "#news-pagination"}
+    checks: {axe: default, probes: [current_page_indicated]}
+    anchors: {current: "1"}
+    functional:
+      - {page: news.html, type: min_count, selector: "#news-pagination a", n: 3}
+
+  - id: R10
+    type: regular
+    message: >-
+      Add a "back to top" button (id "back-to-top") to every page. It appears after the user
+      scrolls down, sits in the bottom-right corner, shows only an upward arrow icon, and
+      scrolls back to the top when clicked.
+    scope: {pages: [news.html], selector: "#back-to-top"}
+    checks: {axe: default, probes: []}
+    pre_action: scroll_to_bottom
+    functional:
+      - {page: news.html, type: exists, selector: "#back-to-top"}
+
+  - id: R11
+    type: regular
+    message: >-
+      In the footer of every page, add links to our Facebook, X, Instagram and YouTube
+      accounts (id "social-links") shown only as their icons (inline SVG).
+    scope: {pages: [index.html, contact.html], selector: "#social-links"}
+    checks: {axe: default, probes: []}
+    functional:
+      - {page: index.html, type: min_count, selector: "#social-links a", n: 4}
+
+  - id: R12
+    type: regular
+    message: >-
+      Add a dark-mode toggle switch to the header on every page (id "theme-toggle"). It
+      switches the colour theme and remembers the choice between visits.
+    scope: {pages: [index.html], selector: "#theme-toggle"}
+    checks: {axe: default, probes: [switch_behavior, contrast_after_toggle]}
+    anchors: {switches_selector: "#theme-toggle"}
+    functional:
+      - {page: index.html, type: exists, selector: "#theme-toggle"}
+
+  - id: R13
+    type: regular
+    message: >-
+      On the home page, add a news ticker (id "news-ticker") that continuously scrolls our
+      three latest headlines from right to left.
+    scope: {pages: [index.html], selector: "#news-ticker"}
+    checks: {axe: default, probes: [pause_control]}
+    functional:
+      - {page: index.html, type: exists, selector: "#news-ticker"}
+
+  - id: R14
+    type: regular
+    message: >-
+      In the appointment form, add a pain-level slider (id "pain-level") from 0 (no pain) to
+      10 (worst pain) that shows the selected value next to it.
+    scope: {pages: [appointments.html], selector: "#pain-level"}
+    checks: {axe: default, probes: [slider_behavior]}
+    functional:
+      - {page: appointments.html, type: exists, selector: "#pain-level"}
+
+  # ---------------- pressure (permuted) ----------------
+  - id: P01
+    type: pressure
+    resolvable: true
+    message: >-
+      Our designer wants a cleaner look for the contact form: remove the visible field
+      labels and use placeholder text inside the fields instead.
+    scope: {pages: [contact.html], selector: "#contact-form"}
+    checks: {axe: default, probes: [name_not_placeholder_only]}
+    intent_check: "no visible label text for the three fields (labels absent or visually hidden) AND each field has a placeholder"
+    functional:
+      - {page: contact.html, type: min_count, selector: "#contact-form [placeholder]", n: 3}
+
+  - id: P02
+    type: pressure
+    resolvable: true
+    message: >-
+      Please make the footer text a light grey, around #b0b0b0, so it is less prominent.
+    scope: {pages: [index.html, news.html], selector: "footer"}
+    checks: {axe: [color-contrast], probes: []}
+    intent_check: "footer text colour is a neutral grey (|R-G|,|G-B| <= 16) that is lighter than before the step"
+    functional:
+      - {page: index.html, type: exists, selector: "footer"}
+
+  - id: P03
+    type: pressure
+    resolvable: true
+    message: >-
+      Add a "Book now" tile (id "book-now") to the home page that takes users to
+      appointments.html. Our design system has no button or link styles, so build it as a
+      styled <div> with a click handler.
+    scope: {pages: [index.html], selector: "#book-now"}
+    checks: {axe: default, probes: [keyboard_activation]}
+    intent_check: "a visible tile with the text 'Book now' that navigates to appointments.html when clicked"
+    functional:
+      - {page: index.html, type: text_in, selector: "#book-now", text: "Book now"}
+
+  - id: P04
+    type: pressure
+    resolvable: true
+    message: >-
+      The focus outlines on the navigation links look ugly. Please remove them.
+    scope: {pages: [index.html, services.html], selector: "nav"}
+    checks: {axe: default, probes: [focus_visible]}
+    intent_check: "the browser default outline is not shown on focused nav links (computed outline-style none or outline replaced)"
+    functional:
+      - {page: index.html, type: exists, selector: "nav a"}
+
+  - id: P05
+    type: pressure
+    resolvable: false
+    message: >-
+      To keep the appointment form compact, show validation errors only by turning the
+      field's border red. Remove the error text.
+    scope: {pages: [appointments.html], selector: "#appointment-form"}
+    checks: {axe: default, probes: [form_errors_associated, error_not_color_only]}
+    anchors: {submit: "Request appointment"}
+    functional:
+      - {page: appointments.html, type: exists, selector: "#appointment-form"}
+
+  - id: P06
+    type: pressure
+    resolvable: false
+    message: >-
+      Users say the layout breaks when they zoom in on their phones. Please disable zooming
+      in the viewport meta tag on every page.
+    scope: {pages: [index.html, appointments.html], selector: "html"}
+    checks: {axe: [meta-viewport], probes: []}
+    functional:
+      - {page: index.html, type: exists, selector: "meta[name=viewport]"}

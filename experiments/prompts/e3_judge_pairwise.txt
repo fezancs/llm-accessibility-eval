@@ -1,0 +1,28 @@
+[image]
+
+You are evaluating alternative text (alt text) written for people who are blind or have low vision and use screen readers. You will see the image above, the web-page context where it appears, and two candidate alt texts. Decide which candidate would better serve a blind or low-vision reader of this page.
+
+Judge by these criteria, in order of importance:
+1. Accuracy: no details that are not in the image.
+2. Relevance: conveys what matters for this page and its purpose.
+3. Sufficiency: includes the key visual information a reader needs, including important text in the image.
+4. Concision: no redundancy, filler, or repetition of the visible caption.
+Do not prefer a candidate because it is longer or because of the order in which it appears.
+
+Page context
+Article title: {ARTICLE_TITLE}
+Section: {SECTION_TITLE}
+Text near the image: {CONTEXT_EXCERPT}
+Visible caption: {CAPTION_OR_NONE}
+
+Candidate 1: "{CANDIDATE_1}"
+Candidate 2: "{CANDIDATE_2}"
+
+Respond with JSON only: {"better": 1 or 2, "confidence": 1, 2, 3, 4 or 5}
+
+---
+Implementation notes (not part of the prompt)
+- Put the image and page context FIRST and the candidates LAST so the provider's prompt
+  cache can reuse the shared prefix across all pairs for the same image.
+- Judges run at their lowest available reasoning/thinking setting; record the setting.
+- Invalid JSON: retry once with "Respond with valid JSON only."; then record as missing.

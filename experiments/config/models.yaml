@@ -1,0 +1,417 @@
+# Model registry for the study.
+#
+# Prices are USD per 1M tokens, verified on 2026-10-28 on the providers' own pricing pages
+# (open-weight models: the pinned host's endpoint on the OpenRouter API). They WILL drift.
+# On the day you run each experiment, re-check every price, update this file, and commit it
+# before the run (the analysis reads prices from here, and the paper reports this date).
+#
+# family  = the vendor family used for judge recusal in CMBPE (Experiment E3).
+# roles   = which experiments use the model:
+#           e1        capability tasks (generation, repair, audit)
+#           e2        long agentic sessions (DCDI)
+#           e3_gen    alt-text generator
+#           e3_judge  member of the CMBPE jury
+# tier    = core (must run) | optional (run only if budget allows; see budget.yaml)
+#
+# IDs: "provider_model_id" is the ID for the vendor's own API (for OpenRouter models, the
+# OpenRouter id). None of the closed vendors publishes dated snapshots for these models: the
+# dateless ID is the pin. Always log the model name the API returns in every response.
+#
+# Fields read by harness/llm.py and harness/budget.py (added 2026-10-28, before prereg-v1):
+#   judge_params        parameters sent ONLY when the model acts as an E3 judge, to get its
+#                       lowest available reasoning setting (SPEC 2.1). Evaluated calls send
+#                       none of these, so provider defaults apply.
+#   eval_params         parameters for evaluated calls (empty = provider defaults).
+#   openrouter_provider the single upstream host pinned on OpenRouter (endpoint tag; no fallbacks).
+#   max_output_tokens   cap sent as max_tokens (default 64000, never above this value).
+#   available: false    set when a model cannot be run; the harness then refuses to call it.
+#   price               {input, output, cache_read, cache_write}; cache_write_5m = Anthropic's
+#                       5-minute write, cache_write = OpenAI's 30-minute write (1.25x input).
+#   price_over_100k     Claude Haiku 5.5: prompts over 100,000 tokens (input + cache reads + writes).
+#   price_long_context  {over_prompt_tokens: N, ...}: the whole request uses this card above N.
+#   price_changes       [{from: date, price}]: replaces the base card from that date (00:00 UTC).
+#   price_offpeak       DeepSeek off-peak card; peak_windows_utc = peak hours [start, end) in UTC.
+#   injected_signature  Gemini only: encoding of the dummy thought signature on function calls
+#                       the model did not generate (E2 padded control): bytes | base64. Set it
+#                       from the check_keys result (runs/setup/model_check.md).
+
+snapshot_date: "2026-10-28"
+
+models:
+
+  # ---------------- Anthropic ----------------
+  - key: claude-opus-5-5
+    display: "Claude Opus 5.5"
+    family: anthropic
+    access: closed
+    tier: core
+    provider: anthropic
+    provider_model_id: claude-opus-5-5
+    openrouter_id: "anthropic/claude-opus-5.5"
+    released: "2026-09-22"
+    vision: true
+    context_tokens: 1000000
+    max_output_tokens: 128000
+    architecture: "undisclosed"
+    test_time_compute: "adaptive thinking, always on; effort low..max (default medium)"
+    price: {input: 4.00, output: 20.00, cache_read: 0.20, cache_write_5m: 5.00}
+    price_source: "https://platform.claude.com/docs/en/about-claude/pricing"
+    roles: [e1, e2, e3_gen]
+
+  - key: claude-sonnet-5-5
+    display: "Claude Sonnet 5.5"
+    family: anthropic
+    access: closed
+    tier: core
+    provider: anthropic
+    provider_model_id: claude-sonnet-5-5
+    openrouter_id: "anthropic/claude-sonnet-5.5"
+    released: "2026-09-28"
+    vision: true
+    context_tokens: 1000000
+    max_output_tokens: 128000
+    architecture: "undisclosed"
+    test_time_compute: "adaptive thinking by default (disabled -> 400); effort low..max (default high)"
+    price: {input: 2.00, output: 10.00, cache_read: 0.10, cache_write_5m: 2.50}
+    price_source: "https://platform.claude.com/docs/en/about-claude/pricing"
+    # Lowest thinking setting on Sonnet 5.5: thinking.type between_tools (valid at effort <= high;
+    # no other thinking field allowed). Without tools it answers with no thinking at all.
+    judge_params: {thinking: {type: between_tools}, output_config: {effort: low}}
+    roles: [e1, e3_judge]
+
+  - key: claude-haiku-5-5
+    display: "Claude Haiku 5.5"
+    family: anthropic
+    access: closed
+    tier: core
+    provider: anthropic
+    provider_model_id: claude-haiku-5-5
+    openrouter_id: "anthropic/claude-haiku-5.5"
+    released: "2026-10-07"
+    vision: true
+    context_tokens: 1000000
+    max_output_tokens: 128000
+    architecture: "undisclosed"
+    test_time_compute: "adaptive thinking by default; effort low..max (default medium)"
+    # Two rate cards: a request whose prompt (input + cache reads + cache writes) is over
+    # 100,000 tokens pays the higher card for the whole request.
+    price: {input: 0.10, output: 0.50, cache_read: 0.01, cache_write_5m: 0.125}
+    price_over_100k: {input: 0.50, output: 2.50, cache_read: 0.05, cache_write_5m: 0.625}
+    price_source: "https://platform.claude.com/docs/en/about-claude/pricing"
+    roles: [e1, e2, e3_gen]
+
+  - key: claude-fable-5-1
+    display: "Claude Fable 5.1"
+    family: anthropic
+    access: closed
+    tier: optional            # frontier ceiling for E1 only
+    provider: anthropic
+    provider_model_id: claude-fable-5-1
+    openrouter_id: "anthropic/claude-fable-5.1"
+    released: "2026-09-01"
+    vision: true
+    context_tokens: 1000000
+    max_output_tokens: 128000
+    architecture: "undisclosed"
+    test_time_compute: "adaptive thinking, always on (default effort high)"
+    price: {input: 10.00, output: 50.00, cache_read: 0.25, cache_write_5m: 12.50}
+    price_source: "https://platform.claude.com/docs/en/about-claude/pricing"
+    note: "Requires 30-day data retention: an organisation with zero data retention gets a 400."
+    roles: [e1]
+
+  # ---------------- OpenAI ----------------
+  - key: gpt-6-sol
+    display: "GPT-6 Sol"
+    family: openai
+    access: closed
+    tier: core
+    provider: openai
+    provider_model_id: gpt-6-sol
+    openrouter_id: "openai/gpt-6-sol"
+    released: "2026-09-22"
+    vision: true
+    context_tokens: 1050000
+    max_output_tokens: 128000
+    architecture: "undisclosed"
+    test_time_compute: "reasoning effort none..max (default medium)"
+    # Prompts over 272K input tokens: 2x input and cache rates, 1.5x output, for the whole request.
+    price: {input: 2.00, output: 10.00, cache_read: 0.20, cache_write: 2.50}
+    price_long_context: {over_prompt_tokens: 272000, input: 4.00, output: 15.00, cache_read: 0.40, cache_write: 5.00}
+    price_source: "https://developers.openai.com/api/docs/models/gpt-6-sol"
+    note: "GPT-6.1 Sol (gpt-6.1-sol, 2026-09-29) is newer; it has no 'none' effort (lowest: low). Pin ONE Sol model and report it."
+    judge_params: {reasoning: {effort: "none"}}
+    roles: [e1, e2, e3_gen, e3_judge]
+
+  - key: gpt-6-luna
+    display: "GPT-6 Luna"
+    family: openai
+    access: closed
+    tier: core
+    provider: openai
+    provider_model_id: gpt-6-luna
+    openrouter_id: "openai/gpt-6-luna"
+    released: "2026-09-22"
+    vision: true
+    context_tokens: 1050000
+    max_output_tokens: 128000
+    architecture: "undisclosed"
+    test_time_compute: "reasoning effort none..max (default medium)"
+    price: {input: 0.10, output: 0.50, cache_read: 0.01, cache_write: 0.125}
+    price_long_context: {over_prompt_tokens: 272000, input: 0.20, output: 0.75, cache_read: 0.02, cache_write: 0.25}
+    price_source: "https://developers.openai.com/api/docs/pricing"
+    roles: [e1, e2, e3_gen]
+
+  - key: gpt-6-astra
+    display: "GPT-6 Astra"
+    family: openai
+    access: closed
+    tier: optional            # frontier ceiling for E1 only
+    provider: openai
+    provider_model_id: gpt-6-astra
+    openrouter_id: "openai/gpt-6-astra"
+    released: "2026-09-03"
+    vision: true
+    context_tokens: 1050000
+    max_output_tokens: 128000
+    architecture: "undisclosed"
+    test_time_compute: "reasoning effort low..max ('none' returns 400); default not documented"
+    price: {input: 10.00, output: 50.00, cache_read: 1.00, cache_write: 12.50}
+    price_long_context: {over_prompt_tokens: 272000, input: 20.00, output: 75.00, cache_read: 2.00, cache_write: 25.00}
+    price_source: "https://developers.openai.com/api/docs/pricing"
+    roles: [e1]
+
+  # ---------------- Google ----------------
+  - key: gemini-4-argon
+    display: "Gemini 4 Argon"
+    family: google
+    access: closed
+    tier: core
+    provider: google
+    provider_model_id: gemini-4-argon
+    openrouter_id: "google/gemini-4-argon"
+    released: "2026-10-13"    # GA on the paid Gemini API (announced 2026-09-30)
+    vision: true
+    context_tokens: 1048576   # unified: input + thinking + output
+    max_output_tokens: 65536  # per streaming request (more only with long decode)
+    architecture: "undisclosed"
+    test_time_compute: "thinking_level low/medium/high (default medium); thinking cannot be disabled"
+    # Introductory price through 2026-11-30. Implicit caching only; no cache-write charge.
+    price: {input: 2.00, output: 10.00, cache_read: 0.10}
+    price_changes:
+      - {from: "2026-12-01", price: {input: 4.00, output: 20.00, cache_read: 0.20}}
+    price_source: "https://ai.google.dev/gemini-api/docs/pricing"
+    fallback: "gemini-3.1-pro-preview"   # use if Argon has no paid API access for you; log the deviation
+    note: "Tier 1 projects: spend limit $10 per 10 minutes (429 RESOURCE_EXHAUSTED)."
+    roles: [e1, e2]              # not an E3 generator: Gemini 3.8 Flash covers Google so E3 keeps 8 generators
+
+  - key: gemini-3-8-flash
+    display: "Gemini 3.8 Flash"
+    family: google
+    access: closed
+    tier: core
+    provider: google
+    provider_model_id: gemini-3.8-flash
+    openrouter_id: "google/gemini-3.8-flash"
+    released: "2026-09-02"
+    vision: true
+    context_tokens: 1048576
+    max_output_tokens: 65536
+    architecture: "undisclosed"
+    test_time_compute: "thinking_level low/medium/high (default medium); 'minimal' returns an error"
+    # Introductory price through 2026-12-31. No cache-write charge for implicit caching.
+    price: {input: 0.75, output: 3.75, cache_read: 0.075}
+    price_changes:
+      - {from: "2027-01-01", price: {input: 1.50, output: 7.50, cache_read: 0.15}}
+    price_source: "https://ai.google.dev/gemini-api/docs/pricing"
+    judge_params: {thinking_config: {thinking_level: "low"}}   # lowest supported level
+    roles: [e1, e2, e3_gen, e3_judge]
+
+  # ---------------- Open-weight ----------------
+  - key: deepseek-v4-pro
+    display: "DeepSeek V4-Pro"
+    family: deepseek
+    access: open              # MIT licence
+    tier: core
+    provider: deepseek
+    provider_model_id: deepseek-v4-pro   # the only accepted string; serves DeepSeek-V4-Pro-0813 (check the pricing page's version row on run day)
+    openrouter_id: "deepseek/deepseek-v4-pro-0813"   # reference only (native API is used)
+    released: "2026-08-13"
+    vision: false             # "Vision: Not supported" on the pricing page
+    context_tokens: 1048576
+    max_output_tokens: 393216
+    architecture: "sparse MoE, 1.6T total / 49B active"
+    test_time_compute: "thinking (default, effort high) or non-thinking; efforts low / high / max"
+    # Peak 01:00-04:00 and 06:00-10:00 UTC, Monday to Friday; weekends and PRC public holidays are
+    # off-peak (no holiday falls in the run window). Off-peak is half price. No cache-write charge.
+    price: {input: 1.32, output: 3.96, cache_read: 0.044}
+    price_offpeak: {input: 0.66, output: 1.98, cache_read: 0.022}
+    peak_windows_utc: [[1, 4], [6, 10]]
+    peak_weekdays_only: true
+    price_source: "https://api-docs.deepseek.com/quick_start/pricing"
+    roles: [e1, e2]
+
+  # Open-weight models on OpenRouter: one pinned host each (endpoint tag), no fallbacks.
+  # Hosts chosen on 2026-10-28 by: tools/image support where the model's roles need them,
+  # full or near-full precision, context and max output, then price. Change a pin only before
+  # a model's first run, and report the host in the paper.
+  - key: qwen3-8-27b
+    display: "Qwen3.8-27B"
+    family: alibaba
+    access: open              # Apache-2.0
+    tier: core
+    provider: openrouter      # or a local Ollama/vLLM server; see SPEC.md section 9
+    provider_model_id: "qwen/qwen3.8-27b"
+    openrouter_id: "qwen/qwen3.8-27b"
+    released: "2026-08-14"
+    vision: true
+    context_tokens: 262144
+    max_output_tokens: 235929
+    architecture: "dense 27B (hybrid Gated DeltaNet + gated attention) with vision encoder"
+    test_time_compute: "thinking on by default (effort xhigh); can be disabled per request"
+    # DeepInfra bf16, 25 % promotional discount with no end date (list 0.20 / 2.50 / 0.05):
+    # compare with provider_reported_cost in the call log on run day.
+    price: {input: 0.15, output: 1.875, cache_read: 0.0375}
+    openrouter_provider: "deepinfra/bf16"
+    price_source: "https://openrouter.ai/api/v1/models/qwen/qwen3.8-27b/endpoints"
+    judge_params: {extra_body: {reasoning: {enabled: false}}}   # thinking off
+    roles: [e1, e2, e3_gen, e3_judge]
+    local_candidate: true     # fits one 24 GB consumer GPU at 4-bit
+
+  - key: gemma-4-31b
+    display: "Gemma 4 31B"
+    family: google
+    access: open              # Apache-2.0
+    tier: core
+    provider: openrouter
+    provider_model_id: "google/gemma-4-31b-it"
+    openrouter_id: "google/gemma-4-31b-it"
+    released: "2026-04-02"
+    vision: true
+    context_tokens: 262144
+    max_output_tokens: 262141
+    architecture: "dense 31B"
+    test_time_compute: "thinking off by default (configurable)"
+    price: {input: 0.14, output: 0.40, cache_read: 0.14}
+    openrouter_provider: "crusoe/bf16"
+    price_source: "https://openrouter.ai/api/v1/models/google/gemma-4-31b-it/endpoints"
+    roles: [e1, e3_gen]
+    local_candidate: true
+
+  - key: llama-4-maverick
+    display: "Llama 4 Maverick"
+    family: meta
+    access: open              # Llama 4 Community License (source-available)
+    tier: core
+    provider: openrouter
+    provider_model_id: "meta-llama/llama-4-maverick"
+    openrouter_id: "meta-llama/llama-4-maverick"
+    released: "2025-04-05"
+    vision: true              # model level; image input at the pinned host is checked by check_keys
+    context_tokens: 524288    # largest context of any OpenRouter host (the model supports 1M)
+    max_output_tokens: 32768  # the host's limit; OpenRouter refuses requests asking for more
+    architecture: "MoE, 400B total / 17B active, 128 experts"
+    test_time_compute: "none"
+    price: {input: 0.35, output: 1.00, cache_read: 0.17}
+    openrouter_provider: "parasail/fp8"   # Meta's official FP8 release
+    price_source: "https://openrouter.ai/api/v1/models/meta-llama/llama-4-maverick/endpoints"
+    note: "Latest open-weight Llama. Meta's newer Muse models are proprietary."
+    roles: [e1, e3_gen]
+
+  - key: qwen3-8-flagship
+    display: "Qwen3.8 (2.4T-A95B)"
+    family: alibaba
+    access: open              # custom licence; commercial licence needed above USD 50M revenue
+    tier: optional
+    provider: openrouter
+    provider_model_id: "qwen/qwen3.8-2.4t-a95b"
+    openrouter_id: "qwen/qwen3.8-2.4t-a95b"
+    released: "2026-08-12"
+    vision: false             # text-only; multimodal inputs are not supported
+    context_tokens: 1010000   # model maximum (the host accepts 1,048,576)
+    max_output_tokens: 131072
+    architecture: "sparse MoE, 2.4T total / 95B active"
+    test_time_compute: "thinking only (cannot be disabled); effort xhigh (default) / medium / low"
+    price: {input: 2.00, output: 6.00, cache_read: 0.25}
+    openrouter_provider: "siliconflow/fp8"
+    price_source: "https://openrouter.ai/api/v1/models/qwen/qwen3.8-2.4t-a95b/endpoints"
+    roles: [e1]
+
+  # ---------------- Local (self-hosted, $0) ----------------
+  # Served by Ollama (or any OpenAI-compatible server) on the LOCAL_BASE_URL endpoint
+  # (default http://localhost:11434/v1). provider_model_id is the Ollama tag you `ollama pull`.
+  # These fit an 8 GB GPU (RTX 2060 SUPER) at 4-bit, one model resident at a time. Prices are
+  # 0, so every call is logged at $0 and never counts against a budget cap. Running on 8 GB is
+  # a deliberate substitution for the larger study models (see DEVIATIONS.md): report these as
+  # "small open-weight models runnable on consumer 8 GB hardware", not as the frontier models.
+  - key: local-qwen3-8b
+    display: "Qwen3 8B (local)"
+    family: alibaba-local       # distinct family so the E3 jury can recuse correctly
+    access: open                # Apache-2.0
+    tier: core
+    provider: local
+    provider_model_id: "qwen3:8b"
+    released: "2026"
+    vision: false               # Qwen3 8B is text-only; use local-qwen2.5vl-7b for E3
+    context_tokens: 32768       # Ollama default is 4096; raise with OLLAMA_CONTEXT or a Modelfile
+    max_output_tokens: 8192
+    architecture: "dense 8B"
+    test_time_compute: "thinking toggle (default on); reasoning not sent by the harness"
+    price: {input: 0, output: 0}
+    price_source: "self-hosted; no per-token cost"
+    roles: [e1, e2]             # strong tool calling for E2; text-only so not an E3 generator/judge
+    local_candidate: true
+
+  - key: local-qwen25vl-7b
+    display: "Qwen2.5-VL 7B (local)"
+    family: alibaba-local
+    access: open                # Apache-2.0
+    tier: core
+    provider: local
+    provider_model_id: "qwen2.5vl:7b"
+    released: "2026"
+    vision: true
+    context_tokens: 32768
+    max_output_tokens: 8192
+    architecture: "vision-language 7B"
+    test_time_compute: "--"
+    price: {input: 0, output: 0}
+    price_source: "self-hosted; no per-token cost"
+    # Local vision models are weaker at alt text than cloud models (dri.es round 2); report the
+    # limitation rather than hiding it. Serves as the Alibaba-family E3 generator and judge.
+    judge_params: {}
+    roles: [e1, e3_gen, e3_judge]
+    local_candidate: true
+
+  - key: local-gemma3-4b
+    display: "Gemma 3 4B (local)"
+    family: google-local        # second family for the E3 jury (CMBPE needs >= 3 families)
+    access: open                # Gemma terms of use
+    tier: optional              # fits alongside another small model on 8 GB; optional second judge
+    provider: local
+    provider_model_id: "gemma3:4b"
+    released: "2026"
+    vision: true
+    context_tokens: 32768
+    max_output_tokens: 8192
+    architecture: "dense 4B (vision)"
+    test_time_compute: "--"
+    price: {input: 0, output: 0}
+    price_source: "self-hosted; no per-token cost"
+    judge_params: {}
+    roles: [e1, e3_gen, e3_judge]
+    local_candidate: true
+
+# Judge panel for CMBPE (E3): exactly one judge per family.
+# For a cloud run use the four lines below. For a fully local run, comment those out and use
+# the local map instead (needs >= 3 families; local-qwen25vl-7b + local-gemma3-4b give two,
+# so add a third small vision model from another family, e.g. a Llama-vision or MiniMax-VL
+# build, before relying on CMBPE locally).
+judges:
+  anthropic: claude-sonnet-5-5
+  openai: gpt-6-sol
+  google: gemini-3-8-flash
+  alibaba: qwen3-8-27b
+
+# judges (fully local example; uncomment and add a third family):
+#   alibaba-local: local-qwen25vl-7b
+#   google-local: local-gemma3-4b

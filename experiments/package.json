@@ -1,0 +1,9 @@
+{
+  "name": "llm-accessibility-eval",
+  "private": true,
+  "description": "Pinned axe-core for the evaluation harness",
+  "dependencies": {
+    "axe-core": "^4.14.0",
+    "prettier": "3.9.10"
+  }
+}
