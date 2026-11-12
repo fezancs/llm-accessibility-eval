@@ -139,6 +139,11 @@ def call(model_cfg: dict, system: str | None, messages: list[dict], tools: list[
     try:
         for chunk in client(provider).chat.completions.create(**kwargs):
             model_returned = chunk.model or model_returned
+            if provider == "local" and model_returned and model_returned != model_id:
+                # A self-hosted server serves whatever model is loaded, whatever the request
+                # says. Stop at the first chunk and refuse (never cache) the other model's answer.
+                raise AttemptError(f"local server answered with model {model_returned!r}, expected "
+                                   f"{model_id!r}", retryable=False, kind="wrong_model")
             fingerprint = getattr(chunk, "system_fingerprint", None) or fingerprint
             extra = chunk.model_extra or {}
             served = extra.get("provider") or served
@@ -174,12 +179,6 @@ def call(model_cfg: dict, system: str | None, messages: list[dict], tools: list[
     except Exception as exc:        # noqa: BLE001
         retryable, code = _classify(exc)
         raise AttemptError(f"{type(exc).__name__}: {exc}", retryable, code, _usage(usage_obj)) from exc
-
-    if provider == "local" and model_returned and model_returned != model_id:
-        # A self-hosted server serves whatever model is loaded, whatever the request says. Refuse
-        # (and so never cache) an answer from a different model than the one requested.
-        raise AttemptError(f"local server answered with model {model_returned!r}, expected {model_id!r}",
-                           retryable=False, usage=_usage(usage_obj), kind="wrong_model")
 
     tool_calls = []
     raw_calls = []

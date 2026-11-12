@@ -44,14 +44,20 @@ except Exception:
 PYEOF
 }
 
+kill_server() {
+  pkill -f "local/serve_llamacpp.sh" 2>/dev/null
+  pkill -f "llama-server.*--port 11434" 2>/dev/null
+  sleep 5
+}
+
 launch() {    # profile (the watchdog leaves the server alone while .launching exists)
   touch "$STATE/.launching"
-  pkill -f "llama-server.*--port 11434" 2>/dev/null; sleep 5
+  kill_server
   nohup "$SERVE" "$1" >> "$LOGS/server_$1.log" 2>&1 &
-  local ok=1
+  local pid=$! ok=1                             # the serve script execs llama-server: same pid
   for _ in $(seq 1 120); do
     if healthy "${ALIAS[$1]}"; then ok=0; break; fi
-    pgrep -f "llama-server.*--port 11434" > /dev/null || break      # died while loading
+    kill -0 "$pid" 2>/dev/null || break         # died while loading
     sleep 3
   done
   rm -f "$STATE/.launching"
@@ -68,7 +74,7 @@ serve() {     # profile: start the server and keep it alive (watchdog restarts a
 unserve() {
   : > "$STATE/.server"
   rm -f "$STATE/.launching"
-  pkill -f "llama-server.*--port 11434" 2>/dev/null; sleep 5
+  kill_server
 }
 
 watchdog() {  # restart a crashed server; after 3 failed restarts, stop the running step
@@ -121,6 +127,13 @@ needed() {    # step names... -> 0 if any is not done
   return 1
 }
 
+all_done() {  # step names... -> 0 if every one is done (steps that replay the cache need this)
+  for s in "$@"; do
+    [ -e "$STATE/$s.done" ] || { log "skip: $s not done, so the steps that depend on it wait for a re-run"; return 1; }
+  done
+  return 0
+}
+
 # ------------------------------------------------------------------ results
 publish() {   # message
   for f in "$LOGS"/*.log; do
@@ -162,17 +175,22 @@ log "pipeline start (pid $$) on branch $(git -C "$REPO" rev-parse --abbrev-ref H
 watchdog & WD=$!
 trap 'kill $WD 2>/dev/null; unserve' EXIT
 
-# --- 1. E1 with Qwen2.5-VL 7B (text only) -------------------------------------------------
-if needed e1gen_qv e1rep_qv e1aud_qv; then
+# A server stays loaded between phases: steps that replay the cache for several models then
+# get a fast refusal (wrong model, chat_adapter.py) for any request that is not cached, instead
+# of retrying against a dead endpoint. Cache-replay steps run only after their inputs are done.
+
+# --- 1. E1 with Qwen2.5-VL 7B (text only), scored while its server is still loaded ---------
+if needed e1gen_qv e1rep_qv e1aud_qv e1score_gen_qv e1score_rep_qv e1score_aud_qv; then
   serve local-qwen25vl-7b-text && {
     api_step e1gen_qv "$PY" -m harness.e1_gen --models "$QV" --no-eval
     api_step e1rep_qv "$PY" -m harness.e1_repair --models "$QV" --no-eval
     api_step e1aud_qv "$PY" -m harness.e1_audit --models "$QV" --no-eval
+    all_done e1gen_qv e1rep_qv e1aud_qv && e1_score "$QV" qv
   }
-  unserve
 fi
-e1_score "$QV" qv
-[ -e "$STATE/m1.done" ] || { milestone "E1 for Qwen2.5-VL 7B"; touch "$STATE/m1.done"; }
+if all_done e1score_gen_qv e1score_rep_qv e1score_aud_qv && [ ! -e "$STATE/m1.done" ]; then
+  milestone "E1 for Qwen2.5-VL 7B"; touch "$STATE/m1.done"
+fi
 
 # --- 2. E3: generation and judging, one vision model at a time ---------------------------
 for M in "$QV" "$G3" "$MI"; do
@@ -184,17 +202,23 @@ for M in "$QV" "$G3" "$MI"; do
     }
   fi
 done
-unserve
-step e3gen_all "$PY" -m harness.e3_generate --models "$QV,$G3,$MI"
-step e3leak "$PY" -m harness.e3_generate --models "$QV,$G3,$MI" --leakage
-for M in "$QV" "$G3" "$MI"; do
-  if needed "e3pairs_$M"; then
-    serve "$M" && api_step "e3pairs_$M" "$PY" -m harness.e3_judge --models "$M" --procedures gen_pairs
+if all_done "e3gen_$QV" "e3gen_$G3" "e3gen_$MI"; then
+  step e3gen_all "$PY" -m harness.e3_generate --models "$QV,$G3,$MI"
+  all_done e3gen_all && step e3leak "$PY" -m harness.e3_generate --models "$QV,$G3,$MI" --leakage
+fi
+if all_done e3gen_all; then
+  for M in "$QV" "$G3" "$MI"; do
+    if needed "e3pairs_$M"; then
+      serve "$M" && api_step "e3pairs_$M" "$PY" -m harness.e3_judge --models "$M" --procedures gen_pairs
+    fi
+  done
+fi
+if all_done "e3judge_$QV" "e3judge_$G3" "e3judge_$MI" "e3pairs_$QV" "e3pairs_$G3" "e3pairs_$MI"; then
+  step e3judge_all "$PY" -m harness.e3_judge --models "$QV,$G3,$MI"
+  if all_done e3judge_all && [ ! -e "$STATE/m2.done" ]; then
+    milestone "E3 (alt-text generation and CMBPE judging)"; touch "$STATE/m2.done"
   fi
-done
-unserve
-step e3judge_all "$PY" -m harness.e3_judge --models "$QV,$G3,$MI"
-[ -e "$STATE/m2.done" ] || { milestone "E3 (alt-text generation and CMBPE judging)"; touch "$STATE/m2.done"; }
+fi
 
 # --- 3. E2 with Qwen3 8B --------------------------------------------------------------------
 if needed e2pilot e2full; then
@@ -217,19 +241,26 @@ if needed e2pilot e2full; then
     fi
   }
 fi
-[ -e "$STATE/m3.done" ] || { milestone "E2 (long agentic sessions, DCDI)"; touch "$STATE/m3.done"; }
+if all_done e2full && [ ! -e "$STATE/m3.done" ]; then
+  milestone "E2 (long agentic sessions, DCDI)"; touch "$STATE/m3.done"
+fi
 
-# --- 4. E1 with Qwen3 8B, then E1 scoring for both models ----------------------------------
-if needed e1gen_q3 e1rep_q3 e1aud_q3; then
+# --- 4. E1 with Qwen3 8B, then E1 scoring for both models (Qwen3 server still loaded) -------
+if needed e1gen_q3 e1rep_q3 e1aud_q3 e1score_gen_all e1score_rep_all e1score_aud_all; then
   serve "$Q3" && {
     api_step e1gen_q3 "$PY" -m harness.e1_gen --models "$Q3" --no-eval
     api_step e1rep_q3 "$PY" -m harness.e1_repair --models "$Q3" --no-eval
     api_step e1aud_q3 "$PY" -m harness.e1_audit --models "$Q3" --no-eval
+    all_done e1gen_q3 e1rep_q3 e1aud_q3 e1gen_qv e1rep_qv e1aud_qv && e1_score "$Q3,$QV" all
   }
-  unserve
 fi
-e1_score "$Q3,$QV" all
-step checks_all "$PY" -m harness.check_keys --models "$Q3,$QV,$G3,$MI"
+all_done check_q3 "check_$QV" "check_$G3" "check_$MI" \
+  && step checks_all "$PY" -m harness.check_keys --models "$Q3,$QV,$G3,$MI"
+unserve
 log "failed steps this pass: ${FAILED[*]:-none}"
-[ -e "$STATE/m4.done" ] || { milestone "E1 complete; all experiments done"; touch "$STATE/m4.done"; }
+if all_done m1 m2 m3 e1score_gen_all e1score_rep_all e1score_aud_all checks_all; then
+  [ -e "$STATE/m4.done" ] || { milestone "E1 complete; all experiments done"; touch "$STATE/m4.done"; }
+else
+  milestone "partial (pipeline pass ended; see runs/local_pipeline/pipeline.log)"
+fi
 log "pipeline end"
