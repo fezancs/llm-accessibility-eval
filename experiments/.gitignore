@@ -14,3 +14,9 @@ runs/**/screens/
 runs/cache/
 runs/**/evalcache/
 runs_*.log
+# machine-specific symlinks to data/corpus/base/images (common.link_images), and E1-Repair
+# reference copies + screenshots of corpus pages (re-created from data/corpus when scoring)
+runs/**/artifacts/**/images
+runs/**/artifacts/repair_refs/
+runs/local_pipeline/.server
+runs/local_pipeline/.launching

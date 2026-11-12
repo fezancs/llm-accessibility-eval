@@ -30,7 +30,8 @@ _SEMAPHORES = {p: threading.BoundedSemaphore(n) for p, n in CONCURRENCY.items()}
 MAX_RETRIES = 5
 DEFAULT_MAX_TOKENS = 64_000
 CONTEXT_RE = re.compile(r"prompt is too long|context[_ ]length|maximum context|context window|"
-                        r"exceeds the maximum number of tokens|too many tokens|input is too long", re.I)
+                        r"exceeds the maximum number of tokens|too many tokens|input is too long|"
+                        r"exceeds the available context size", re.I)   # last: llama.cpp server (HTTP 400)
 
 
 class ModelUnavailable(RuntimeError):

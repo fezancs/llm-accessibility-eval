@@ -86,10 +86,18 @@ def generate(client: llm.LLM, model: str = MODEL, out_path: pathlib.Path | None 
     scratch.mkdir(parents=True)
     ws = Workspace(scratch)
     messages, boundaries, stats = [], [], []
+    stopped = None
     for i, text in enumerate(turns, 1):
         messages.append(llm.user(text))
         res = run_turn(client, model, system, TOOLS, messages, ws, item_prefix=f"e2/padding/turn{i:02d}",
                        sample_idx=0, cap=TURN_CAP)
+        if res["status"] == "context_exhausted" and boundaries:
+            # A short-context model (e.g. a local 32K model) fills its window before turn 30. Keep
+            # the complete turns: the padded control only needs prefixes up to the session's
+            # Lambda, which cannot exceed the same window (DEVIATIONS.md, 2026-11-12).
+            stopped = f"context_exhausted at turn {i}"
+            del messages[boundaries[-1]:]
+            break
         if res["status"] != "ok":
             raise RuntimeError(f"padding turn {i} failed ({res['status']}): {res['error']}")
         boundaries.append(len(messages))
@@ -97,8 +105,8 @@ def generate(client: llm.LLM, model: str = MODEL, out_path: pathlib.Path | None 
                                            "cost_usd", "cap_reached")})
     neutral = to_neutral(messages)
     data = {"model_key": model, "system": system, "tools": [t["name"] for t in TOOLS],
-            "n_turns": len(turns), "turn_boundaries": boundaries, "turn_stats": stats,
-            "cost_usd": sum(s["cost_usd"] for s in stats), "messages": neutral}
+            "n_turns": len(boundaries), "turn_boundaries": boundaries, "turn_stats": stats,
+            "stopped": stopped, "cost_usd": sum(s["cost_usd"] for s in stats), "messages": neutral}
     path = out_path or transcript_path()
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")

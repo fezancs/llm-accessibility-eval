@@ -127,6 +127,25 @@ Pass the local model keys explicitly with `--models`:
 Everything is resumable: re-running replays cached responses and continues where it stopped.
 Watch GPU memory with `watch -n2 nvidia-smi` during E2.
 
+## 6b. Serving with llama.cpp instead of Ollama (used for the 2026-11 run)
+
+Without the proprietary NVIDIA driver (for example on the open nouveau/NVK driver, or without
+sudo to install one), Ollama has no GPU backend. llama.cpp's Vulkan build runs on NVK and is
+what the 2026-11 local run used (`experiments/DEVIATIONS.md`, 2026-11-12):
+
+```bash
+# llama.cpp release b12004, Vulkan build (llama-b12004-bin-ubuntu-vulkan-x64.tar.gz)
+~/opt/llama.cpp/llama-b12004/llama-server --list-devices     # should list the GPU (NVK)
+# GGUF files (Q4_K_M) in ~/models; repos, file names and sha256 are in config/models.yaml (`gguf`)
+experiments/local/serve_llamacpp.sh local-qwen3-8b            # serves on 127.0.0.1:11434
+```
+
+The server listens on Ollama's port, so the harness default `LOCAL_BASE_URL` works unchanged.
+One profile per model sets the context, KV-cache type, image-token cap and the Ollama-library
+sampling defaults (see the script). `experiments/local/run_local.sh` runs the whole local study
+unattended: it switches models, runs E1, E3 and E2, scores, analyses and pushes the results to
+the results branch at each milestone (`runs/local_pipeline/pipeline.log`).
+
 ## 7. Analysis and paper
 
 ```bash

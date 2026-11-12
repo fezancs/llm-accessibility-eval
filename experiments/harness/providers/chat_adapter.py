@@ -175,6 +175,12 @@ def call(model_cfg: dict, system: str | None, messages: list[dict], tools: list[
         retryable, code = _classify(exc)
         raise AttemptError(f"{type(exc).__name__}: {exc}", retryable, code, _usage(usage_obj)) from exc
 
+    if provider == "local" and model_returned and model_returned != model_id:
+        # A self-hosted server serves whatever model is loaded, whatever the request says. Refuse
+        # (and so never cache) an answer from a different model than the one requested.
+        raise AttemptError(f"local server answered with model {model_returned!r}, expected {model_id!r}",
+                           retryable=False, usage=_usage(usage_obj), kind="wrong_model")
+
     tool_calls = []
     raw_calls = []
     for idx in sorted(calls):
