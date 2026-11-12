@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration Form</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+  }
+  .form-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .step {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .step .current {
+    color: #4CAF50;
+  }
+  .step .next, .step .back {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .step .next {
+    background-color: #4CAF50;
+    color: white;
+  }
+  .step .back {
+    background-color: #f44336;
+    color: white;
+  }
+  .step .back:hover, .step .next:hover {
+    background-color: #45a049;
+    color: white;
+  }
+  .form-group {
+    margin-bottom: 20px;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  .form-group input, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .form-group textarea {
+    height: 100px;
+  }
+  .form-group .error {
+    color: red;
+    margin-top: 5px;
+  }
+  .submit {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .submit:hover {
+    background-color: #45a049;
+  }
+</style>
+<script>
+  function validateForm() {
+    const name = document.getElementById('name').value;
+    const dob = document.getElementById('dob').value;
+    const phone = document.getElementById('phone').value;
+    const email = document.getElementById('email').value;
+    const error = document.getElementById('error');
+
+    if (!name || !dob || !phone || !email) {
+      error.textContent = 'All fields are required';
+      return false;
+    }
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      error.textContent = 'Please enter a valid email address';
+      return false;
+    }
+    if (!/^\d{10}$/.test(phone)) {
+      error.textContent = 'Please enter a valid phone number';
+      return false;
+    }
+    error.textContent = '';
+    return true;
+  }
+
+  function nextStep() {
+    const currentStep = document.querySelector('.current');
+    const nextStep = currentStep.nextElementSibling;
+    if (nextStep) {
+      currentStep.classList.remove('current');
+      nextStep.classList.add('current');
+      document.getElementById('step').textContent = nextStep.textContent;
+    }
+  }
+
+  function previousStep() {
+    const currentStep = document.querySelector('.current');
+    const prevStep = currentStep.previousElementSibling;
+    if (prevStep) {
+      currentStep.classList.remove('current');
+      prevStep.classList.add('current');
+      document.getElementById('step').textContent = prevStep.textContent;
+    }
+  }
+
+  document.getElementById('submit').addEventListener('click', function() {
+    if (validateForm()) {
+      document.getElementById('step').textContent = 'Step 3';
+      document.querySelector('.step .next').classList.add('current');
+      document.querySelector('.step .back').classList.remove('current');
+    }
+  });
+
+  document.getElementById('back').addEventListener('click', previousStep);
+  document.getElementById('next').addEventListener('click', nextStep);
+</script>
+</head>
+<body>
+<div class="form-container">
+  <div class="step">
+    <div class="current">Step 1</div>
+    <button id="back">Back</button>
+    <button id="next">Next</button>
+  </div>
+  <div class="step">
+    <div class="current">Step 2</div>
+    <button id="back">Back</button>
+    <button id="next">Next</button>
+  </div>
+  <div class="step">
+    <div class="current">Step 3</div>
+    <button id="back">Back</button>
+    <button id="submit">Submit</button>
+  </div>
+  <div id="step">Step 1</div>
+  <form>
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name">
+    </div>
+    <div class="form-group">
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="dob" name="dob">
+    </div>
+    <div class="form-group">
+      <label for="phone">Phone:</label>
+      <input type="text" id="phone" name="phone">
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email">
+    </div>
+    <div id="error" class="error"></div>
+  </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,7 @@
+2026-11-12T12:16:56+05:00 pipeline start (pid 95734) on branch local-run-2026-11 at a5d4154
+2026-11-12T12:16:56+05:00 server: start local-qwen25vl-7b-text
+2026-11-12T12:17:05+05:00 start e1gen_qv.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_gen --models local-qwen25vl-7b --no-eval
+2026-11-12T13:12:45+05:00 end   e1gen_qv.pass1 rc=0 (55 min)
+2026-11-12T13:12:45+05:00 start e1gen_qv: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_gen --models local-qwen25vl-7b --no-eval
+2026-11-12T13:12:57+05:00 end   e1gen_qv rc=0 (0 min)
+2026-11-12T13:12:57+05:00 start e1rep_qv.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_repair --models local-qwen25vl-7b --no-eval

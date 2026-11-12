@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CityCare</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        @media (max-width: 600px) {
+            .nav {
+                flex-direction: column;
+            }
+            .nav a {
+                display: block;
+                width: 100%;
+                text-align: center;
+            }
+            .dropdown {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav">
+            <a href="#home">CityCare</a>
+            <div class="dropdown">
+                <button class="dropbtn">Services</button>
+                <div class="dropdown-content">
+                    <a href="#vaccinations">Vaccinations</a>
+                    <a href="#check-ups">Check-ups</a>
+                    <a href="#pharmacy">Pharmacy</a>
+                    <a href="#mental-health">Mental Health</a>
+                </div>
+            </div>
+            <a href="#appointments">Appointments</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </header>
+    <main>
+        <section id="home">
+            <h1>Welcome to CityCare</h1>
+            <p>Your health, our priority.</p>
+        </section>
+        <section id="services">
+            <h2>Services</h2>
+            <p>Explore our range of services.</p>
+        </section>
+        <section id="appointments">
+            <h2>Book an Appointment</h2>
+            <p>Make your appointment now.</p>
+        </section>
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <p>Get in touch with us.</p>
+        </section>
+    </main>
+</body>
+</html>

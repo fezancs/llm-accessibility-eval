@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pain Scale Control</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  .pain-scale {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .pain-scale input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 25px;
+    background: #d3d3d3;
+    border-radius: 5px;
+    transition: background 0.3s;
+  }
+  .pain-scale input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .pain-scale input[type="range"]::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .pain-scale input[type="range"]::-ms-thumb {
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .pain-scale input[type="range"]::-ms-fill-lower {
+    background: #d3d3d3;
+    border-radius: 5px;
+  }
+  .pain-scale input[type="range"]::-ms-fill-upper {
+    background: #d3d3d3;
+    border-radius: 5px;
+  }
+  .pain-scale .pain-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4CAF50;
+  }
+</style>
+</head>
+<body>
+<div class="pain-scale">
+  <input type="range" min="0" max="10" value="0" step="1" id="painSlider">
+  <span class="pain-value">0</span>
+</div>
+<script>
+  document.getElementById('painSlider').addEventListener('input', function() {
+    document.querySelector('.pain-value').textContent = this.value;
+  });
+</script>
+</body>
+</html>

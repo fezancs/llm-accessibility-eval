@@ -1,0 +1,40 @@
+[
+ {
+  "key": "local-gemma3-4b",
+  "provider": "local",
+  "text": {
+   "ok": true,
+   "status": "ok",
+   "model_returned": "gemma-3-4b-it-Q4_K_M",
+   "provider_served": null,
+   "stop_reason": "end_turn",
+   "text": "OK\n",
+   "cost_usd": 0.0,
+   "ttft_s": 4.751958224995178,
+   "total_s": 4.809088515990879
+  },
+  "judge": {
+   "ok": true,
+   "status": "ok",
+   "model_returned": "gemma-3-4b-it-Q4_K_M",
+   "provider_served": null,
+   "stop_reason": "end_turn",
+   "text": "```json\n{\"better\": 1, \"confidence\": 3}\n```\n",
+   "cost_usd": 0.0,
+   "ttft_s": 0.37043048700434156,
+   "total_s": 0.751031794003211
+  },
+  "vision": {
+   "ok": true,
+   "status": "ok",
+   "model_returned": "gemma-3-4b-it-Q4_K_M",
+   "provider_served": null,
+   "stop_reason": "end_turn",
+   "text": "Geometric shapes on a wall.",
+   "cost_usd": 0.0,
+   "ttft_s": 5.843198078000569,
+   "total_s": 5.973310854998999
+  },
+  "ok": true
+ }
+]

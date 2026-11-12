@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  .faq {
+    margin: 20px;
+  }
+  .faq-question {
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .faq-answer {
+    display: none;
+    margin-top: 10px;
+  }
+</style>
+<script>
+  function toggleAnswer(e) {
+    const question = e.target;
+    const answer = question.nextElementSibling;
+    answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+  }
+</script>
+</head>
+<body>
+<div class="faq">
+  <div class="faq-question" onclick="toggleAnswer(event)">How do I book an appointment?</div>
+  <div class="faq-answer" style="display: none;">To book an appointment, please call our office at 555-1234 or visit our website. Appointments are available on weekdays from 9 AM to 5 PM.</div>
+  <div class="faq-question" onclick="toggleAnswer(event)">Can I bring someone with me?</div>
+  <div class="faq-answer" style="display: none;">Yes, you are welcome to bring a friend or family member with you to your appointment. Just let us know when you book your appointment.</div>
+  <div class="faq-question" onclick="toggleAnswer(event)">Is parking available?</div>
+  <div class="faq-answer" style="display: none;">Parking is available in our lot, which is located behind the building. Please park there and walk to the entrance.</div>
+  <div class="faq-question" onclick="toggleAnswer(event)">How do I get my test results?</div>
+  <div class="faq-answer" style="display: none;">Your test results will be available in your electronic health record. You can access it through our website or by calling our office. If you prefer, we can also send the results to you by mail.</div>
+  <div class="faq-question" onclick="toggleAnswer(event)">What if I need an interpreter?</div>
+  <div class="faq-answer" style="display: none;">If you need an interpreter, please let us know when you book your appointment. We will arrange for a certified interpreter to be present during your visit.</div>
+</div>
+</body>
+</html>

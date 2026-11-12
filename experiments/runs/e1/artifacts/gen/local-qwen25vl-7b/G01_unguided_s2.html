@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CityCare Appointment Request</title>
+<style>
+  body { font-family: Arial, sans-serif; }
+  .error { color: red; }
+</style>
+</head>
+<body>
+  <h1>Request an Appointment</h1>
+  <form id="appointmentForm">
+    <label for="fullName">Full Name:</label>
+    <input type="text" id="fullName" name="fullName" required>
+    <br>
+    <label for="dob">Date of Birth:</label>
+    <input type="date" id="dob" name="dob" required>
+    <br>
+    <label for="email">Email Address:</label>
+    <input type="email" id="email" name="email" required>
+    <br>
+    <label for="preferredClinic">Preferred Clinic:</label>
+    <select id="preferredClinic" name="preferredClinic" required>
+      <option value="Northside">Northside</option>
+      <option value="Riverside">Riverside</option>
+      <option value="Old Town">Old Town</option>
+      <option value="Harbour">Harbour</option>
+    </select>
+    <br>
+    <label for="consultationType">Consultation Type:</label>
+    <select id="consultationType" name="consultationType" required>
+      <option value="in person">In Person</option>
+      <option value="video call">Video Call</option>
+      <option value="phone call">Phone Call</option>
+    </select>
+    <br>
+    <label for="notes">Notes:</label>
+    <textarea id="notes" name="notes"></textarea>
+    <br>
+    <label for="privacyCheckbox">I agree to the privacy notice:</label>
+    <input type="checkbox" id="privacyCheckbox" name="privacyCheckbox" required>
+    <br>
+    <button type="submit">Request Appointment</button>
+  </form>
+  <script>
+    document.getElementById('appointmentForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const fullName = document.getElementById('fullName').value;
+      const dob = document.getElementById('dob').value;
+      const email = document.getElementById('email').value;
+      const preferredClinic = document.getElementById('preferredClinic').value;
+      const consultationType = document.getElementById('consultationType').value;
+      const notes = document.getElementById('notes').value;
+      const privacyCheckbox = document.getElementById('privacyCheckbox').checked;
+
+      if (!fullName || !dob || !email || !preferredClinic || !consultationType || !privacyCheckbox) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+
+      alert('Appointment request submitted successfully!');
+    });
+  </script>
+</body>
+</html>

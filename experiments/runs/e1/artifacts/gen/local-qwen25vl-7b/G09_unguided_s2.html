@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CityCare Services Search</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  .search-box {
+    position: relative;
+    width: 100%;
+  }
+  .search-box input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+  }
+  .search-box .suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .search-box .suggestions li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+  }
+  .search-box .suggestions li:hover {
+    background-color: #f0f0f0;
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('.search-box input[type="text"]');
+    const suggestionsList = document.querySelector('.search-box .suggestions');
+
+    searchInput.addEventListener('input', function() {
+      const query = searchInput.value.toLowerCase();
+      const suggestions = document.querySelectorAll('.search-box .suggestions li');
+      suggestions.forEach(suggestion => {
+        if (suggestion.textContent.toLowerCase().includes(query)) {
+          suggestion.style.display = 'block';
+        } else {
+          suggestion.style.display = 'none';
+        }
+      });
+    });
+
+    searchInput.addEventListener('blur', function() {
+      const suggestions = document.querySelectorAll('.search-box .suggestions li');
+      suggestions.forEach(suggestion => {
+        suggestion.style.display = 'none';
+      });
+    });
+
+    searchInput.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        const selected = document.querySelector('.search-box .suggestions li.active');
+        if (selected) {
+          searchInput.value = selected.textContent;
+          searchInput.blur();
+        }
+      }
+    });
+
+    suggestionsList.addEventListener('click', function(event) {
+      const target = event.target;
+      if (target.tagName === 'LI') {
+        searchInput.value = target.textContent;
+        searchInput.blur();
+        target.classList.add('active');
+      }
+    });
+  });
+</script>
+</head>
+<body>
+<div class="search-box">
+  <input type="text" placeholder="Search CityCare services...">
+  <ul class="suggestions">
+    <li class="active">Vaccinations</li>
+    <li>Blood tests</li>
+    <li>Physiotherapy</li>
+    <li>Pharmacy</li>
+    <li>Dental care</li>
+    <li>Eye tests</li>
+    <li>Hearing tests</li>
+    <li>Mental health</li>
+    <li>Maternity</li>
+    <li>Child health</li>
+    <li>Travel clinic</li>
+    <li>Sexual health</li>
+  </ul>
+</div>
+</body>
+</html>

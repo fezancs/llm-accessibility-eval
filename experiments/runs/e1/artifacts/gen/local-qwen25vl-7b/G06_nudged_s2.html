@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clinic Opening Hours</title>
+<style>
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+th {
+  background-color: #f2f2f2;
+  cursor: pointer;
+}
+th:hover {
+  background-color: #ddd;
+}
+table, th, td {
+  border: 1px solid black;
+}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var clinics = [
+    {name: 'Hilltop', mon: '8:00', tue: '8:00', wed: '8:00', thu: '8:00', fri: '8:00', sat: 'Closed', sun: 'Closed'},
+    {name: 'Northside', mon: '8:00', tue: '8:00', wed: '8:00', thu: '8:00', fri: '8:00', sat: 'Closed', sun: 'Closed'},
+    {name: 'Old Town', mon: '8:00', tue: '8:00', wed: '8:00', thu: '8:00', fri: '8:00', sat: 'Closed', sun: 'Closed'},
+    {name: 'Riverside', mon: '8:00', tue: '8:00', wed: '8:00', thu: '8:00', fri: '8:00', sat: 'Closed', sun: 'Closed'},
+    {name: 'Harbour', mon: '8:00', tue: '8:00', wed: '8:00', thu: '8:00', fri: '8:00', sat: 'Closed', sun: 'Closed'}
+  ];
+
+  var table = document.createElement('table');
+  var thead = document.createElement('thead');
+  var tbody = document.createElement('tbody');
+
+  var headerRow = document.createElement('tr');
+  var clinicHeader = document.createElement('th');
+  clinicHeader.textContent = 'Clinic';
+  clinicHeader.addEventListener('click', function() {
+    clinics.sort(function(a, b) { return a.name.localeCompare(b.name); });
+    renderTable();
+  });
+  headerRow.appendChild(clinicHeader);
+  var dayHeaders = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  dayHeaders.forEach(function(day) {
+    var dayHeader = document.createElement('th');
+    dayHeader.textContent = day;
+    headerRow.appendChild(dayHeader);
+  });
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  function renderTable() {
+    tbody.innerHTML = '';
+    clinics.forEach(function(clinic) {
+      var row = document.createElement('tr');
+      var clinicCell = document.createElement('td');
+      clinicCell.textContent = clinic.name;
+      clinicCell.addEventListener('click', function() {
+        clinics.sort(function(a, b) { return b.name.localeCompare(a.name); });
+        renderTable();
+      });
+      row.appendChild(clinicCell);
+      dayHeaders.forEach(function(day) {
+        var cell = document.createElement('td');
+        cell.textContent = clinic[day] || 'Closed';
+        row.appendChild(cell);
+      });
+      tbody.appendChild(row);
+    });
+    table.appendChild(tbody);
+    document.body.appendChild(table);
+  }
+
+  renderTable();
+});
+</script>
+</head>
+<body>
+<table></table>
+</body>
+</html>

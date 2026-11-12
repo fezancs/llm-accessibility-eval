@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  .faq {
+    margin: 20px;
+  }
+  .faq-question {
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .faq-answer {
+    display: none;
+    margin-top: 10px;
+  }
+</style>
+<script>
+  function toggleAnswer(questionId) {
+    const question = document.getElementById(questionId);
+    const answer = document.getElementById(questionId + '-answer');
+    if (answer.style.display === 'none') {
+      answer.style.display = 'block';
+    } else {
+      answer.style.display = 'none';
+    }
+  }
+</script>
+</head>
+<body>
+<div class="faq">
+  <div class="faq-question" onclick="toggleAnswer('q1')">How do I book an appointment?</div>
+  <div id="q1-answer" class="faq-answer">To book an appointment, please call our office at 555-1234 or visit our website. You can also book online if available.</div>
+  <div class="faq-question" onclick="toggleAnswer('q2')">Can I bring someone with me?</div>
+  <div id="q2-answer" class="faq-answer">Yes, you are welcome to bring a friend or family member with you to your appointment. Just let us know when you book your appointment.</div>
+  <div class="faq-question" onclick="toggleAnswer('q3')">Is parking available?</div>
+  <div id="q3-answer" class="faq-answer">Parking is available in our lot, which is located behind the building. You can park there and walk to the office.</div>
+  <div class="faq-question" onclick="toggleAnswer('q4')">How do I get my test results?</div>
+  <div id="q4-answer" class="faq-answer">Your test results will be available in your electronic health record. You can access it through our website or by calling our office to request a copy.</div>
+  <div class="faq-question" onclick="toggleAnswer('q5')">What if I need an interpreter?</div>
+  <div id="q5-answer" class="faq-answer">If you need an interpreter, please let us know when you book your appointment. We will arrange for one to be present during your visit.</div>
+</div>
+</body>
+</html>
