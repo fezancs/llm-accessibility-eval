@@ -141,6 +141,19 @@ experiments/local/serve_llamacpp.sh local-qwen3-8b            # serves on 127.0.
 ```
 
 The server listens on Ollama's port, so the harness default `LOCAL_BASE_URL` works unchanged.
+
+**Watching the GPU.** `nvidia-smi` and NVIDIA's monitoring tools ship with NVIDIA's proprietary
+driver. They do not work on the open NVK/nouveau driver, even though the GPU does all the work.
+Use the bundled monitor instead:
+
+```bash
+cd experiments && .venv/bin/python local/gpu_monitor.py      # live view, Ctrl+C to quit
+```
+
+It shows VRAM in use (from the Vulkan memory budget), the model that is loaded, its live
+tokens per second, how busy the server has been recently, the server's CPU use and the
+pipeline step. The unattended run also logs one sample every 10 s to
+`runs/local_pipeline/gpu_usage.csv`.
 One profile per model sets the context, KV-cache type, image-token cap and the Ollama-library
 sampling defaults (see the script). `experiments/local/run_local.sh` runs the whole local study
 unattended: it switches models, runs E1, E3 and E2, scores, analyses and pushes the results to
