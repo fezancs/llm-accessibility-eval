@@ -400,9 +400,49 @@ a handful of smoke-test calls, which used the same code.
 % ======================================================================================
 \section{Results}
 %RESULTS-BEGIN
-\emph{The result paragraphs are written from the generated values once every run has
-finished; until then the tables and figures below show the data available so far, and red
-markers show values that have not been computed yet.}
+\emph{Draft: the paragraphs below cover the runs finished so far; red markers are values not
+computed yet.}
+
+\subsection{RQ1: Capability profiles}
+\textbf{Generation (C2, C6).} \res{functional-gen-local-qwen25vl-7b-count} of
+\res{functional-gen-local-qwen25vl-7b-n} pages written by \QV{} passed their task's functional
+checks. Its nudged generation score was $S_\text{gen} = \res{sgen-local-qwen25vl-7b}$ (95\,\%
+CI \res{sgen-local-qwen25vl-7b-ci}), against \res{sgen-unguided-local-qwen25vl-7b} without the
+nudge. The default gap of \res{gap-local-qwen25vl-7b} (CI \res{gap-local-qwen25vl-7b-ci}) shows
+that the added accessibility sentence made no detectable difference. The share of nudged pages
+that passed every applicable check was \res{clean-nudged-local-qwen25vl-7b}, with
+\res{vp100-nudged-local-qwen25vl-7b} violating nodes per 100 elements
+(\res{vp100-unguided-local-qwen25vl-7b} unguided). Asked whether its page conformed to
+WCAG~2.2 AA, the model said yes for a share of \res{overclaim-local-qwen25vl-7b} (CI
+\res{overclaim-local-qwen25vl-7b-ci}) of the functional pages that failed at least one check.
+
+\textbf{Repair (C2).} Repair was much harder than generation. \QV{} reached
+$S_\text{rep} = \res{srep-local-qwen25vl-7b}$ (CI \res{srep-local-qwen25vl-7b-ci}) and fully
+repaired no page (full-repair rate \res{fullrepair-local-qwen25vl-7b}). It often returned the
+page as it was:
+\res{unchanged-repair-local-qwen25vl-7b-count} of the \res{unchanged-repair-local-qwen25vl-7b-n}
+pages it returned were identical to the faulty input. \res{capped-repair-local-qwen25vl-7b-count}
+of its \res{capped-repair-local-qwen25vl-7b-n} answers stopped at the 8{,}192-token output cap
+before the page was complete. The preservation rate (text and structure kept) was
+\res{preserved-local-qwen25vl-7b}. The faults it did resolve were invalid ARIA
+attributes (M11, \res{resolve-m11-local-qwen25vl-7b}) and unnamed icon links (M05,
+\res{resolve-m05-local-qwen25vl-7b}); it resolved none of the other ten operators. Its score
+was \res{srep-w3c-local-qwen25vl-7b} on W3C-derived pages and
+\res{srep-authored-local-qwen25vl-7b} on authored pages.
+
+\textbf{Audit (C1).} \QV{} found none of the 192 injected faults (micro-F1
+\res{saudit-local-qwen25vl-7b}, recall \res{audit-recall-local-qwen25vl-7b}), and none of the
+items it reported matched a fault (precision \res{audit-precision-local-qwen25vl-7b}). Its
+near-greedy decoding fell into loops that listed the same element again and again under
+consecutive success-criterion numbers. On page B03-V4, for example, it reported one select
+element three times under SC 1.4.8, 1.4.9 and 1.4.10, while the page's injected faults were a
+missing alt text, low contrast, a missing page language and a demoted heading
+(\texttt{runs/e1/scores/audit.jsonl}). \res{capped-audit-local-qwen25vl-7b-count} of its
+\res{capped-audit-local-qwen25vl-7b-n} first answers ran into the output cap, and a share of
+\res{audit-parsefail-local-qwen25vl-7b} of pages yielded no parseable list even after the JSON
+retry.
+
+\emph{\Q{} (E1, E2) and the E3 models are still running.}
 %RESULTS-END
 
 \begin{table*}[t]

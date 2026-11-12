@@ -13,7 +13,9 @@ E1 diagnostics (first attempt of each request; JSON retries excluded):
 - capped-<family>-<m>: share of requests whose answer stopped at the output-token cap
   (families: gen, selfassess, repair, audit);
 - unchanged-repair-<m>: repairs whose HTML equals the faulty page (whitespace-normalised),
-  as a share of repairs that returned an HTML block, and that count (-n).
+  as a share of repairs that returned an HTML block (-count, -n);
+- functional-gen-<m>: share of E1-Gen samples (both conditions) that pass the task's
+  functional checks (-count, -n).
 Values are \\setres{key}{value} lines, as in analysis/export_latex.py.
 """
 from __future__ import annotations
@@ -73,6 +75,15 @@ def main() -> int:
             if k and row.get("state") in ("generating", "reading prompt") and row.get("vram_used_mib"):
                 vram.setdefault(k, []).append(int(row["vram_used_mib"]))
 
+    functional = {}                       # E1-Gen samples (both conditions) that pass the task's checks
+    gen = RUNS / "e1" / "scores" / "gen.jsonl"
+    if gen.exists():
+        for line in open(gen, encoding="utf-8"):
+            r = json.loads(line)
+            f = functional.setdefault(r["model_key"], [0, 0])
+            f[1] += 1
+            f[0] += bool(r.get("functional"))
+
     unchanged = {}
     rep = RUNS / "e1" / "scores" / "repair.jsonl"
     if rep.exists():
@@ -104,7 +115,13 @@ def main() -> int:
             if reqs:
                 capped = sum(1 for s in reqs.values() if s == "max_tokens")
                 lines += [f"\\setres{{capped-{fam}-{m}}}{{{capped / len(reqs):.2f}}}",
+                          f"\\setres{{capped-{fam}-{m}-count}}{{{capped}}}",
                           f"\\setres{{capped-{fam}-{m}-n}}{{{len(reqs)}}}"]
+        if m in functional and functional[m][1]:
+            f_ok, f_n = functional[m]
+            lines += [f"\\setres{{functional-gen-{m}}}{{{f_ok / f_n:.2f}}}",
+                      f"\\setres{{functional-gen-{m}-count}}{{{f_ok}}}",
+                      f"\\setres{{functional-gen-{m}-n}}{{{f_n}}}"]
         if m in unchanged and unchanged[m][1]:
             u, n = unchanged[m]
             lines += [f"\\setres{{unchanged-repair-{m}}}{{{u / n:.2f}}}",
