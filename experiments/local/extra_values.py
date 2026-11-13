@@ -5,8 +5,14 @@
 
 Hardware (study experiments e1, e2, e3; successful calls of the local models):
 - decode-tps-<m>: median output_tokens / (total_s - ttft_s) over calls with >= 64 output tokens;
-- prompt-tps-<m>: median prompt tokens / ttft_s over calls with a prompt of >= 1,000 tokens that
-  the server did not serve from its prompt cache (cached tokens < 10 % of the prompt);
+- prompt-tps-<m>: median uncached prompt tokens / ttft_s over calls with >= 1,000 uncached
+  prompt tokens. The chat adapter logs input_tokens = prompt tokens minus those llama.cpp served
+  from its prompt cache, and TTFT covers only the uncached ones, so this is the rate at which the
+  server processed new prompt tokens. (Requiring a nearly uncached prompt left no Ministral call:
+  its chat template's ~534-token system prefix is always cached.) Caveat: every E3 prompt of the
+  vision models carries an image, so their TTFT includes image encoding; Gemma 3 4B and
+  Ministral 3 8B, which run E3 only, are therefore not comparable with the text prompts of
+  Qwen3 8B and (mostly E1) Qwen2.5-VL 7B;
 - vram-mib-<m>: median VRAM in use (all processes, desktop included) over the 10 s samples of
   runs/local_pipeline/gpu_usage.csv (local/gpu_monitor.py) while the model was working.
 E1 diagnostics (first attempt of each request; JSON retries excluded):
@@ -59,9 +65,9 @@ def main() -> int:
             out, total, ttft = r.get("output_tokens") or 0, r.get("total_s"), r.get("ttft_s")
             if out >= 64 and total and ttft is not None and total - ttft > 0:
                 decode.setdefault(m, []).append(out / (total - ttft))
-            n_in = (r.get("input_tokens") or 0) + (r.get("cached_input_tokens") or 0)
-            if n_in >= 1000 and ttft and (r.get("cached_input_tokens") or 0) < 0.1 * n_in:
-                prompt.setdefault(m, []).append(n_in / ttft)
+            n_new = r.get("input_tokens") or 0          # prompt tokens not served from the prompt cache
+            if n_new >= 1000 and ttft:
+                prompt.setdefault(m, []).append(n_new / ttft)
             if exp == "e1":
                 fam = r["item_id"].split("/")[0]
                 if fam in FAMILIES and not r["item_id"].endswith("/retry"):

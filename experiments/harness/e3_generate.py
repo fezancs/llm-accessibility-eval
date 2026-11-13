@@ -294,11 +294,13 @@ def transform_counts(records: list[dict]) -> dict:
 
 def leakage_check(records: list[dict], seed: int = 0) -> dict:
     """5-fold logistic regression on character 3-5-grams predicting the generator's family
-    from anonymised alt text, against the majority-class baseline."""
+    from anonymised alt text, against the majority-class baseline. Folds are grouped by image:
+    an image's texts by the other families share its content words, so ungrouped folds push
+    predictions towards a wrong family and bias accuracy below chance (DEVIATIONS.md 2026-11-14)."""
     import numpy as np
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.linear_model import LogisticRegression
-    from sklearn.model_selection import StratifiedKFold, cross_val_predict
+    from sklearn.model_selection import StratifiedGroupKFold, cross_val_predict
     from sklearn.pipeline import make_pipeline
 
     recs = [r for r in records if r.get("alt_clean")]
@@ -306,14 +308,15 @@ def leakage_check(records: list[dict], seed: int = 0) -> dict:
     fams = [config.family(r["generator"]) for r in recs]
     counts = collections.Counter(fams)
     majority = max(counts.values()) / len(fams) if fams else None
-    n_splits = min(5, min(counts.values())) if counts else 0
+    groups = [r.get("image_id", k) for k, r in enumerate(recs)]
+    n_splits = min(5, min(counts.values()), len(set(groups))) if counts else 0
     if len(counts) < 2 or n_splits < 2:
         return {"n": len(recs), "families": dict(counts), "accuracy": None, "majority_baseline": majority,
                 "note": "too few families or examples for 5-fold cross-validation"}
     pipe = make_pipeline(TfidfVectorizer(analyzer="char", ngram_range=(3, 5), sublinear_tf=True, min_df=2),
                          LogisticRegression(max_iter=2000))
-    cv = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=seed)
-    pred = cross_val_predict(pipe, texts, fams, cv=cv)
+    cv = StratifiedGroupKFold(n_splits=n_splits, shuffle=True, random_state=seed)
+    pred = cross_val_predict(pipe, texts, fams, cv=cv, groups=groups)
     acc = float(np.mean(np.array(pred) == np.array(fams)))
     return {"n": len(recs), "families": dict(counts), "folds": n_splits, "accuracy": round(acc, 4),
             "majority_baseline": round(majority, 4)}

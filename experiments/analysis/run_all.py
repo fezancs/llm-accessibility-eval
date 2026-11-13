@@ -30,6 +30,14 @@ def compute(inputs, b: int = B_DEFAULT, seed: int = SEED) -> dict:
     res["gen"] = metrics.e1_gen(inputs.gen, b, seed)
     res["rep"] = metrics.e1_repair(inputs.repair, b, seed)
     res["aud"] = metrics.e1_audit(inputs.audit, b, seed)
+    # Sensitivity: E1-Repair/Audit without the byte-identical duplicate pages (DEVIATIONS.md
+    # 2026-11-14); the main estimates above keep all pages.
+    res["e1_distinct"] = metrics.e1_distinct(inputs.repair, inputs.audit, inputs.variant_hashes)
+    dup = res["e1_distinct"].get("duplicates", [])
+    res["rep_dedup"] = metrics.e1_repair(inputs.repair[~inputs.repair["page_id"].isin(dup)], b, seed) \
+        if not inputs.repair.empty else {"models": {}}
+    res["aud_dedup"] = metrics.e1_audit(inputs.audit[~inputs.audit["page_id"].isin(dup)], b, seed) \
+        if not inputs.audit.empty else {"models": {}}
     pairs = dcdi.paired(inputs.steps)
     res["dcdi"] = dcdi.dcdi(pairs, b, seed)
     res["decomp"] = dcdi.decomposition(pairs, b, seed)
@@ -67,7 +75,7 @@ def f(e: Est | None, d: int = 3) -> str:
     if e is None or not e.ok:
         return "--" + (f" ({e.note})" if e is not None and e.note else "")
     ci = f" [{e.lo:.{d}f}, {e.hi:.{d}f}]" if e.lo is not None else ""
-    return f"{e.est:.{d}f}{ci} (n={e.n})"
+    return f"{e.est:.{d}f}{ci} (n={e.n}" + (f"; {e.note})" if e.ci_withheld and e.note else ")")
 
 
 def table(header: list[str], rows: list[list]) -> str:
@@ -98,7 +106,7 @@ def summary(res: dict, inputs, values: dict, figs: list, wrote_paper: bool) -> s
 
     sc = study_calls(inputs.calls)
     if not sc.empty:
-        L.append("## Call logs (study experiments; pilot excluded)\n")
+        L.append("## Call logs (study experiments; of the pilot, only its E2 calls, which E2 run 0 replays)\n")
         g = sc.assign(cost=pd.to_numeric(sc["cost_usd"], errors="coerce").fillna(0.0))
         rows = []
         for (e, m), d in g.groupby(["experiment", "model_key"]):
@@ -106,7 +114,10 @@ def summary(res: dict, inputs, values: dict, figs: list, wrote_paper: bool) -> s
             rows.append([e, nm(m), len(d), f"{d['cost'].sum():.2f}", st.get("ok", 0), st.get("refusal", 0),
                          st.get("error", 0)])
         L.append(table(["experiment", "model", "attempts", "USD", "ok", "refusal", "error"], rows))
-        L.append(f"Total: {len(g)} attempts, ${g['cost'].sum():.2f}.\n")
+        n_pilot = int(g["from_pilot"].sum()) if "from_pilot" in g else 0
+        n_err = int((g["status"] == "error").sum()) if "status" in g else 0
+        L.append(f"Total: {len(g)} attempts ({n_err} failed), ${g['cost'].sum():.2f}; "
+                 f"{n_pilot} E2 attempts are from runs/pilot.\n")
 
     if res["gen"]["models"]:
         L.append("## E1-Gen (C2, C6)\n")
@@ -128,6 +139,12 @@ def summary(res: dict, inputs, values: dict, figs: list, wrote_paper: bool) -> s
                  r["n"]["no_html"]] for m, r in res["rep"]["models"].items()]
         L.append(table(["model", "S_rep", "full repair", "regressions/page", "preserved", "by provenance", "pages",
                         "errors", "no html"], rows))
+        dd = res.get("e1_distinct") or {}
+        if dd:
+            L.append(f"Pages: {dd['pages']}, of which {dd['distinct_pages']} distinct ({dd['distinct_faults']} distinct "
+                     f"faults); byte-identical duplicates: {', '.join(dd['duplicates']) or 'none'}. Without them: " +
+                     "; ".join(f"{nm(m)} S_rep {f(r['srep'])}, full repair {f(r['full_repair'])}"
+                               for m, r in res["rep_dedup"]["models"].items()) + "\n")
         ops = sorted({op for r in res["rep"]["models"].values() for op in r["per_operator"]})
         if ops:
             rows = [[nm(m)] + [f(r["per_operator"].get(op), 2) for op in ops] for m, r in res["rep"]["models"].items()]
@@ -139,6 +156,10 @@ def summary(res: dict, inputs, values: dict, figs: list, wrote_paper: bool) -> s
                  r["n"]["reported"], r["n"]["retried"], r["n"]["error"]] for m, r in res["aud"]["models"].items()]
         L.append(table(["model", "micro-F1", "precision (lower bound)", "recall", "parse-failure rate", "faults",
                         "reported items", "retried", "errors"], rows))
+        if (res.get("e1_distinct") or {}).get("duplicates"):
+            L.append("Without the duplicate pages: " + "; ".join(
+                f"{nm(m)} micro-F1 {f(r['saudit'])}, recall {f(r['recall'])}"
+                for m, r in res["aud_dedup"]["models"].items()) + "\n")
 
     if res["dcdi"]["models"] or res["drops"]:
         L.append("## E2 (C3, C5, DCDI)\n")
@@ -207,8 +228,9 @@ def summary(res: dict, inputs, values: dict, figs: list, wrote_paper: bool) -> s
                 f"{k}: {f(e)}" for k, e in bp["accuracy"]["all"].items()) + "\n")
         c = e3.get("e3c", {})
         if c:
-            L.append(f"Generator comparison (E3c): {c['n_judgments']} judgments, {c['n_valid']} valid, {c['n_recused']} "
-                     f"recused, {c['n_aggregated']} aggregated, {c['n_images']} images; fit converged: {c['converged']}; "
+            L.append(f"Generator comparison (E3c): {c['n_pairs']} pairs, {c['n_judgments']} judgments, {c['n_valid']} "
+                     f"valid, {c['n_recused']} recused, {c['n_aggregated']} aggregated, {c['n_images']} images; "
+                     f"generators connected after recusal: {c['connected']}; fit converged: {c['converged']}; "
                      f"sd(len) = {c['sd_len']:.1f} chars; Krippendorff alpha {c.get('kalpha')}.\n")
             rows = [[nm(g), f(c["theta"][g]), f(c["s4"][g])] for g in c["cands"]]
             L.append(table(["generator", "theta", "S4 (expected win rate)"], rows))
@@ -221,7 +243,8 @@ def summary(res: dict, inputs, values: dict, figs: list, wrote_paper: bool) -> s
         if lk:
             L.append(f"Leakage classifier (family from anonymised alt text): accuracy {lk.get('accuracy')} "
                      f"[{lk.get('lo')}, {lk.get('hi')}] vs majority {lk.get('majority')} (n={lk.get('n')}, "
-                     f"folds={lk.get('folds')}, families {lk.get('families')}).\n")
+                     f"folds={lk.get('folds')} grouped by image ({lk.get('groups')} groups), "
+                     f"families {lk.get('families')}).\n")
         if e3.get("transforms"):
             L.append("Anonymisation rules fired: " + "; ".join(f"{nm(g)}: {v['fired']} of {v['n']}"
                                                               for g, v in e3["transforms"].items()) + "\n")

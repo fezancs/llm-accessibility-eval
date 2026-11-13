@@ -20,3 +20,6 @@ runs/**/artifacts/**/images
 runs/**/artifacts/repair_refs/
 runs/local_pipeline/.server
 runs/local_pipeline/.launching
+runs/local_pipeline/.loaded
+runs/local_pipeline/.logline
+local/run_local.active.sh

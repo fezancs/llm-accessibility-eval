@@ -8,6 +8,10 @@
 
 profile: full        # full | lean
 
+# No API budget for this study: refuse every model whose price card is nonzero (harness/llm.py
+# _check_available). Free hosted tiers and self-hosted models have $0 price cards.
+free_only: true
+
 caps:
   pilot: 25
   e1: 120            # lean: 40   (core models only; optional ceilings add ~ $105)

@@ -161,3 +161,48 @@ def test_kalpha_perfect_agreement():
                              "y": int((first == "x") == pref_x)})
     pairs = cb.pair_table(pd.DataFrame(rows), "first", "second", "image_id")
     assert cb.kalpha(pairs, ["j1", "j2", "j3"]) == pytest.approx(1.0)
+
+
+def _shared_content_texts(n_images=60, seed=0):
+    """Three families describe each image with the SAME words: no style signal at all."""
+    rng = np.random.default_rng(seed)
+    vocab = ["lamp", "river", "bicycle", "garden", "violin", "harbor", "candle", "meadow", "tower", "kettle",
+             "forest", "pillow", "ladder", "window", "saddle", "basket", "mirror", "bridge", "statue", "carpet"]
+    rows = []
+    for k in range(n_images):
+        words = " ".join(rng.choice(vocab, size=4, replace=False)) + f" scene{k:02d}x"
+        for g in ("g-a1", "g-b1", "g-c1"):
+            rows.append({"generator": g, "image_id": f"img{k}", "status": "ok", "alt_clean": f"A photo of {words}"})
+    return pd.DataFrame(rows)
+
+
+def test_leakage_folds_are_grouped_by_image():
+    """Ungrouped folds put an image's other-family texts in training, so the classifier picks a
+    wrong family and scores far below chance; grouped folds give chance when there is no style."""
+    df = _shared_content_texts()
+    out = cb.leakage(df, MODELS, seed=0)
+    assert out["groups"] == 60 and out["folds"] == 5
+    assert out["majority"] == pytest.approx(1 / 3)
+    assert out["lo"] <= out["majority"] <= out["hi"]                # chance, not below it
+    per_row = cb.leakage(df.drop(columns="image_id"), MODELS, seed=0)  # fallback: one group per text
+    assert per_row["groups"] == len(df) and per_row["accuracy"] < 0.1   # the bias the grouping removes
+
+
+def test_e3c_disconnected_generators_are_not_identified():
+    """One judge (j-a, family fa) recuses every pair with g-a1/g-a2, so those two generators have no
+    comparison left: theta, S4 and eta are 'not identified', not the ridge's 0 / 0.5 [0.5, 0.5]."""
+    df, _ = simulate(n_images=12, seed=4)
+    one = cb.e3c(df[df["judge"] == "j-a"], MODELS, b=10, seed=1)
+    assert one["connected"] is False
+    for g in THETA:
+        assert not one["s4"][g].ok and not one["theta"][g].ok and "not connected" in one["s4"][g].note
+    assert not one["eta"]["j-a"].ok and "not connected" in one["eta"]["j-a"].note
+    full = cb.e3c(df, MODELS, b=10, seed=1)
+    assert full["connected"] is True and all(e.ok for e in full["s4"].values())
+
+
+def test_e3c_counts_pairs_and_skips_all_missing_verdicts():
+    df, _ = simulate(n_images=3, seed=5)
+    out = cb.e3c(df, MODELS, b=5, seed=1)
+    assert out["n_pairs"] == 3 * 15                                 # 3 images x C(6, 2) unordered pairs
+    assert cb.e3c(df.assign(y=np.nan), MODELS, b=5, seed=1) == {}   # nothing valid: no fit, no crash

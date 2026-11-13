@@ -27,6 +27,9 @@ DEFAULT_LOCAL_BASE_URL = "http://localhost:11434/v1"   # Ollama's OpenAI-compati
 ENDPOINTS = {
     "deepseek": ("https://api.deepseek.com", "DEEPSEEK_API_KEY"),
     "openrouter": ("https://openrouter.ai/api/v1", "OPENROUTER_API_KEY"),
+    # Free hosted tiers (added 2026-11-13, DEVIATIONS.md): OpenAI-compatible chat endpoints.
+    "nvidia": ("https://integrate.api.nvidia.com/v1", "NVIDIA_API_KEY"),
+    "mistral": ("https://api.mistral.ai/v1", "MISTRAL_API_KEY"),
 }
 _clients: dict[str, openai.OpenAI] = {}
 
@@ -187,8 +190,12 @@ def call(model_cfg: dict, system: str | None, messages: list[dict], tools: list[
         args, ok = parse_arguments(c["arguments"])
         tool_calls.append({"id": c["id"], "name": c["name"], "arguments": args, "valid": ok,
                            "arguments_raw": c["arguments"]})
+        # Replay "{}" for arguments that are not valid JSON (or empty): llama.cpp parses replayed
+        # arguments and answers HTTP 500 for the whole conversation if one does not parse. The
+        # harness already answered the call with a malformed-call error (DEVIATIONS.md 2026-11-14).
+        replay = c["arguments"] if ok and c["arguments"].strip() else "{}"
         raw_calls.append({"id": c["id"], "type": "function",
-                          "function": {"name": c["name"], "arguments": c["arguments"]}})
+                          "function": {"name": c["name"], "arguments": replay}})
     raw = {"role": "assistant", "content": "".join(content) or None}
     if raw_calls:
         raw["tool_calls"] = raw_calls

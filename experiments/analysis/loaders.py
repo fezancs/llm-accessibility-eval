@@ -5,10 +5,14 @@ Every loader tolerates a missing file: it returns an empty table and records the
 
 Optional `runs/meta.json` (written by the harness) supplies values that are not in any
 record: {"axe_version", "chromium_version", "probe_count", "prereg_hash"}.
+
+`variant_hashes` (sha256 of data/corpus/variants/<page_id>.html) lets the analysis find
+byte-identical E1 pages. The pilot's E2 calls count as E2 study calls (`study_calls`).
 """
 from __future__ import annotations
 
 import dataclasses
+import hashlib
 import json
 import pathlib
 import re
@@ -17,7 +21,7 @@ import pandas as pd
 import yaml
 
 EXPERIMENTS = pathlib.Path(__file__).resolve().parent.parent
-STUDY_EXPERIMENTS = ("e1", "e2", "e3")      # call-log experiments counted in the paper (pilot excluded)
+STUDY_EXPERIMENTS = ("e1", "e2", "e3")      # call-log experiments counted in the paper (pilot: E2 only)
 
 
 @dataclasses.dataclass
@@ -90,6 +94,7 @@ class Inputs:
     calls: pd.DataFrame
     meta: dict
     missing: list[str]
+    variant_hashes: dict[str, str] = dataclasses.field(default_factory=dict)
 
 
 def _frame(records: list[dict] | None) -> pd.DataFrame:
@@ -142,7 +147,9 @@ def load(paths: Paths | None = None) -> Inputs:
         blv_pairs=rec("runs/e3/judgments/blv_pairs.jsonl"),
         generated=rec("runs/e3/generated.jsonl"),
         gen_pairs=rec("runs/e3/judgments/gen_pairs.jsonl"),
-        calls=_frame(calls), meta=meta, missing=missing)
+        calls=_frame(calls), meta=meta, missing=missing,
+        variant_hashes={p.stem: hashlib.sha256(p.read_bytes()).hexdigest()
+                        for p in sorted((paths.data / "corpus" / "variants").glob("*.html"))})
 
 
 # ------------------------------------------------------------------ model attributes
@@ -176,10 +183,18 @@ def total_params_b(cfg: dict) -> float | None:
 
 
 def study_calls(calls: pd.DataFrame) -> pd.DataFrame:
-    """Call-log lines of the study experiments (E1-E3); pilot and test runs excluded."""
+    """Call-log lines of the study experiments (E1-E3); pilot and test runs excluded, except the
+    pilot's E2 calls (item_id "e2/..."). The pilot is E2 run 0, and the full run replays its
+    responses from the cache for positions 1-6 (DEVIATIONS.md 2026-11-14), so those calls are
+    E2 calls: they are relabelled experiment "e2" and flagged `from_pilot`."""
     if calls.empty or "experiment" not in calls:
         return calls
     exp = calls["experiment"].astype(str)
     mask = exp.apply(lambda e: any(e == s or e.startswith(s + "_") or e.startswith(s + "-")
                                    for s in STUDY_EXPERIMENTS))
-    return calls[mask]
+    item = calls["item_id"].astype(str) if "item_id" in calls else pd.Series("", index=calls.index)
+    pilot_e2 = (exp == "pilot") & item.str.startswith("e2/")
+    out = calls[mask | pilot_e2].copy()
+    out["from_pilot"] = pilot_e2[mask | pilot_e2].to_numpy()
+    out.loc[out["from_pilot"], "experiment"] = "e2"
+    return out

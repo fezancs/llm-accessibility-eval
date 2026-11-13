@@ -11,6 +11,9 @@ Interpretations fixed here:
 - One-sided p-value for H1: stat > 0 is (1 + #{replicates <= 0}) / (B_finite + 1).
 - Replicates where a statistic is undefined (empty resample) are dropped from its CI and
   p-value; their share is reported.
+- A statistic whose data come from fewer than 2 clusters gets no CI (its percentile interval
+  would be [est, est]); its replicates are kept for derived statistics (`no_ci`). A composite
+  of such a statistic gets no CI either.
 """
 from __future__ import annotations
 
@@ -98,6 +101,22 @@ class Est:
         if self.reps is not None:
             return self.reps
         return np.full(b, np.nan if self.est is None else self.est)
+
+    @property
+    def ci_withheld(self) -> bool:
+        """True when the CI was blanked by `no_ci` (replicates kept, no interval)."""
+        return self.ok and self.reps is not None and self.lo is None
+
+
+ONE_CLUSTER = "fewer than 2 bootstrap clusters: no CI"
+
+
+def no_ci(e: Est | None, n_clusters: int, note: str = ONE_CLUSTER) -> Est | None:
+    """Blank the CI of `e` when it rests on fewer than 2 clusters; keep the replicates."""
+    if e is not None and e.ok and n_clusters < 2:
+        e.lo = e.hi = None
+        e.note = f"{e.note}; {note}" if e.note else note
+    return e
 
 
 def cluster_sums(df, key_col: str, keys: list, value_cols: list[str]) -> dict[str, np.ndarray]:

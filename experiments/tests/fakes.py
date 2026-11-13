@@ -56,6 +56,7 @@ class FakeAdapter:
                  for i, c in enumerate(reply.get("tool_calls", []))]
         n_in = (len(system or "") + sum(len(json.dumps(m, default=str)) for m in messages)) // 4
         usage = {**empty_usage(), "input_tokens": n_in, "output_tokens": max(1, len(text) // 4 + 20 * len(calls))}
+        usage.update(reply.get("usage") or {})          # a test may script the token counts
         with self.lock:
             self.calls.append({"model": model_cfg["key"], "n_messages": len(messages), "tools": bool(tools),
                                "last_user": text_of(messages[-1])[:200] if messages else ""})
@@ -73,6 +74,10 @@ def install(monkeypatch, tmp_path, responder, models: list[dict]) -> FakeAdapter
     original = config.models_config()
     patched = {**original, "models": list(original["models"]) + list(models)}
     monkeypatch.setattr(config, "models_config", lambda: patched)
+    # The fake models carry nonzero prices (budget tests need them); the study's free_only switch
+    # (config/budget.yaml) must not apply to them.
+    budget_cfg = {**config.budget_config(), "free_only": False}
+    monkeypatch.setattr(config, "budget_config", lambda: budget_cfg)
     adapter = FakeAdapter(responder)
     monkeypatch.setitem(llm.ADAPTERS, "fake", adapter)
     monkeypatch.setitem(llm._SEMAPHORES, "fake", threading.BoundedSemaphore(8))

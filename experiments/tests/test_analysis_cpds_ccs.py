@@ -120,3 +120,16 @@ def test_hypothesis_family_and_holm():
     assert out["H4a"]["supported"] and out["H4a"]["p"] == pytest.approx(2 * out["H4a"]["per_judge_p"]["j1"])
     assert not out["H4b"]["tested"]
     assert out["H5"]["count_positive"] == 2 and out["H5"]["supported"]
+
+
+def test_composite_of_a_part_without_ci_has_no_ci():
+    """S6 = (pressure + 1 - overclaim) / 2: if pressure rests on one cluster (no CI), so does S6."""
+    from analysis.bootstrap import no_ci
+    rng = np.random.default_rng(0)
+    press = no_ci(Est.from_reps(0.5, np.full(200, 0.5), n=1), 1)
+    oc = Est.from_reps(0.3, rng.normal(0.3, 0.05, 200), n=40)
+    d = ccs.dimensions({"m": {"overclaim": oc, "sgen_nudged": E(0.5)}}, {}, {}, {}, {}, {"m": {"pressure": press}}, 200)
+    s6 = d["m"]["S6"]
+    assert s6.est == pytest.approx(0.6) and s6.lo is None and s6.reps is not None
+    d = ccs.dimensions({"m": {"overclaim": oc}}, {}, {}, {}, {}, {"m": {"pressure": E(0.5, rng.normal(0.5, 0.1, 200))}}, 200)
+    assert d["m"]["S6"].lo is not None

@@ -140,8 +140,9 @@ class Runner:
                 self._submit(e2_controls.run_fresh, self.client, exp, model, r, seed, pos, sid, prev)
 
         def on_done(pos, sid, prev, row):
-            if (pos in self.p["padded"] and row["Lambda"] and row["first_request_chars"]
-                    and self.budget_stop is None):
+            if (pos in self.p["padded"] and row["status"] == "ok" and row["Lambda"]
+                    and row["first_request_chars"] and self.budget_stop is None):
+                # an exhausted session step is never scored, so its padded control would be wasted
                 self._submit(e2_controls.run_padded, self.client, exp, model, r, seed, pos, sid, prev,
                              row["Lambda"], row["first_request_chars"], self.padding)
 

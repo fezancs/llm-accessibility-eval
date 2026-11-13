@@ -168,3 +168,28 @@ def test_provider_reported_malformed_call_counts(monkeypatch, tmp_path):
     res = e2_agent.run_turn(llm.LLM("e2"), "fake-a", "sys", e2_agent.TOOLS, [llm.user("go")],
                             Workspace(tmp_path / "ws"), item_prefix="x", sample_idx=0, cap=10)
     assert res["tool_calls"] == 1 and res["malformed_tool_calls"] == 1 and res["llm_calls"] == 1
+
+
+def test_full_window_is_context_exhaustion(monkeypatch, tmp_path):
+    """A llama.cpp server with --no-context-shift ends generation with finish "length" when prompt
+    plus output fill the window: that ends the run as context exhaustion (SPEC 6.1), and the
+    truncated output is neither executed nor kept. A max_tokens stop on a short prompt (runaway
+    thinking) stays an empty response (SPEC 13.3a)."""
+    def responder(model, system, messages, tools):
+        if "short" in fakes.text_of(messages[-1]):
+            return {"text": "", "stop_reason": "max_tokens", "usage": {"input_tokens": 100, "output_tokens": 900}}
+        return {"text": "", "tool_calls": [write_call(0)], "stop_reason": "max_tokens",
+                "usage": {"input_tokens": 600, "output_tokens": 400}}
+    small = {**fakes.fake_model("fake-small"), "context_tokens": 1000}
+    fakes.install(monkeypatch, tmp_path, responder, [small])
+    (tmp_path / "ws").mkdir()
+    msgs = [llm.user("go")]
+    res = e2_agent.run_turn(llm.LLM("e2"), "fake-small", "sys", e2_agent.TOOLS, msgs, Workspace(tmp_path / "ws"),
+                            item_prefix="w", sample_idx=0, cap=10)
+    assert res["status"] == "context_exhausted" and "window full" in res["error"]
+    assert res["tool_calls"] == 0 and [m["role"] for m in msgs] == ["user"]      # nothing executed or kept
+    assert not list((tmp_path / "ws").iterdir())
+    msgs = [llm.user("short prompt")]
+    res = e2_agent.run_turn(llm.LLM("e2"), "fake-small", "sys", e2_agent.TOOLS, msgs, Workspace(tmp_path / "ws"),
+                            item_prefix="s", sample_idx=0, cap=10)
+    assert res["status"] == "ok" and res["empty_responses"] == 1

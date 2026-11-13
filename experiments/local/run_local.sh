@@ -4,11 +4,13 @@
 # scores, runs the analysis and pushes results to the results branch at each milestone.
 #
 #   nohup setsid experiments/local/run_local.sh > /dev/null 2>&1 &
+# (or run a copy, local/run_local.active.sh, so that editing this file cannot disturb a running pass)
 #
 # Resumable: a finished step leaves runs/local_pipeline/<step>.done and is skipped on a re-run;
 # an unfinished step re-runs and replays every cached response (harness/cache.py).
-# Each API step runs twice: the second pass only retries requests that failed (successes are
-# cache hits), as RUNBOOK.md prescribes for interrupted runs.
+# Each API step runs up to four passes: a later pass only retries requests that failed (successes
+# are cache hits), as RUNBOOK.md prescribes for interrupted runs. A step is done only when a pass
+# exits 0 and leaves no failed request (local/step_errors.py).
 set -uo pipefail
 EXP=$(cd "$(dirname "$0")/.." && pwd)
 REPO=$(cd "$EXP/.." && pwd)
@@ -44,15 +46,57 @@ except Exception:
 PYEOF
 }
 
+# Vision warm-up: one image of each large E3 image shape, largest first, then a small check image.
+# The vision encoder allocates GPU buffers per image shape; with ~1.3 GB of VRAM left next to
+# Qwen2.5-VL and the desktop, an allocation that fails mid-run leaves the encoder unusable until
+# the server restarts (2026-11-13, DEVIATIONS.md). Warming up right after loading allocates them
+# while memory is free. The requests are live and uncached and never reach the call logs.
+WARMUP_IMAGES=(e3/images/blv/blv-living_room6.jpg e3/images/blv/blv-meeting_in_progress7.jpg
+  e3/images/blv/blv-church19.jpeg e3/images/blv/blv-laid_table3.jpg e3/images/blv/blv-meeting_in_progress2.jpg
+  e3/images/blv/blv-laid_table14.jpg e3/images/blv/blv-church4.jpg corpus/base/images/cc-reception.png)
+
+vision_ok() { # alias -> 0 if the loaded server encodes every warm-up image (live, uncached requests)
+  local paths=()
+  for f in "${WARMUP_IMAGES[@]}"; do [ -f "$EXP/data/$f" ] && paths+=("$EXP/data/$f"); done
+  "$PY" - "$1" "${paths[@]}" <<'PYEOF' 2>/dev/null
+import base64, json, sys, urllib.request
+for path in sys.argv[2:]:
+    img = base64.b64encode(open(path, "rb").read()).decode()
+    mt = "image/png" if path.endswith(".png") else "image/jpeg"
+    body = {"model": sys.argv[1], "max_tokens": 16, "messages": [{"role": "user", "content": [
+        {"type": "image_url", "image_url": {"url": f"data:{mt};base64,{img}"}},
+        {"type": "text", "text": "Reply with one word."}]}]}
+    req = urllib.request.Request("http://127.0.0.1:11434/v1/chat/completions", json.dumps(body).encode(),
+                                 {"Content-Type": "application/json"})
+    try:
+        if urllib.request.urlopen(req, timeout=300).status != 200:
+            sys.exit(1)
+    except Exception:
+        sys.exit(1)
+PYEOF
+}
+
+VISION_ERRORS="ErrorOutOfDeviceMemory|failed to process mtmd|ErrorDeviceLost|DeviceLostError"
+vision_broken() { # profile -> 0 if its server log shows a vision-encoder failure since the last launch
+  local f="$LOGS/server_$1.log" n0
+  n0=$(cat "$STATE/.logline" 2>/dev/null || echo 0)
+  [ -f "$f" ] && tail -n +"$((n0 + 1))" "$f" | grep -qE "$VISION_ERRORS"
+}
+
 kill_server() {
   pkill -f "local/serve_llamacpp.sh" 2>/dev/null
   pkill -f "llama-server.*--port 11434" 2>/dev/null
+  : > "$STATE/.loaded"
   sleep 5
 }
 
+# The E1 (text-only) and E3 (vision) profiles of Qwen2.5-VL share one alias, so the alias alone
+# cannot tell them apart: .loaded records the profile the running server was launched with.
+# (Before this check, the E3 steps of 2026-11-12 ran against the text-only E1 server.)
 launch() {    # profile (the watchdog leaves the server alone while .launching exists)
   touch "$STATE/.launching"
   kill_server
+  if [ -f "$LOGS/server_$1.log" ]; then wc -l < "$LOGS/server_$1.log"; else echo 0; fi > "$STATE/.logline"
   nohup "$SERVE" "$1" >> "$LOGS/server_$1.log" 2>&1 &
   local pid=$! ok=1                             # the serve script execs llama-server: same pid
   for _ in $(seq 1 120); do
@@ -60,13 +104,20 @@ launch() {    # profile (the watchdog leaves the server alone while .launching e
     kill -0 "$pid" 2>/dev/null || break         # died while loading
     sleep 3
   done
+  if [ $ok -eq 0 ]; then
+    case "$1" in
+      local-qwen25vl-7b|local-gemma3-4b|local-ministral3-8b)
+        if ! vision_ok "${ALIAS[$1]}"; then log "server: $1 is up but refuses image input"; ok=1; fi ;;
+    esac
+  fi
+  [ $ok -eq 0 ] && echo "$1" > "$STATE/.loaded"
   rm -f "$STATE/.launching"
   return $ok
 }
 
 serve() {     # profile: start the server and keep it alive (watchdog restarts a crashed server)
   echo "$1" > "$STATE/.server"
-  if healthy "${ALIAS[$1]}"; then return 0; fi
+  if [ "$(cat "$STATE/.loaded" 2>/dev/null)" = "$1" ] && healthy "${ALIAS[$1]}"; then return 0; fi
   log "server: start $1"
   if ! launch "$1"; then log "server: $1 failed to start (see $LOGS/server_$1.log)"; return 1; fi
 }
@@ -77,19 +128,24 @@ unserve() {
   kill_server
 }
 
-watchdog() {  # restart a crashed server; after 3 failed restarts, stop the running step
+watchdog() {  # restart a crashed server, or one whose vision encoder failed (its /health stays
+              # ok); after 3 failed restarts, stop the running step
   local fails=0
   while true; do
-    sleep 30
+    sleep 15
     [ -e "$STATE/.launching" ] && continue
     p=$(cat "$STATE/.server" 2>/dev/null)
     [ -z "$p" ] && { fails=0; continue; }
-    healthy "${ALIAS[$p]}" && { fails=0; continue; }
-    sleep 20
-    [ -e "$STATE/.launching" ] && continue
-    [ "$(cat "$STATE/.server" 2>/dev/null)" = "$p" ] || continue
-    healthy "${ALIAS[$p]}" && continue
-    log "watchdog: $p not healthy, restarting"
+    if healthy "${ALIAS[$p]}"; then
+      vision_broken "$p" || { fails=0; continue; }
+      log "watchdog: $p vision encoder failed ($(tail -n +"$(( $(cat "$STATE/.logline" 2>/dev/null || echo 0) + 1 ))" "$LOGS/server_$p.log" | grep -m1 -oE "$VISION_ERRORS")), restarting"
+    else
+      sleep 20
+      [ -e "$STATE/.launching" ] && continue
+      [ "$(cat "$STATE/.server" 2>/dev/null)" = "$p" ] || continue
+      healthy "${ALIAS[$p]}" && continue
+      log "watchdog: $p not healthy, restarting"
+    fi
     if launch "$p"; then fails=0; log "watchdog: $p restarted"; continue; fi
     fails=$((fails + 1))
     log "watchdog: restart $fails of $p failed (see $LOGS/server_$p.log)"
@@ -103,23 +159,41 @@ watchdog() {  # restart a crashed server; after 3 failed restarts, stop the runn
 }
 
 # ------------------------------------------------------------------ steps
-step() {      # name cmd... : run once unless done
+# A step counts as done only if its command exits 0 AND no request it made ended in failure
+# (local/step_errors.py; context exhaustion is a legitimate outcome, not a failure). The harness
+# scripts record failed requests and still exit 0, so rc alone marked steps done that had run
+# against a broken server (2026-11-12/13, DEVIATIONS.md).
+run_pass() {  # name cmd... : run once, then gate; 0 only if both pass (never writes .done)
   local name=$1; shift
-  if [ -e "$STATE/$name.done" ]; then return 0; fi
+  local since; since=$(date -u +%Y-%m-%dT%H:%M:%S)
   log "start $name: ${*#$PY }"
   local t0; t0=$(date +%s)
   "$@" >> "$LOGS/$name.log" 2>&1
   local rc=$?
-  log "end   $name rc=$rc ($(( ($(date +%s) - t0) / 60 )) min)"
-  if [ $rc -eq 0 ]; then touch "$STATE/$name.done"; else FAILED+=("$name"); tail -15 "$LOGS/$name.log" >> "$STATE/pipeline.log"; fi
-  return $rc
+  local gate; gate=$("$PY" "$EXP/local/step_errors.py" "$since" 2>&1); local g=$?
+  log "end   $name rc=$rc ($(( ($(date +%s) - t0) / 60 )) min); $gate"
+  [ $rc -eq 0 ] || tail -15 "$LOGS/$name.log" >> "$STATE/pipeline.log"
+  [ $rc -eq 0 ] && [ $g -eq 0 ]
 }
 
-api_step() {  # name cmd... : two passes (the second retries failed requests only)
+step() {      # name cmd... : one pass unless done
   local name=$1; shift
   if [ -e "$STATE/$name.done" ]; then return 0; fi
-  step "$name.pass1" "$@"
-  step "$name" "$@"
+  if run_pass "$name" "$@"; then touch "$STATE/$name.done"; return 0; fi
+  FAILED+=("$name"); return 1
+}
+
+api_step() {  # name cmd... : up to 4 passes; a later pass replays successes from the cache and
+              # retries only the failed requests
+  local name=$1; shift
+  if [ -e "$STATE/$name.done" ]; then return 0; fi
+  local k
+  for k in 1 2 3 4; do
+    if run_pass "$name.pass$k" "$@"; then touch "$STATE/$name.done"; return 0; fi
+    [ $k -lt 4 ] && sleep 60
+  done
+  FAILED+=("$name"); log "$name: not done after 4 passes"
+  return 1
 }
 
 needed() {    # step names... -> 0 if any is not done
@@ -161,6 +235,7 @@ milestone() { # message
   log "milestone: $1"
   "$PY" -m analysis.run_all --paper "$RESULTS" --summary "$RESULTS/summary.md" \
     >> "$LOGS/analysis.log" 2>&1 || log "analysis failed (see logs/analysis.log)"
+  "$PY" local/extra_values.py >> "$LOGS/analysis.log" 2>&1 || log "extra values failed (see logs/analysis.log)"
   publish "$1"
 }
 
@@ -224,11 +299,19 @@ fi
 if needed e2pilot e2full; then
   serve "$Q3" && {
     step check_q3 "$PY" -m harness.check_keys --models "$Q3"
-    api_step e2pilot "$PY" -m harness.e2_run --pilot --models "$Q3"
-    rate=$("$PY" -c "import json; d=json.load(open('runs/pilot/scores/e2_tool_calls.json')); print(d['$Q3']['all']['rate'] or 0)" 2>/dev/null || echo 1)
+    # SPEC 12 gate on the pilot. A pilot that did not finish, or made no tool call, decides
+    # nothing: E2 then waits for a re-run instead of being recorded as an exclusion (2026-11-14).
+    if api_step e2pilot "$PY" -m harness.e2_run --pilot --models "$Q3"; then
+      rate=$("$PY" -c "import json; a=json.load(open('runs/pilot/scores/e2_tool_calls.json'))['$Q3']['all']; print(a['rate'] if a['tool_calls'] else 'none')" 2>/dev/null || echo missing)
+    else
+      rate=missing
+    fi
     log "E2 pilot malformed tool-call rate for $Q3: $rate (SPEC 12 exclusion above 0.20)"
-    if "$PY" -c "import sys; sys.exit(0 if float('$rate') <= 0.20 else 1)"; then
-      if [ -e "$EXP/data/e2_padding_transcript.json" ] || step e2pad "$PY" -m harness.e2_padding --model "$Q3"; then
+    if [ "$rate" = missing ] || [ "$rate" = none ]; then
+      log "E2 pilot incomplete or without tool calls ($rate): E2 not started; re-run the pipeline"
+      FAILED+=(e2pilot)
+    elif "$PY" -c "import sys; sys.exit(0 if float('$rate') <= 0.20 else 1)"; then
+      if [ -e "$EXP/data/e2_padding_transcript.json" ] || api_step e2pad "$PY" -m harness.e2_padding --model "$Q3"; then
         step pilot_report "$PY" -m harness.pilot_report
         api_step e2full "$PY" -m harness.e2_run --models "$Q3" --runs 1
       else
