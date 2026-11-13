@@ -100,6 +100,33 @@ def test_estimates_come_with_cis(run):
     assert keys["h1a-result"] in ("supported", "not supported")
 
 
+def test_e3_difference_length_and_reliability_keys(run):
+    """Paired E3 differences, common-item r, alt-text lengths, alpha CIs and per-judge H4a p-values."""
+    import itertools
+
+    from tests.test_analysis_synth import GEN, JUDGES
+    _, paper, _ = run
+    keys = _keys(paper / "results" / "values.tex")
+    full = lambda k: [f"{k}{s}" for s in ("", "-ci", "-lo", "-hi", "-n") if f"{k}{s}" not in keys]
+    need = [f"s4-diff-{a}-{b}" for a, b in itertools.combinations(sorted(GEN), 2)]
+    need += ["acc-known-cmbpe-minus-naive"] + [f"acc-known-{d}-cmbpe-minus-naive"
+                                               for d in ("append", "repeat", "swap", "truncate")]
+    need += [f"r-{t}-length-minus-{m}" for t in ("blv", "crowd") for m in ("cmbpe", "naive")]
+    need += [f"r-{t}-{m}-common" for t in ("blv", "crowd") for m in JUDGES + ["cmbpe", "naive", "length"]]
+    need += ["kalpha-e3b", "kalpha-e3c"]
+    missing = [k for n in need for k in full(n)]
+    assert not missing, missing
+    assert f"s4-diff-{sorted(GEN)[1]}-{sorted(GEN)[0]}" not in keys                  # one order per pair
+    assert keys["r-blv-cmbpe-common-n"] == keys["r-blv-cmbpe-n"] == "68"            # synthetic judges score every item
+    for g in GEN:
+        assert re.fullmatch(r"\d+", keys[f"e3c-meanlen-{g}"]), g                     # integer, no interval
+        assert f"e3c-meanlen-{g}-ci" not in keys
+    assert re.fullmatch(r"\d+\.\d", keys["e3c-sdlen"])
+    for j in JUDGES:
+        assert re.fullmatch(r"\d\.\d{3}", keys[f"h4a-p-{j}"]), j
+    assert "h4a-max-eta" in keys and "h4a-p" in keys
+
+
 def test_exclusion_count_and_progress_keys(run):
     """E3 exclusions and counts, E2 session extent, E1 duplicate-page sensitivity (SPEC 10)."""
     _, paper, _ = run

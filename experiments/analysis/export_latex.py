@@ -477,6 +477,8 @@ def values(res: dict, inputs) -> Values:
         for g, e in c["s4"].items():
             V.est(f"s4-{g}", e)
             V.est(f"theta-{g}", c["theta"][g])
+        for (a, g), e in c.get("s4_diff", {}).items():            # a < g alphabetically: S4(a) - S4(g)
+            V.est(f"s4-diff-{a}-{g}", e)
         for j in c["judges"]:
             V.est(f"gamma-{j}", c["gamma"][j])
             V.est(f"delta-{j}", c["delta"][j])
@@ -485,6 +487,8 @@ def values(res: dict, inputs) -> Values:
         V.add("pc-naive", num(c["naive"].get("pc")))
         V.add("gamma-naive", num(c["naive"].get("gamma")))
         V.add("kalpha-e3c", num(c.get("kalpha")))
+        V.est("kalpha-e3c", c.get("kalpha_est"))                # same estimate, plus its image-cluster CI
+        V.add("e3c-sdlen", num(c["sd_len"], 1))
         V.add("e3c-judgments", integer(c["n_judgments"]))
         V.add("e3c-recused", integer(c["n_recused"]))
         V.add("e3c-images", integer(c["n_images"]))
@@ -502,7 +506,10 @@ def values(res: dict, inputs) -> Values:
                 key = f"acc-known-{tag}" if grp == "all" else f"acc-known-{grp}-{tag}"
                 V.est(key, e)
         V.est("h4b-diff", kn.get("h4b"))
+        for grp, e in kn.get("cmbpe_minus_naive", {}).items():
+            V.est("acc-known-cmbpe-minus-naive" if grp == "all" else f"acc-known-{grp}-cmbpe-minus-naive", e)
         V.add("kalpha-e3b", num(kn.get("kalpha")))
+        V.est("kalpha-e3b", kn.get("kalpha_est"))
         V.add("e3b-pairs", integer(kn["n_pairs"]))
         for j, n in kn.get("missing_by_judge", {}).items():
             V.add(f"e3b-missing-{j}", integer(n))
@@ -522,12 +529,18 @@ def values(res: dict, inputs) -> Values:
     if not inputs.generated.empty and {"generator", "status"} <= set(inputs.generated.columns):
         for (m, st), n in inputs.generated.groupby(["generator", "status"]).size().items():
             V.add(f"e3gen-{st}-{m}", integer(n))
+    for m, n in e3.get("alt_len", {}).items():
+        V.add(f"e3c-meanlen-{m}", integer(n))
     for ds, tag in (("blv", "blv"), ("cr", "crowd")):
         for mth, v in e3.get("pointwise", {}).get(ds, {}).items():
             if isinstance(v, dict) and "r" in v:
                 name = mth.replace("single:", "")
                 V.est(f"r-{tag}-{name}", v["r"])
                 V.est(f"tau-{tag}-{name}", v["tau"])
+        for mth, e in e3.get("pointwise", {}).get(ds, {}).get("length_minus", {}).items():
+            V.est(f"r-{tag}-length-minus-{mth}", e)
+        for mth, e in e3.get("pointwise", {}).get(ds, {}).get("common", {}).items():
+            V.est(f"r-{tag}-{mth.replace('single:', '')}-common", e)
     for mth, e in e3.get("pointwise", {}).get("crowd_minus_blv", {}).items():
         V.est(f"r-crowd-minus-blv-{mth.replace('single:', '')}", e)
     lk = e3.get("leakage", {})
@@ -552,6 +565,11 @@ def values(res: dict, inputs) -> Values:
     if h3.get("tested"):
         V.add("h3-best-open", tex_escape(display(M, h3["best_open"])))
         V.add("h3-pi", num(h3["pi"]))
+    h4a = res["hyp"]["tests"].get("H4a", {})
+    if h4a.get("tested"):
+        for j, p in h4a["per_judge_p"].items():
+            V.add(f"h4a-p-{j}", num(p, 3))
+        V.add("h4a-max-eta", num(h4a["max_eta"]))
     h5 = res["hyp"]["tests"].get("H5", {})
     if h5.get("tested"):
         V.add("h5-count", f"{h5['count_positive']} of {h5['models']}")

@@ -1,0 +1,157 @@
+% E3 results (RQ3, C4). Every number is a res-macro key defined in values.tex (export_latex.py).
+% Input right after %RESULTS-BEGIN or after the RQ1 subsection of main.tex.
+\subsection{RQ3: Judging alt text, and alt-text quality (C4)}
+\textbf{Agreement with human ratings.} Against the mean BLV rating (Table~\ref{tab:cmbpe}),
+pointwise scores correlated at $r={}$\res{r-blv-local-qwen25vl-7b} for \QV{} (CI
+\res{r-blv-local-qwen25vl-7b-ci}), \res{r-blv-local-gemma3-4b} for \GM{} (CI
+\res{r-blv-local-gemma3-4b-ci}) and \res{r-blv-local-ministral3-8b} for \MI{} (CI
+\res{r-blv-local-ministral3-8b-ci}, on \res{r-blv-local-ministral3-8b-n} items only). The CMBPE
+panel (mean of per-judge z-scores) reached \res{r-blv-cmbpe} (CI \res{r-blv-cmbpe-ci}), the naive
+panel (mean raw score) \res{r-blv-naive} (CI \res{r-blv-naive-ci}), and description length alone
+\res{r-blv-length} (CI \res{r-blv-length-ci}). Against crowd ratings, CMBPE reached
+\res{r-crowd-cmbpe} (CI \res{r-crowd-cmbpe-ci}), the naive panel \res{r-crowd-naive} and length
+\res{r-crowd-length} (CI \res{r-crowd-length-ci}). All correlations were lower for crowd
+ratings (CMBPE drop: \res{r-crowd-minus-blv-cmbpe}, CI \res{r-crowd-minus-blv-cmbpe-ci}).
+The jury tracked human ratings no better than description length. On crowd ratings length was
+ahead of the CMBPE panel (difference \res{r-crowd-length-minus-cmbpe}, CI
+\res{r-crowd-length-minus-cmbpe-ci}, paired resamples); on BLV ratings no difference was
+detectable (\res{r-blv-length-minus-cmbpe}, CI \res{r-blv-length-minus-cmbpe-ci}). On the
+\res{r-blv-cmbpe-common-n} BLV items that all three judges scored, \MI{} remained the best single
+judge (\res{r-blv-local-ministral3-8b-common}, CI \res{r-blv-local-ministral3-8b-common-ci}).
+
+\textbf{Known-answer pairs (E3b).} On the \res{e3b-pairs} known-answer pairs, CMBPE chose the
+original with accuracy \res{acc-known-cmbpe} (CI \res{acc-known-cmbpe-ci}), the single judges
+\res{acc-known-local-gemma3-4b} (\GM), \res{acc-known-local-qwen25vl-7b} (\QV) and
+\res{acc-known-local-ministral3-8b} (\MI, CI \res{acc-known-local-ministral3-8b-ci}), and the
+naive majority \res{acc-known-naive} (CI \res{acc-known-naive-ci}). CMBPE beat the median single
+judge by \res{h4b-stat} (CI \res{h4b-stat-ci}, Holm-adjusted $p={}$\res{h4b-padj}), so H4b is
+\res{h4b-result}. The gain is small but real. It comes from three small models, and CMBPE uses
+both orders of each pair while the baselines use one, so it does not isolate the bias
+adjustment. CMBPE also beat the naive majority panel (difference
+\res{acc-known-cmbpe-minus-naive}, CI \res{acc-known-cmbpe-minus-naive-ci}), most clearly on
+descriptions with an appended sentence from another image (\res{acc-known-append-cmbpe-minus-naive},
+CI \res{acc-known-append-cmbpe-minus-naive-ci}).
+Truncation to three words was the hardest degradation for every method (CMBPE
+\res{acc-known-truncate-cmbpe}, CI \res{acc-known-truncate-cmbpe-ci}; single judges
+\res{acc-known-truncate-local-qwen25vl-7b} to \res{acc-known-truncate-local-ministral3-8b}; naive
+panel \res{acc-known-truncate-naive}), with overlapping intervals.
+
+\textbf{BLV-preference pairs (E3a).} Only \res{e3a-pairs} pairs have a side preferred by BLV
+readers, so the intervals are wide. Agreement with that side was
+\res{acc-blvpairs-local-qwen25vl-7b} for \QV{} (CI \res{acc-blvpairs-local-qwen25vl-7b-ci}),
+\res{acc-blvpairs-cmbpe} for CMBPE (CI \res{acc-blvpairs-cmbpe-ci}), \res{acc-blvpairs-naive} for
+the naive panel, \res{acc-blvpairs-local-ministral3-8b} for \MI{} (CI
+\res{acc-blvpairs-local-ministral3-8b-ci}) and \res{acc-blvpairs-local-gemma3-4b} for \GM{} (CI
+\res{acc-blvpairs-local-gemma3-4b-ci}). All intervals overlap, and those of \MI{} and \GM{}
+include chance level, so these pairs do not rank the methods.
+
+\textbf{Generator comparison (E3c).} After recusal, \res{e3c-aggregated} of \res{e3c-valid} valid
+verdicts on \res{e3c-pairs} pairs (\res{e3c-images} images) entered the fit. $S_4$ was
+\res{s4-local-ministral3-8b} for \MI{} (CI \res{s4-local-ministral3-8b-ci}),
+\res{s4-local-gemma3-4b} for \GM{} (CI \res{s4-local-gemma3-4b-ci}) and \res{s4-local-qwen25vl-7b}
+for \QV{} (CI \res{s4-local-qwen25vl-7b-ci}). Both \MI{} and \GM{} wrote better alt text than
+\QV{} (differences \res{s4-diff-local-ministral3-8b-local-qwen25vl-7b}, CI
+\res{s4-diff-local-ministral3-8b-local-qwen25vl-7b-ci}, and
+\res{s4-diff-local-gemma3-4b-local-qwen25vl-7b}, CI
+\res{s4-diff-local-gemma3-4b-local-qwen25vl-7b-ci}); \GM{} and \MI{} did not differ
+(\res{s4-diff-local-gemma3-4b-local-ministral3-8b}, CI
+\res{s4-diff-local-gemma3-4b-local-ministral3-8b-ci}). The ranking follows text length: the mean
+alt text had \res{e3c-meanlen-local-ministral3-8b} characters for \MI,
+\res{e3c-meanlen-local-gemma3-4b} for \GM{} and \res{e3c-meanlen-local-qwen25vl-7b} for \QV. The
+model removes each judge's length preference ($\gamma_j$), but because the length gap between two
+generators is systematic and each pair has a single non-recused judge, length bias and quality
+are only weakly separable here, and longer descriptions may also be genuinely more informative.
+H2 is \res{h2-result}; it needs a closed generator.
+
+\textbf{Judge biases (E3c).} \GM{} and \QV{} favoured the second-shown text
+($\delta={}$\res{delta-local-gemma3-4b}, CI \res{delta-local-gemma3-4b-ci};
+\res{delta-local-qwen25vl-7b}, CI \res{delta-local-qwen25vl-7b-ci}); \MI's interval includes 0.
+Only \GM{} had a length bias, towards longer text ($\gamma={}$\res{gamma-local-gemma3-4b}, CI
+\res{gamma-local-gemma3-4b-ci}); the other two intervals include 0. Position consistency was
+\res{pc-local-qwen25vl-7b} (\QV), \res{pc-local-gemma3-4b} (\GM) and \res{pc-local-ministral3-8b}
+(\MI). \QV{} and \GM{} preferred their own family's alt text
+($\eta={}$\res{eta-local-qwen25vl-7b}, CI \res{eta-local-qwen25vl-7b-ci}; \res{eta-local-gemma3-4b},
+CI \res{eta-local-gemma3-4b-ci}); \MI's interval includes 0. H4a is \res{h4a-result}
+(Holm-adjusted $p={}$\res{h4a-padj}), so recusal matters: without it, these two judges would raise
+their own family's score. Agreement between judges was low: Krippendorff's $\alpha$ was
+\res{kalpha-e3b} (CI \res{kalpha-e3b-ci}) on known-answer pairs and \res{kalpha-e3c} (CI
+\res{kalpha-e3c-ci}) on generated alt text.
+
+\textbf{Validity.} Anonymisation did not hide the generator: a character n-gram classifier
+identified its family with accuracy \res{leak-acc} (CI
+\res{leak-acc-ci}, \res{leak-n} texts), against a majority baseline of \res{leak-majority}. Here
+recusal, not anonymisation, keeps self-preference out of $S_4$. \MI{} gave no usable pointwise
+score for \res{pw-missing-blv-local-ministral3-8b} of the 68 BLV and
+\res{pw-missing-crowd-local-ministral3-8b} of the 204 crowd items, mostly because it returned an
+object of per-criterion ratings instead of the single number asked for, even after the retry.
+Its correlations therefore cover fewer items than the others'. With three families, each E3c
+pair keeps one non-recused judge, so $S_4$ mixes alt-text quality with that judge's preferences;
+\MI{} versus \QV{} rests on \GM{}, the judge with the largest position and length
+biases. \GM{} wrote no parseable alt text for \res{e3gen-parse-error-local-gemma3-4b} images,
+even after the retry, so its $S_4$ rests on \res{e3gen-ok-local-gemma3-4b} images.
+
+% ------------------------------------------------------------------------------------------
+% CANDIDATE SENTENCES (not typeset)
+%
+% Abstract (%FINDINGS-ABSTRACT):
+% (A1) On known-answer alt-text pairs, the CMBPE jury of three local vision models was more
+%      accurate than the median single judge (\res{acc-known-cmbpe}; gain \res{h4b-stat}, CI
+%      \res{h4b-stat-ci}), but neither the jury nor any judge tracked blind and low-vision
+%      readers' ratings better than description length did ($r={}$\res{r-blv-length}).
+% (A2) \QV{} and \GM{} preferred their own family's alt text, and a classifier recovered the
+%      generator family from anonymised text (\res{leak-acc} against \res{leak-majority}), so
+%      recusal, not anonymisation, is what keeps the jury fair.
+%
+% Conclusion (%CONCLUSION-BEGIN ... %CONCLUSION-END):
+% (C1) For alt text, a bias-controlled jury of small local models improves modestly on a single
+%      judge for clear-cut errors, but it is no substitute for ratings by blind and low-vision
+%      readers: its scores agree with them no better than text length, and with three families
+%      each generator pair rests on a single judge.
+%
+% ------------------------------------------------------------------------------------------
+% RESULTS WITHOUT A KEY (value from summary.md unless noted; key the analysis would export)
+%
+% 1. S_4 differences between generators (needed to say "differ"). Not in summary.md (only
+%    the per-generator S4 0.626 / 0.511 / 0.363). Keys:
+%    s4-diff-local-ministral3-8b-local-qwen25vl-7b, s4-diff-local-ministral3-8b-local-gemma3-4b,
+%    s4-diff-local-gemma3-4b-local-qwen25vl-7b (each with -ci).
+% 2. CMBPE minus naive panel accuracy on E3b. Not in summary.md (cmbpe 0.975 [0.966, 0.984],
+%    naive 0.951 [0.936, 0.965]; disjoint at 3 decimals, touching at 2). Key:
+%    acc-known-cmbpe-minus-naive (+ -ci); the same for truncate:
+%    acc-known-truncate-cmbpe-minus-naive (+ -ci).
+% 3. Length baseline minus panel correlation. Not in summary.md (BLV: length 0.573 vs cmbpe
+%    0.519; crowd: 0.403 vs 0.262). Keys: r-blv-length-minus-cmbpe, r-crowd-length-minus-cmbpe,
+%    r-blv-length-minus-naive, r-crowd-length-minus-naive (each with -ci). A partial
+%    correlation of the panel score given length would show whether the jury adds anything
+%    beyond length: r-blv-cmbpe-partial-length, r-crowd-cmbpe-partial-length (+ -ci).
+% 4. Single-judge and panel correlations on the items Ministral scored (49 BLV, 153 crowd),
+%    so Ministral's r can be compared like for like. Not in summary.md. Keys:
+%    r-blv-<judge>-ministral-subset, r-crowd-<judge>-ministral-subset (+ -ci), for the
+%    other two judges, cmbpe, naive and length.
+% 5. Mean alt-text length per generator. NOT in summary.md; my read-only count of
+%    runs/e3/generated.jsonl (parsed texts): Qwen2.5-VL 141.4, Gemma 188.5, Ministral 221.9
+%    characters (medians 137.5 / 186.5 / 208). The S4 ranking follows this length order,
+%    which matters given the length baseline and Gemma's gamma. Keys: e3c-meanlen-local-qwen25vl-7b,
+%    e3c-meanlen-local-gemma3-4b, e3c-meanlen-local-ministral3-8b; and e3c-sdlen (summary:
+%    sd(len) = 61.6 chars).
+% 6. Krippendorff alpha intervals. summary.md: 0.338 (E3b), 0.195 (E3c), no CI. Keys:
+%    kalpha-e3b-ci, kalpha-e3c-ci. Without them the text reports alpha without interpretation;
+%    E3b's low alpha next to accuracies above 0.9 is likely the high-prevalence effect, which
+%    a reader may misread.
+% 7. H4a details. summary.md: max eta 0.5756; per-judge p (one-sided) Qwen2.5-VL 0.0005,
+%    Gemma 0.0015, Ministral 0.1574. Keys: h4a-max-eta, h4a-p-local-qwen25vl-7b,
+%    h4a-p-local-gemma3-4b, h4a-p-local-ministral3-8b.
+% 8. Naive-panel intervals. summary.md: PC 0.75 (n=356), gamma 0.377, no CI (keys pc-naive and
+%    gamma-naive exist without -ci). Keys: pc-naive-ci, gamma-naive-ci.
+% 9. Ministral's malformed pointwise answers by kind. Not in summary.md; my read-only check
+%    of the 70 failed items' raw responses: final answer a nested "score"/"scoring" object of
+%    per-criterion ratings in 43, an "evaluation" object of per-criterion ratings in 20
+%    (first attempt a score object), and a top-level "score" in JSON the parser rejected in 7
+%    (reason not checked). Key: pw-objscore-local-ministral3-8b (count). The text says
+%    "mostly ... an object of per-criterion ratings", which this supports.
+% 10. Anonymisation rules fired. summary.md: Ministral markdown 2 of 120, none for the others.
+%    Key: anon-markdown-local-ministral3-8b (and anon-<rule>-<model>).
+% 11. Leakage: values.tex leak-acc 0.63 (summary 0.6257, Wilson CI [0.574, 0.674]) comes from
+%    analysis/cmbpe_bt; runs/e3/leakage.json (harness leakage_check) has 0.6229. Same n, folds
+%    and baseline. SPEC 13.4 says the paper uses the analysis value, which the text does; the
+%    two implementations still disagree slightly (fold seeding?), worth a check.

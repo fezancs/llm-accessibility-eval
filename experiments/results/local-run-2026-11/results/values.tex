@@ -29,6 +29,11 @@
 \setres{acc-known-append-cmbpe-ci}{[1.00, 1.00]}
 \setres{acc-known-append-cmbpe-hi}{1.00}
 \setres{acc-known-append-cmbpe-lo}{1.00}
+\setres{acc-known-append-cmbpe-minus-naive}{0.05}
+\setres{acc-known-append-cmbpe-minus-naive-ci}{[0.02, 0.08]}
+\setres{acc-known-append-cmbpe-minus-naive-hi}{0.08}
+\setres{acc-known-append-cmbpe-minus-naive-lo}{0.02}
+\setres{acc-known-append-cmbpe-minus-naive-n}{272}
 \setres{acc-known-append-cmbpe-n}{272}
 \setres{acc-known-append-local-gemma3-4b}{0.90}
 \setres{acc-known-append-local-gemma3-4b-ci}{[0.87, 0.94]}
@@ -54,6 +59,11 @@
 \setres{acc-known-cmbpe-ci}{[0.97, 0.98]}
 \setres{acc-known-cmbpe-hi}{0.98}
 \setres{acc-known-cmbpe-lo}{0.97}
+\setres{acc-known-cmbpe-minus-naive}{0.02}
+\setres{acc-known-cmbpe-minus-naive-ci}{[0.01, 0.04]}
+\setres{acc-known-cmbpe-minus-naive-hi}{0.04}
+\setres{acc-known-cmbpe-minus-naive-lo}{0.01}
+\setres{acc-known-cmbpe-minus-naive-n}{1{,}058}
 \setres{acc-known-cmbpe-n}{1{,}058}
 \setres{acc-known-local-gemma3-4b}{0.91}
 \setres{acc-known-local-gemma3-4b-ci}{[0.89, 0.93]}
@@ -79,6 +89,11 @@
 \setres{acc-known-repeat-cmbpe-ci}{[0.99, 1.00]}
 \setres{acc-known-repeat-cmbpe-hi}{1.00}
 \setres{acc-known-repeat-cmbpe-lo}{0.99}
+\setres{acc-known-repeat-cmbpe-minus-naive}{0.01}
+\setres{acc-known-repeat-cmbpe-minus-naive-ci}{[0.00, 0.03]}
+\setres{acc-known-repeat-cmbpe-minus-naive-hi}{0.03}
+\setres{acc-known-repeat-cmbpe-minus-naive-lo}{0.00}
+\setres{acc-known-repeat-cmbpe-minus-naive-n}{272}
 \setres{acc-known-repeat-cmbpe-n}{272}
 \setres{acc-known-repeat-local-gemma3-4b}{0.91}
 \setres{acc-known-repeat-local-gemma3-4b-ci}{[0.87, 0.94]}
@@ -104,6 +119,11 @@
 \setres{acc-known-swap-cmbpe-ci}{[0.99, 1.00]}
 \setres{acc-known-swap-cmbpe-hi}{1.00}
 \setres{acc-known-swap-cmbpe-lo}{0.99}
+\setres{acc-known-swap-cmbpe-minus-naive}{0.01}
+\setres{acc-known-swap-cmbpe-minus-naive-ci}{[0.00, 0.03]}
+\setres{acc-known-swap-cmbpe-minus-naive-hi}{0.03}
+\setres{acc-known-swap-cmbpe-minus-naive-lo}{0.00}
+\setres{acc-known-swap-cmbpe-minus-naive-n}{272}
 \setres{acc-known-swap-cmbpe-n}{272}
 \setres{acc-known-swap-local-gemma3-4b}{0.98}
 \setres{acc-known-swap-local-gemma3-4b-ci}{[0.96, 0.99]}
@@ -129,6 +149,11 @@
 \setres{acc-known-truncate-cmbpe-ci}{[0.86, 0.94]}
 \setres{acc-known-truncate-cmbpe-hi}{0.94}
 \setres{acc-known-truncate-cmbpe-lo}{0.86}
+\setres{acc-known-truncate-cmbpe-minus-naive}{0.02}
+\setres{acc-known-truncate-cmbpe-minus-naive-ci}{[$-$0.01, 0.06]}
+\setres{acc-known-truncate-cmbpe-minus-naive-hi}{0.06}
+\setres{acc-known-truncate-cmbpe-minus-naive-lo}{$-$0.01}
+\setres{acc-known-truncate-cmbpe-minus-naive-n}{242}
 \setres{acc-known-truncate-cmbpe-n}{242}
 \setres{acc-known-truncate-local-gemma3-4b}{0.84}
 \setres{acc-known-truncate-local-gemma3-4b-ci}{[0.80, 0.89]}
@@ -210,6 +235,7 @@
 \setres{dm-research-runner}{Gemma 3 4B (local)}
 \setres{e1-distinct-faults}{184}
 \setres{e1-distinct-pages}{46}
+\setres{e2-calls-from-pilot}{40}
 \setres{e3-images}{222}
 \setres{e3a-pairs}{23}
 \setres{e3b-missing-local-gemma3-4b}{0}
@@ -222,11 +248,15 @@
 \setres{e3c-firstpref-local-qwen25vl-7b}{0.39}
 \setres{e3c-images}{120}
 \setres{e3c-judgments}{2{,}136}
+\setres{e3c-meanlen-local-gemma3-4b}{188}
+\setres{e3c-meanlen-local-ministral3-8b}{222}
+\setres{e3c-meanlen-local-qwen25vl-7b}{141}
 \setres{e3c-missing-local-gemma3-4b}{0}
 \setres{e3c-missing-local-ministral3-8b}{2}
 \setres{e3c-missing-local-qwen25vl-7b}{0}
 \setres{e3c-pairs}{356}
 \setres{e3c-recused}{1{,}423}
+\setres{e3c-sdlen}{61.6}
 \setres{e3c-valid}{2{,}134}
 \setres{e3gen-ok-local-gemma3-4b}{118}
 \setres{e3gen-ok-local-ministral3-8b}{120}
@@ -288,7 +318,11 @@
 \setres{h3-padj}{0.002}
 \setres{h3-pi}{1.00}
 \setres{h3-result}{supported}
+\setres{h4a-max-eta}{0.58}
 \setres{h4a-p}{0.001}
+\setres{h4a-p-local-gemma3-4b}{0.001}
+\setres{h4a-p-local-ministral3-8b}{0.157}
+\setres{h4a-p-local-qwen25vl-7b}{0.000}
 \setres{h4a-padj}{0.003}
 \setres{h4a-result}{supported}
 \setres{h4b-diff}{0.03}
@@ -310,7 +344,15 @@
 \setres{h5-result}{not supported}
 \setres{hyp-family-size}{4}
 \setres{kalpha-e3b}{0.34}
+\setres{kalpha-e3b-ci}{[0.26, 0.41]}
+\setres{kalpha-e3b-hi}{0.41}
+\setres{kalpha-e3b-lo}{0.26}
+\setres{kalpha-e3b-n}{1{,}058}
 \setres{kalpha-e3c}{0.19}
+\setres{kalpha-e3c-ci}{[0.14, 0.25]}
+\setres{kalpha-e3c-hi}{0.25}
+\setres{kalpha-e3c-lo}{0.14}
+\setres{kalpha-e3c-n}{356}
 \setres{lat-gen-local-qwen25vl-7b}{20.2}
 \setres{lat-rep-local-qwen25vl-7b}{169.9}
 \setres{leak-acc}{0.63}
@@ -375,56 +417,131 @@
 \setres{pw-missing-crowd-local-qwen25vl-7b}{0}
 \setres{r-blv-cmbpe}{0.52}
 \setres{r-blv-cmbpe-ci}{[0.34, 0.67]}
+\setres{r-blv-cmbpe-common}{0.55}
+\setres{r-blv-cmbpe-common-ci}{[0.36, 0.73]}
+\setres{r-blv-cmbpe-common-hi}{0.73}
+\setres{r-blv-cmbpe-common-lo}{0.36}
+\setres{r-blv-cmbpe-common-n}{49}
 \setres{r-blv-cmbpe-hi}{0.67}
 \setres{r-blv-cmbpe-lo}{0.34}
 \setres{r-blv-cmbpe-n}{68}
 \setres{r-blv-length}{0.57}
 \setres{r-blv-length-ci}{[0.48, 0.69]}
+\setres{r-blv-length-common}{0.61}
+\setres{r-blv-length-common-ci}{[0.53, 0.74]}
+\setres{r-blv-length-common-hi}{0.74}
+\setres{r-blv-length-common-lo}{0.53}
+\setres{r-blv-length-common-n}{49}
 \setres{r-blv-length-hi}{0.69}
 \setres{r-blv-length-lo}{0.48}
+\setres{r-blv-length-minus-cmbpe}{0.05}
+\setres{r-blv-length-minus-cmbpe-ci}{[$-$0.09, 0.21]}
+\setres{r-blv-length-minus-cmbpe-hi}{0.21}
+\setres{r-blv-length-minus-cmbpe-lo}{$-$0.09}
+\setres{r-blv-length-minus-cmbpe-n}{68}
+\setres{r-blv-length-minus-naive}{0.05}
+\setres{r-blv-length-minus-naive-ci}{[$-$0.09, 0.21]}
+\setres{r-blv-length-minus-naive-hi}{0.21}
+\setres{r-blv-length-minus-naive-lo}{$-$0.09}
+\setres{r-blv-length-minus-naive-n}{68}
 \setres{r-blv-length-n}{68}
 \setres{r-blv-local-gemma3-4b}{0.34}
 \setres{r-blv-local-gemma3-4b-ci}{[0.17, 0.51]}
+\setres{r-blv-local-gemma3-4b-common}{0.38}
+\setres{r-blv-local-gemma3-4b-common-ci}{[0.20, 0.58]}
+\setres{r-blv-local-gemma3-4b-common-hi}{0.58}
+\setres{r-blv-local-gemma3-4b-common-lo}{0.20}
+\setres{r-blv-local-gemma3-4b-common-n}{49}
 \setres{r-blv-local-gemma3-4b-hi}{0.51}
 \setres{r-blv-local-gemma3-4b-lo}{0.17}
 \setres{r-blv-local-gemma3-4b-n}{68}
 \setres{r-blv-local-ministral3-8b}{0.61}
 \setres{r-blv-local-ministral3-8b-ci}{[0.44, 0.75]}
+\setres{r-blv-local-ministral3-8b-common}{0.61}
+\setres{r-blv-local-ministral3-8b-common-ci}{[0.44, 0.75]}
+\setres{r-blv-local-ministral3-8b-common-hi}{0.75}
+\setres{r-blv-local-ministral3-8b-common-lo}{0.44}
+\setres{r-blv-local-ministral3-8b-common-n}{49}
 \setres{r-blv-local-ministral3-8b-hi}{0.75}
 \setres{r-blv-local-ministral3-8b-lo}{0.44}
 \setres{r-blv-local-ministral3-8b-n}{49}
 \setres{r-blv-local-qwen25vl-7b}{0.40}
 \setres{r-blv-local-qwen25vl-7b-ci}{[0.16, 0.63]}
+\setres{r-blv-local-qwen25vl-7b-common}{0.40}
+\setres{r-blv-local-qwen25vl-7b-common-ci}{[0.13, 0.67]}
+\setres{r-blv-local-qwen25vl-7b-common-hi}{0.67}
+\setres{r-blv-local-qwen25vl-7b-common-lo}{0.13}
+\setres{r-blv-local-qwen25vl-7b-common-n}{49}
 \setres{r-blv-local-qwen25vl-7b-hi}{0.63}
 \setres{r-blv-local-qwen25vl-7b-lo}{0.16}
 \setres{r-blv-local-qwen25vl-7b-n}{68}
 \setres{r-blv-naive}{0.52}
 \setres{r-blv-naive-ci}{[0.35, 0.68]}
+\setres{r-blv-naive-common}{0.55}
+\setres{r-blv-naive-common-ci}{[0.37, 0.73]}
+\setres{r-blv-naive-common-hi}{0.73}
+\setres{r-blv-naive-common-lo}{0.37}
+\setres{r-blv-naive-common-n}{49}
 \setres{r-blv-naive-hi}{0.68}
 \setres{r-blv-naive-lo}{0.35}
 \setres{r-blv-naive-n}{68}
 \setres{r-crowd-cmbpe}{0.26}
 \setres{r-crowd-cmbpe-ci}{[0.12, 0.39]}
+\setres{r-crowd-cmbpe-common}{0.19}
+\setres{r-crowd-cmbpe-common-ci}{[0.01, 0.34]}
+\setres{r-crowd-cmbpe-common-hi}{0.34}
+\setres{r-crowd-cmbpe-common-lo}{0.01}
+\setres{r-crowd-cmbpe-common-n}{153}
 \setres{r-crowd-cmbpe-hi}{0.39}
 \setres{r-crowd-cmbpe-lo}{0.12}
 \setres{r-crowd-cmbpe-n}{204}
 \setres{r-crowd-length}{0.40}
 \setres{r-crowd-length-ci}{[0.32, 0.50]}
+\setres{r-crowd-length-common}{0.37}
+\setres{r-crowd-length-common-ci}{[0.28, 0.47]}
+\setres{r-crowd-length-common-hi}{0.47}
+\setres{r-crowd-length-common-lo}{0.28}
+\setres{r-crowd-length-common-n}{153}
 \setres{r-crowd-length-hi}{0.50}
 \setres{r-crowd-length-lo}{0.32}
+\setres{r-crowd-length-minus-cmbpe}{0.14}
+\setres{r-crowd-length-minus-cmbpe-ci}{[0.02, 0.28]}
+\setres{r-crowd-length-minus-cmbpe-hi}{0.28}
+\setres{r-crowd-length-minus-cmbpe-lo}{0.02}
+\setres{r-crowd-length-minus-cmbpe-n}{204}
+\setres{r-crowd-length-minus-naive}{0.15}
+\setres{r-crowd-length-minus-naive-ci}{[0.03, 0.29]}
+\setres{r-crowd-length-minus-naive-hi}{0.29}
+\setres{r-crowd-length-minus-naive-lo}{0.03}
+\setres{r-crowd-length-minus-naive-n}{204}
 \setres{r-crowd-length-n}{204}
 \setres{r-crowd-local-gemma3-4b}{0.14}
 \setres{r-crowd-local-gemma3-4b-ci}{[0.00, 0.28]}
+\setres{r-crowd-local-gemma3-4b-common}{0.07}
+\setres{r-crowd-local-gemma3-4b-common-ci}{[$-$0.10, 0.23]}
+\setres{r-crowd-local-gemma3-4b-common-hi}{0.23}
+\setres{r-crowd-local-gemma3-4b-common-lo}{$-$0.10}
+\setres{r-crowd-local-gemma3-4b-common-n}{153}
 \setres{r-crowd-local-gemma3-4b-hi}{0.28}
 \setres{r-crowd-local-gemma3-4b-lo}{0.00}
 \setres{r-crowd-local-gemma3-4b-n}{204}
 \setres{r-crowd-local-ministral3-8b}{0.32}
 \setres{r-crowd-local-ministral3-8b-ci}{[0.16, 0.46]}
+\setres{r-crowd-local-ministral3-8b-common}{0.32}
+\setres{r-crowd-local-ministral3-8b-common-ci}{[0.15, 0.46]}
+\setres{r-crowd-local-ministral3-8b-common-hi}{0.46}
+\setres{r-crowd-local-ministral3-8b-common-lo}{0.15}
+\setres{r-crowd-local-ministral3-8b-common-n}{153}
 \setres{r-crowd-local-ministral3-8b-hi}{0.46}
 \setres{r-crowd-local-ministral3-8b-lo}{0.16}
 \setres{r-crowd-local-ministral3-8b-n}{153}
 \setres{r-crowd-local-qwen25vl-7b}{0.20}
 \setres{r-crowd-local-qwen25vl-7b-ci}{[0.06, 0.33]}
+\setres{r-crowd-local-qwen25vl-7b-common}{0.09}
+\setres{r-crowd-local-qwen25vl-7b-common-ci}{[$-$0.08, 0.25]}
+\setres{r-crowd-local-qwen25vl-7b-common-hi}{0.25}
+\setres{r-crowd-local-qwen25vl-7b-common-lo}{$-$0.08}
+\setres{r-crowd-local-qwen25vl-7b-common-n}{153}
 \setres{r-crowd-local-qwen25vl-7b-hi}{0.33}
 \setres{r-crowd-local-qwen25vl-7b-lo}{0.06}
 \setres{r-crowd-local-qwen25vl-7b-n}{204}
@@ -460,6 +577,11 @@
 \setres{r-crowd-minus-blv-naive-n}{68}
 \setres{r-crowd-naive}{0.25}
 \setres{r-crowd-naive-ci}{[0.12, 0.37]}
+\setres{r-crowd-naive-common}{0.17}
+\setres{r-crowd-naive-common-ci}{[0.00, 0.33]}
+\setres{r-crowd-naive-common-hi}{0.33}
+\setres{r-crowd-naive-common-lo}{0.00}
+\setres{r-crowd-naive-common-n}{153}
 \setres{r-crowd-naive-hi}{0.37}
 \setres{r-crowd-naive-lo}{0.12}
 \setres{r-crowd-naive-n}{204}
@@ -551,6 +673,21 @@
 \setres{s2-local-qwen25vl-7b-hi}{0.45}
 \setres{s2-local-qwen25vl-7b-lo}{0.32}
 \setres{s2-local-qwen25vl-7b-n}{48}
+\setres{s4-diff-local-gemma3-4b-local-ministral3-8b}{$-$0.11}
+\setres{s4-diff-local-gemma3-4b-local-ministral3-8b-ci}{[$-$0.24, 0.02]}
+\setres{s4-diff-local-gemma3-4b-local-ministral3-8b-hi}{0.02}
+\setres{s4-diff-local-gemma3-4b-local-ministral3-8b-lo}{$-$0.24}
+\setres{s4-diff-local-gemma3-4b-local-ministral3-8b-n}{711}
+\setres{s4-diff-local-gemma3-4b-local-qwen25vl-7b}{0.15}
+\setres{s4-diff-local-gemma3-4b-local-qwen25vl-7b-ci}{[0.03, 0.26]}
+\setres{s4-diff-local-gemma3-4b-local-qwen25vl-7b-hi}{0.26}
+\setres{s4-diff-local-gemma3-4b-local-qwen25vl-7b-lo}{0.03}
+\setres{s4-diff-local-gemma3-4b-local-qwen25vl-7b-n}{711}
+\setres{s4-diff-local-ministral3-8b-local-qwen25vl-7b}{0.26}
+\setres{s4-diff-local-ministral3-8b-local-qwen25vl-7b-ci}{[0.10, 0.41]}
+\setres{s4-diff-local-ministral3-8b-local-qwen25vl-7b-hi}{0.41}
+\setres{s4-diff-local-ministral3-8b-local-qwen25vl-7b-lo}{0.10}
+\setres{s4-diff-local-ministral3-8b-local-qwen25vl-7b-n}{711}
 \setres{s4-local-gemma3-4b}{0.51}
 \setres{s4-local-gemma3-4b-ci}{[0.45, 0.57]}
 \setres{s4-local-gemma3-4b-hi}{0.57}
@@ -682,8 +819,8 @@
 \setres{theta-local-qwen25vl-7b-hi}{$-$0.14}
 \setres{theta-local-qwen25vl-7b-lo}{$-$0.62}
 \setres{theta-local-qwen25vl-7b-n}{711}
-\setres{total-calls}{41{,}395}
-\setres{total-calls-answered}{10{,}400}
+\setres{total-calls}{41{,}435}
+\setres{total-calls-answered}{10{,}440}
 \setres{total-calls-failed}{30{,}995}
 \setres{total-cost}{\$0}
 \setres{vp100-nudged-local-qwen25vl-7b}{5.3}
