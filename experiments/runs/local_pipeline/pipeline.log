@@ -93,3 +93,20 @@
 2026-11-14T00:16:02+05:00 pipeline start (pid 60911) on branch local-run-2026-11 at 91f1775
 2026-11-14T00:16:02+05:00 server: start local-ministral3-8b
 2026-11-14T00:16:22+05:00 start e3judge_local-ministral3-8b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-ministral3-8b --procedures pointwise,known,blv_pairs
+2026-11-14T01:24:52+05:00 end   e3judge_local-ministral3-8b.pass1 rc=0 (68 min); step_errors since 2026-11-13T19:16:22: 577 requests, 0 failed
+2026-11-14T01:24:52+05:00 start e3gen_all: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_generate --models local-qwen25vl-7b,local-gemma3-4b,local-ministral3-8b
+2026-11-14T01:25:01+05:00 end   e3gen_all rc=0 (0 min); step_errors since 2026-11-13T20:24:52: 0 requests, 0 failed
+2026-11-14T01:25:01+05:00 start e3leak: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_generate --models local-qwen25vl-7b,local-gemma3-4b,local-ministral3-8b --leakage
+2026-11-14T01:25:08+05:00 end   e3leak rc=0 (0 min); step_errors since 2026-11-13T20:25:01: 0 requests, 0 failed
+2026-11-14T01:25:08+05:00 server: start local-qwen25vl-7b
+2026-11-14T01:25:35+05:00 start e3pairs_local-qwen25vl-7b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-qwen25vl-7b --procedures gen_pairs
+2026-11-14T01:30:45+05:00 end   e3pairs_local-qwen25vl-7b.pass1 rc=0 (5 min); step_errors since 2026-11-13T20:25:35: 712 requests, 0 failed
+2026-11-14T01:30:45+05:00 server: start local-gemma3-4b
+2026-11-14T01:31:26+05:00 start e3pairs_local-gemma3-4b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-gemma3-4b --procedures gen_pairs
+2026-11-14T01:42:07+05:00 end   e3pairs_local-gemma3-4b.pass1 rc=0 (10 min); step_errors since 2026-11-13T20:31:26: 712 requests, 0 failed
+2026-11-14T01:42:07+05:00 server: start local-ministral3-8b
+2026-11-14T01:42:36+05:00 start e3pairs_local-ministral3-8b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-ministral3-8b --procedures gen_pairs
+2026-11-14T03:30:07+05:00 end   e3pairs_local-ministral3-8b.pass1 rc=0 (107 min); step_errors since 2026-11-13T20:42:36: 721 requests, 0 failed
+2026-11-14T03:30:07+05:00 start e3judge_all: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-qwen25vl-7b,local-gemma3-4b,local-ministral3-8b
+2026-11-14T03:31:37+05:00 end   e3judge_all rc=0 (1 min); step_errors since 2026-11-13T22:30:07: 0 requests, 0 failed
+2026-11-14T03:31:37+05:00 milestone: E3 (alt-text generation and CMBPE judging)

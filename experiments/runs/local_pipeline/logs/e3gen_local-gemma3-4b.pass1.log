@@ -1,0 +1,19 @@
+{
+  "generators": [
+    "local-gemma3-4b"
+  ],
+  "transform_counts": {
+    "local-gemma3-4b": {
+      "markdown": 0,
+      "quotes": 0,
+      "alt_text_prefix": 0,
+      "image_of": 0,
+      "picture_of": 0,
+      "n": 118
+    }
+  },
+  "status": {
+    "local-gemma3-4b:ok": 118,
+    "local-gemma3-4b:parse_error": 2
+  }
+}

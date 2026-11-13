@@ -1,0 +1,11 @@
+{
+  "n": 358,
+  "families": {
+    "alibaba-local": 120,
+    "google-local": 118,
+    "mistral-local": 120
+  },
+  "folds": 5,
+  "accuracy": 0.6229,
+  "majority_baseline": 0.3352
+}
