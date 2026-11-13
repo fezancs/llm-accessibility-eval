@@ -2,4 +2,4 @@
 
 | Model | Result | Returned model | Notes |
 |---|---|---|---|
-| local-gemma3-4b | OK | gemma-3-4b-it-Q4_K_M |  |
+| local-qwen25vl-7b | OK | Qwen2.5-VL-7B-Instruct-Q4_K_M |  |

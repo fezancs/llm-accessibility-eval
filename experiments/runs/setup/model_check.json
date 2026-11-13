@@ -1,39 +1,39 @@
 [
  {
-  "key": "local-gemma3-4b",
+  "key": "local-qwen25vl-7b",
   "provider": "local",
   "text": {
    "ok": true,
    "status": "ok",
-   "model_returned": "gemma-3-4b-it-Q4_K_M",
+   "model_returned": "Qwen2.5-VL-7B-Instruct-Q4_K_M",
    "provider_served": null,
    "stop_reason": "end_turn",
-   "text": "OK\n",
+   "text": "OK",
    "cost_usd": 0.0,
-   "ttft_s": 4.751958224995178,
-   "total_s": 4.809088515990879
+   "ttft_s": 0.7867649840045488,
+   "total_s": 0.8188244109915104
   },
   "judge": {
    "ok": true,
    "status": "ok",
-   "model_returned": "gemma-3-4b-it-Q4_K_M",
+   "model_returned": "Qwen2.5-VL-7B-Instruct-Q4_K_M",
    "provider_served": null,
    "stop_reason": "end_turn",
-   "text": "```json\n{\"better\": 1, \"confidence\": 3}\n```\n",
+   "text": "{\"better\": 1, \"confidence\": 3}",
    "cost_usd": 0.0,
-   "ttft_s": 0.37043048700434156,
-   "total_s": 0.751031794003211
+   "ttft_s": 0.4485528329969384,
+   "total_s": 0.8130157499981578
   },
   "vision": {
    "ok": true,
    "status": "ok",
-   "model_returned": "gemma-3-4b-it-Q4_K_M",
+   "model_returned": "Qwen2.5-VL-7B-Instruct-Q4_K_M",
    "provider_served": null,
    "stop_reason": "end_turn",
-   "text": "Geometric shapes on a wall.",
+   "text": "Abstract shapes on beige background.",
    "cost_usd": 0.0,
-   "ttft_s": 5.843198078000569,
-   "total_s": 5.973310854998999
+   "ttft_s": 11.605287356011104,
+   "total_s": 11.788511236009072
   },
   "ok": true
  }

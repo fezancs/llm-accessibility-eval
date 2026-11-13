@@ -23,3 +23,5 @@ runs/local_pipeline/.launching
 runs/local_pipeline/.loaded
 runs/local_pipeline/.logline
 local/run_local.active.sh
+# temporary files the E3 judge and E1/E2 runners write mid-step
+runs/**/*.jsonl.partial
