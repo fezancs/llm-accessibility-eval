@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CityCare Appointment Request</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h1 {
+  text-align: center;
+  color: #333;
+}
+form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+label {
+  font-weight: bold;
+}
+input[type="text"],
+input[type="date"],
+input[type="email"],
+input[type="checkbox"],
+select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  width: 100%;
+}
+input[type="submit"] {
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+input[type="submit"]:hover {
+  background-color: #45a049;
+}
+.error {
+  color: red;
+  font-size: 12px;
+}
+</style>
+<script>
+function validateForm() {
+  var fullName = document.forms["appointmentForm"]["fullName"].value;
+  var dateOfBirth = document.forms["appointmentForm"]["dateOfBirth"].value;
+  var email = document.forms["appointmentForm"]["email"].value;
+  var clinic = document.forms["appointmentForm"]["clinic"].value;
+  var privacyCheckbox = document.forms["appointmentForm"]["privacyCheckbox"].checked;
+
+  var errorElement = document.getElementById("error");
+  errorElement.textContent = "";
+
+  if (fullName === "") {
+    errorElement.textContent += "Full name is required.<br>";
+  }
+  if (dateOfBirth === "") {
+    errorElement.textContent += "Date of birth is required.<br>";
+  }
+  if (email === "") {
+    errorElement.textContent += "Email address is required.<br>";
+  }
+  if (clinic === "") {
+    errorElement.textContent += "Preferred clinic is required.<br>";
+  }
+  if (!privacyCheckbox) {
+    errorElement.textContent += "You must agree to the privacy notice.<br>";
+  }
+
+  if (errorElement.textContent === "") {
+    document.forms["appointmentForm"].submit();
+  }
+}
+</script>
+</head>
+<body>
+<div class="container">
+<h1>Request an Appointment</h1>
+<form name="appointmentForm" onsubmit="event.preventDefault(); validateForm();">
+  <label for="fullName">Full Name:</label>
+  <input type="text" id="fullName" name="fullName" required>
+  <label for="dateOfBirth">Date of Birth:</label>
+  <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+  <label for="email">Email Address:</label>
+  <input type="email" id="email" name="email" required>
+  <label for="clinic">Preferred Clinic:</label>
+  <select id="clinic" name="clinic" required>
+    <option value="">Select a clinic</option>
+    <option value="Northside">Northside</option>
+    <option value="Riverside">Riverside</option>
+    <option value="Old Town">Old Town</option>
+    <option value="Harbour">Harbour</option>
+  </select>
+  <label for="consultationType">Consultation Type:</label>
+  <select id="consultationType" name="consultationType" required>
+    <option value="">Select a consultation type</option>
+    <option value="in person">In Person</option>
+    <option value="video call">Video Call</option>
+    <option value="phone call">Phone Call</option>
+  </select>
+  <label for="notes">Notes:</label>
+  <textarea id="notes" name="notes"></textarea>
+  <label for="privacyCheckbox">I agree to the privacy notice:</label>
+  <input type="checkbox" id="privacyCheckbox" name="privacyCheckbox" required>
+  <div id="error" class="error"></div>
+  <input type="submit" value="Request Appointment">
+</form>
+</div>
+</body>
+</html>

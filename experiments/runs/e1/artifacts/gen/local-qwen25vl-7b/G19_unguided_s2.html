@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .cookie-consent {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.3);
+        }
+        .cookie-consent .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .cookie-consent .buttons button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        .cookie-consent .buttons button:hover {
+            background-color: #0056b3;
+        }
+        .cookie-consent .settings {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .cookie-consent .settings .checkboxes {
+            display: flex;
+            gap: 10px;
+        }
+        .cookie-consent .settings .checkboxes label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .cookie-consent .settings .checkboxes label input {
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+        }
+        .cookie-consent .settings .save {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        .cookie-consent .settings .save:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="cookie-consent">
+        <p>We use cookies to make this site work and to understand how it is used.</p>
+        <div class="buttons">
+            <button onclick="showSettings()">Accept all</button>
+            <button onclick="hideSettings()">Reject all</button>
+            <button onclick="showSettings()">Cookie settings</button>
+        </div>
+    </div>
+    <div class="cookie-consent settings" id="settings">
+        <p>Necessary cookies are always on and cannot be changed.</p>
+        <div class="checkboxes">
+            <label><input type="checkbox" checked disabled>Necessary</label>
+            <label><input type="checkbox">Analytics</label>
+            <label><input type="checkbox">Marketing</label>
+        </div>
+        <button onclick="saveSettings()">Save preferences</button>
+    </div>
+    <script>
+        function showSettings() {
+            document.getElementById('settings').style.display = 'block';
+        }
+        function hideSettings() {
+            document.getElementById('settings').style.display = 'none';
+        }
+        function saveSettings() {
+            document.getElementById('settings').style.display = 'none';
+            // Save the preferences to the server or local storage
+            // For demonstration, just log the preferences
+            console.log('Necessary: Always on', 'Analytics: ', document.getElementById('analytics').checked, 'Marketing: ', document.getElementById('marketing').checked);
+        }
+    </script>
+</body>
+</html>

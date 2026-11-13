@@ -1,0 +1,95 @@
+2026-11-12T12:16:56+05:00 pipeline start (pid 95734) on branch local-run-2026-11 at a5d4154
+2026-11-12T12:16:56+05:00 server: start local-qwen25vl-7b-text
+2026-11-12T12:17:05+05:00 start e1gen_qv.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_gen --models local-qwen25vl-7b --no-eval
+2026-11-12T13:12:45+05:00 end   e1gen_qv.pass1 rc=0 (55 min)
+2026-11-12T13:12:45+05:00 start e1gen_qv: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_gen --models local-qwen25vl-7b --no-eval
+2026-11-12T13:12:57+05:00 end   e1gen_qv rc=0 (0 min)
+2026-11-12T13:12:57+05:00 start e1rep_qv.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_repair --models local-qwen25vl-7b --no-eval
+2026-11-12T16:00:37+05:00 end   e1rep_qv.pass1 rc=0 (167 min)
+2026-11-12T16:00:38+05:00 start e1rep_qv: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_repair --models local-qwen25vl-7b --no-eval
+2026-11-12T16:00:43+05:00 end   e1rep_qv rc=0 (0 min)
+2026-11-12T16:00:43+05:00 start e1aud_qv.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_audit --models local-qwen25vl-7b --no-eval
+2026-11-12T21:39:48+05:00 end   e1aud_qv.pass1 rc=0 (339 min)
+2026-11-12T21:39:48+05:00 start e1aud_qv: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_audit --models local-qwen25vl-7b --no-eval
+2026-11-12T21:39:51+05:00 end   e1aud_qv rc=0 (0 min)
+2026-11-12T21:39:51+05:00 start e1score_gen_qv: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_gen --models local-qwen25vl-7b
+2026-11-12T21:39:55+05:00 end   e1score_gen_qv rc=0 (0 min)
+2026-11-12T21:39:55+05:00 start e1score_rep_qv: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_repair --models local-qwen25vl-7b
+2026-11-12T21:39:58+05:00 end   e1score_rep_qv rc=0 (0 min)
+2026-11-12T21:39:58+05:00 start e1score_aud_qv: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_audit --models local-qwen25vl-7b
+2026-11-12T21:40:19+05:00 end   e1score_aud_qv rc=0 (0 min)
+2026-11-12T21:40:19+05:00 milestone: E1 for Qwen2.5-VL 7B
+2026-11-12T21:40:22+05:00 committed: E1 for Qwen2.5-VL 7B
+2026-11-12T21:40:25+05:00 pushed to origin/local-run-2026-11
+2026-11-12T21:40:25+05:00 start check_local-qwen25vl-7b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.check_keys --models local-qwen25vl-7b
+2026-11-12T21:40:28+05:00 end   check_local-qwen25vl-7b rc=0 (0 min)
+2026-11-12T21:40:28+05:00 start e3gen_local-qwen25vl-7b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_generate --models local-qwen25vl-7b
+2026-11-12T21:49:11+05:00 end   e3gen_local-qwen25vl-7b.pass1 rc=0 (8 min)
+2026-11-12T21:49:11+05:00 start e3gen_local-qwen25vl-7b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_generate --models local-qwen25vl-7b
+2026-11-12T21:57:52+05:00 end   e3gen_local-qwen25vl-7b rc=0 (8 min)
+2026-11-12T21:57:53+05:00 start e3judge_local-qwen25vl-7b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-qwen25vl-7b --procedures pointwise,known,blv_pairs
+2026-11-13T00:31:40+05:00 end   e3judge_local-qwen25vl-7b.pass1 rc=0 (153 min)
+2026-11-13T00:31:40+05:00 start e3judge_local-qwen25vl-7b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-qwen25vl-7b --procedures pointwise,known,blv_pairs
+2026-11-13T03:05:25+05:00 end   e3judge_local-qwen25vl-7b rc=0 (153 min)
+2026-11-13T03:05:25+05:00 server: start local-gemma3-4b
+2026-11-13T03:05:42+05:00 start check_local-gemma3-4b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.check_keys --models local-gemma3-4b
+2026-11-13T03:05:45+05:00 end   check_local-gemma3-4b rc=0 (0 min)
+2026-11-13T03:05:45+05:00 start e3gen_local-gemma3-4b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_generate --models local-gemma3-4b
+2026-11-13T03:14:15+05:00 end   e3gen_local-gemma3-4b.pass1 rc=0 (8 min)
+2026-11-13T03:14:15+05:00 start e3gen_local-gemma3-4b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_generate --models local-gemma3-4b
+2026-11-13T03:14:17+05:00 end   e3gen_local-gemma3-4b rc=0 (0 min)
+2026-11-13T03:14:17+05:00 start e3judge_local-gemma3-4b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-gemma3-4b --procedures pointwise,known,blv_pairs
+2026-11-13T05:18:03+05:00 end   e3judge_local-gemma3-4b.pass1 rc=0 (123 min)
+2026-11-13T05:18:03+05:00 start e3judge_local-gemma3-4b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-gemma3-4b --procedures pointwise,known,blv_pairs
+2026-11-13T05:18:07+05:00 end   e3judge_local-gemma3-4b rc=0 (0 min)
+2026-11-13T05:18:07+05:00 server: start local-ministral3-8b
+2026-11-13T05:18:22+05:00 start check_local-ministral3-8b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.check_keys --models local-ministral3-8b
+2026-11-13T05:18:24+05:00 end   check_local-ministral3-8b rc=0 (0 min)
+2026-11-13T05:18:24+05:00 start e3gen_local-ministral3-8b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_generate --models local-ministral3-8b
+2026-11-13T05:29:33+05:00 end   e3gen_local-ministral3-8b.pass1 rc=0 (11 min)
+2026-11-13T05:29:33+05:00 start e3gen_local-ministral3-8b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_generate --models local-ministral3-8b
+2026-11-13T05:29:35+05:00 end   e3gen_local-ministral3-8b rc=0 (0 min)
+2026-11-13T05:29:35+05:00 start e3judge_local-ministral3-8b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-ministral3-8b --procedures pointwise,known,blv_pairs
+2026-11-13T22:34:58+05:00 operator: the E3 steps for local-qwen25vl-7b had run against the text-only E1 server (same alias; 30,648 attempts failed with HTTP 500 'image input is not supported', none cached). Their .done markers were removed; run_local.sh now records the loaded profile (.loaded) and checks image input live before E3. The steps re-run.
+2026-11-13T22:35:11+05:00 pipeline start (pid 18541) on branch local-run-2026-11 at 91f1775
+2026-11-13T22:35:11+05:00 server: start local-qwen25vl-7b
+2026-11-13T22:35:59+05:00 start check_local-qwen25vl-7b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.check_keys --models local-qwen25vl-7b
+2026-11-13T22:36:04+05:00 end   check_local-qwen25vl-7b rc=0 (0 min)
+2026-11-13T22:36:04+05:00 start e3gen_local-qwen25vl-7b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_generate --models local-qwen25vl-7b
+2026-11-13T22:42:31+05:00 end   e3gen_local-qwen25vl-7b.pass1 rc=0 (6 min)
+2026-11-13T22:42:31+05:00 start e3gen_local-qwen25vl-7b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_generate --models local-qwen25vl-7b
+2026-11-13T22:42:33+05:00 end   e3gen_local-qwen25vl-7b rc=0 (0 min)
+2026-11-13T22:42:33+05:00 start e3judge_local-qwen25vl-7b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-qwen25vl-7b --procedures pointwise,known,blv_pairs
+2026-11-13T22:52:05+05:00 end   e3judge_local-qwen25vl-7b.pass1 rc=143 (9 min)
+    "blv_pairs"
+  ],
+  "pointwise": 272,
+  "known": {
+    "judgments": 2116,
+    "pairs": 1058,
+    "not_applicable": {
+      "truncate": 30
+    }
+  },
+  "blv_pairs": {
+    "pairs": 23,
+    "judgments": 46
+  }
+}
+2026-11-13T22:52:05+05:00 start e3judge_local-qwen25vl-7b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-qwen25vl-7b --procedures pointwise,known,blv_pairs
+2026-11-13T23:04:55+05:00 operator: Qwen2.5-VL 7B vision encoder ran out of GPU memory mid-run (vk ErrorOutOfDeviceMemory at 22:45, then every image request failed while /health stayed ok); pipeline stopped at 22:52 before any step was marked done. run_local.sh now warms the vision encoder up after launch, restarts a server whose log shows a vision-encoder failure, and marks a step done only when its pass leaves no failed request (local/step_errors.py).
+2026-11-13T23:04:55+05:00 pipeline start (pid 49859) on branch local-run-2026-11 at 91f1775
+2026-11-13T23:04:55+05:00 server: start local-qwen25vl-7b
+2026-11-13T23:06:15+05:00 start e3judge_local-qwen25vl-7b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-qwen25vl-7b --procedures pointwise,known,blv_pairs
+2026-11-13T23:14:50+05:00 operator: machine rebooted at 23:11:46 (clean systemd reboot) during e3judge_local-qwen25vl-7b.pass1; resuming from the cache.
+2026-11-13T23:14:50+05:00 pipeline start (pid 6429) on branch local-run-2026-11 at 91f1775
+2026-11-13T23:14:50+05:00 server: start local-qwen25vl-7b
+2026-11-13T23:16:19+05:00 start e3judge_local-qwen25vl-7b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-qwen25vl-7b --procedures pointwise,known,blv_pairs
+2026-11-13T23:32:45+05:00 end   e3judge_local-qwen25vl-7b.pass1 rc=0 (16 min); step_errors since 2026-11-13T18:16:19: 2268 requests, 0 failed
+2026-11-13T23:32:45+05:00 server: start local-ministral3-8b
+2026-11-13T23:33:43+05:00 start e3judge_local-ministral3-8b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-ministral3-8b --procedures pointwise,known,blv_pairs
+2026-11-14T00:15:22+05:00 end   e3judge_local-ministral3-8b.pass1 rc=143 (41 min); step_errors since 2026-11-13T18:33:43: 355 requests, 0 failed
+2026-11-14T00:16:02+05:00 operator: pipeline restarted from an updated run_local.sh (E2 pilot gate, extra_values at milestones) and harness fixes from the code review (E2 window-full rule, tool-call replay, --no-eval score files, self-assessment parsing, grouped leakage folds; DEVIATIONS.md 2026-11-14).
+2026-11-14T00:16:02+05:00 pipeline start (pid 60911) on branch local-run-2026-11 at 91f1775
+2026-11-14T00:16:02+05:00 server: start local-ministral3-8b
+2026-11-14T00:16:22+05:00 start e3judge_local-ministral3-8b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-ministral3-8b --procedures pointwise,known,blv_pairs

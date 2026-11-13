@@ -23,14 +23,19 @@ from .providers.base import AttemptError, Outcome
 from .cache import _normalise
 
 ADAPTERS = {"anthropic": anthropic_adapter, "openai": openai_adapter, "google": gemini_adapter,
-            "deepseek": chat_adapter, "openrouter": chat_adapter, "local": chat_adapter}
+            "deepseek": chat_adapter, "openrouter": chat_adapter, "local": chat_adapter,
+            "nvidia": chat_adapter, "mistral": chat_adapter}
 # A self-hosted server (Ollama/vLLM) runs one model on one GPU, so requests are serialised.
-CONCURRENCY = {"anthropic": 8, "openai": 8, "google": 8, "deepseek": 6, "openrouter": 4, "local": 1}
+# Free hosted tiers allow few requests per minute (NVIDIA ~40 RPM per key, Mistral free ~1 RPS).
+CONCURRENCY = {"anthropic": 8, "openai": 8, "google": 8, "deepseek": 6, "openrouter": 4, "local": 1,
+               "nvidia": 2, "mistral": 1}
+PRICE_KEYS = ("input", "output", "cache_read", "cache_write", "cache_write_5m")
 _SEMAPHORES = {p: threading.BoundedSemaphore(n) for p, n in CONCURRENCY.items()}
 MAX_RETRIES = 5
 DEFAULT_MAX_TOKENS = 64_000
 CONTEXT_RE = re.compile(r"prompt is too long|context[_ ]length|maximum context|context window|"
-                        r"exceeds the maximum number of tokens|too many tokens|input is too long", re.I)
+                        r"exceeds the maximum number of tokens|too many tokens|input is too long|"
+                        r"exceeds the available context size", re.I)   # last: llama.cpp server (HTTP 400)
 
 
 class ModelUnavailable(RuntimeError):
@@ -87,6 +92,13 @@ def _check_available(m: dict) -> None:
     for name, card in budget.price_cards(m):
         if not card or card.get("input") is None or card.get("output") is None:
             raise budget.PriceMissing(f"{m['key']}: {name} missing in models.yaml; fill it in before calling")
+    # budget.yaml free_only: refuse every model with a nonzero price (no paid call can be made).
+    if config.budget_config().get("free_only"):
+        paid = [name for name, card in budget.price_cards(m)
+                if any(float(card.get(k) or 0) > 0 for k in PRICE_KEYS)]
+        if paid:
+            raise ModelUnavailable(f"{m['key']}: has a nonzero price ({', '.join(paid)}) and budget.yaml "
+                                   "sets free_only: true")
 
 
 class LLM:

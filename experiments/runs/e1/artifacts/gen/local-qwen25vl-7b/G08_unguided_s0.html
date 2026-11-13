@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rotating Announcements</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+  }
+  .announcements {
+    width: 80%;
+    max-width: 600px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  .slide {
+    display: none;
+    text-align: center;
+    padding: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+  .slide.active {
+    display: block;
+  }
+  .controls {
+    display: flex;
+    justify-content: space-around;
+    margin: 10px 0;
+  }
+  .controls button {
+    padding: 10px;
+    border: none;
+    background-color: #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .controls button:hover {
+    background-color: #ccc;
+  }
+</style>
+<script>
+  let slideIndex = 0;
+  const slides = document.querySelectorAll('.slide');
+  const controls = document.querySelector('.controls');
+
+  function showSlide(index) {
+    slides.forEach(slide => slide.classList.remove('active'));
+    slides[index].classList.add('active');
+  }
+
+  function nextSlide() {
+    slideIndex++;
+    if (slideIndex >= slides.length) slideIndex = 0;
+    showSlide(slideIndex);
+  }
+
+  function prevSlide() {
+    slideIndex--;
+    if (slideIndex < 0) slideIndex = slides.length - 1;
+    showSlide(slideIndex);
+  }
+
+  function startAutoSlide() {
+    setInterval(nextSlide, 5000);
+  }
+
+  startAutoSlide();
+
+  controls.addEventListener('click', function(event) {
+    if (event.target.tagName === 'BUTTON') {
+      if (event.target.textContent === 'Previous') prevSlide();
+      else nextSlide();
+    }
+  });
+</script>
+</head>
+<body>
+  <div class="announcements">
+    <div class="slide active">Flu vaccinations are now available</div>
+    <div class="slide">New evening hours at Riverside</div>
+    <div class="slide">Download the CityCare app</div>
+    <div class="controls">
+      <button>Previous</button>
+      <button>Next</button>
+    </div>
+  </div>
+</body>
+</html>

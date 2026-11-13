@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referral Letter Upload</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  .upload-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .upload-area .file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .upload-area .file-list .file-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  .upload-area .file-list .file-item .remove-button {
+    cursor: pointer;
+    font-size: 1.5em;
+    color: #ff0000;
+  }
+  .upload-area .file-list .file-item .remove-button:hover {
+    color: #ff4d4d;
+  }
+</style>
+<script>
+  function handleFileUpload(event) {
+    const files = event.target.files;
+    if (files.length > 0) {
+      const fileItem = document.createElement('div');
+      fileItem.classList.add('file-item');
+      fileItem.innerHTML = `
+        <span>${files[0].name}</span>
+        <span>${files[0].size / 1024} KB</span>
+        <button class="remove-button">x</button>
+      `;
+      fileItem.querySelector('.remove-button').addEventListener('click', () => {
+        fileItem.remove();
+      });
+      document.querySelector('.file-list').appendChild(fileItem);
+    }
+  }
+</script>
+</head>
+<body>
+  <div class="upload-area">
+    <input type="file" multiple onchange="handleFileUpload(event)" />
+    <div class="file-list"></div>
+  </div>
+</body>
+</html>

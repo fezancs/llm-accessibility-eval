@@ -9,6 +9,7 @@ Interpretations:
 - A composite dimension (S2, S6) is measured only when both of its parts are.
 - CIs for composites combine the replicate arrays of their parts; parts from different
   experiments were resampled independently, which is correct for independent experiments.
+  A composite of a part without a CI (fewer than 2 clusters, bootstrap.no_ci) has no CI.
 - CCS_partial = the same geometric mean over the dimensions measured for a model (used by the
   research and edge rules of SPEC 9.1). Rank stability: Kendall tau-b between the CCS ranking
   and (a) the arithmetic-mean ranking, (b) each leave-one-dimension-out ranking.
@@ -26,7 +27,7 @@ import itertools
 import numpy as np
 from scipy import stats
 
-from .bootstrap import Est
+from .bootstrap import Est, no_ci
 from .loaders import is_open, total_params_b
 
 EPS = 0.01
@@ -38,7 +39,8 @@ def _combine(parts: list[Est], fn, b: int) -> Est:
         return Est(None, note="a component is not measured")
     est = fn(*[p.est for p in parts])
     reps = fn(*[p.reps_or_point(b) for p in parts])
-    return Est.from_reps(est, reps, n=min(p.n for p in parts))
+    out = Est.from_reps(est, reps, n=min(p.n for p in parts))
+    return no_ci(out, 0, "a component has no CI") if any(p.ci_withheld for p in parts) else out
 
 
 def dimensions(gen: dict, rep: dict, aud: dict, dc: dict, s4: dict, press: dict, b: int) -> dict[str, dict[str, Est]]:
@@ -71,6 +73,8 @@ def ccs(dims: dict[str, dict[str, Est]], b: int) -> dict[str, dict]:
         if len(measured) == 6:
             res["ccs"] = Est.from_reps(_geo([d[k].est for k in DIMS]),
                                        _geo([d[k].reps_or_point(b) for k in DIMS]), n=min(d[k].n for k in DIMS))
+            if any(d[k].ci_withheld for k in DIMS):
+                no_ci(res["ccs"], 0, "a component has no CI")
             res["arith"] = float(np.mean([d[k].est for k in DIMS]))
         else:
             res["ccs"] = Est(None, note=f"{6 - len(measured)} dimension(s) not measured")

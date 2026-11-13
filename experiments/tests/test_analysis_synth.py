@@ -9,6 +9,7 @@ import pathlib
 import shutil
 
 import numpy as np
+import yaml
 from scipy.special import expit
 
 EXPERIMENTS = pathlib.Path(__file__).resolve().parent.parent
@@ -37,6 +38,11 @@ def build(root: pathlib.Path, seed: int = 0, n_images: int = 30) -> pathlib.Path
     rng = np.random.default_rng(seed)
     (root / "config").mkdir(parents=True, exist_ok=True)
     shutil.copy(EXPERIMENTS / "config" / "models.yaml", root / "config" / "models.yaml")
+    # The synthetic judgments come from the cloud panel, whatever panel the live config uses
+    # (a local run switches models.yaml to the local judges).
+    cfg = yaml.safe_load((root / "config" / "models.yaml").read_text(encoding="utf-8"))
+    cfg["judges"] = {FAM[j]: j for j in JUDGES}
+    (root / "config" / "models.yaml").write_text(yaml.safe_dump(cfg, sort_keys=False), encoding="utf-8")
     skill = {m: 0.5 + 0.4 * i / len(E1) for i, m in enumerate(E1)}
 
     # ---------------- E1-Gen

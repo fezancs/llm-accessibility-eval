@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results for "flu"</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+        .search-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .search-result {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .search-result:hover {
+            background-color: #e0e0e0;
+        }
+        .search-result .title {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .search-result .summary {
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination a {
+            margin: 0 5px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            text-decoration: none;
+            color: #333;
+        }
+        .pagination a.active {
+            background-color: #ddd;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Search Results for "flu"</h1>
+    <div class="search-results">
+        <div class="search-result">
+            <a href="https://www.cdc.gov/flu/index.html" class="title">Centers for Disease Control and Prevention</a>
+            <div class="summary">Learn about flu symptoms, prevention, and treatment.</div>
+        </div>
+        <div class="search-result">
+            <a href="https://www.webmd.com/cold-flu" class="title">WebMD</a>
+            <div class="summary">Find information on flu symptoms, causes, and treatment options.</div>
+        </div>
+        <div class="search-result">
+            <a href="https://www.healthline.com/health/flu" class="title">Healthline</a>
+            <div class="summary">Explore flu symptoms, prevention, and treatment tips.</div>
+        </div>
+        <div class="search-result">
+            <a href="https://www.healthline.com/health/flu/flu-symptoms" class="title">Healthline</a>
+            <div class="summary">Discover flu symptoms and how to recognize them.</div>
+        </div>
+        <div class="search-result">
+            <a href="https://www.healthline.com/health/flu/flu-prevention" class="title">Healthline</a>
+            <div class="summary">Learn about flu prevention methods and tips.</div>
+        </div>
+        <div class="search-result">
+            <a href="https://www.healthline.com/health/flu/flu-treatment" class="title">Healthline</a>
+            <div class="summary">Find out about flu treatment options and when to seek medical help.</div>
+        </div>
+        <div class="search-result">
+            <a href="https://www.healthline.com/health/flu/flu-vaccine" class="title">Healthline</a>
+            <div class="summary">Get information on flu vaccines and their effectiveness.</div>
+        </div>
+        <div class="search-result">
+            <a href="https://www.healthline.com/health/flu/flu-season" class="title">Healthline</a>
+            <div class="summary">Learn about flu season, when it typically occurs, and its duration.</div>
+        </div>
+        <div class="search-result">
+            <a href="https://www.healthline.com/health/flu/flu-what-to-expect" class="title">Healthline</a>
+            <div class="summary">Discover what to expect when you have the flu.</div>
+        </div>
+        <div class="search-result">
+            <a href="https://www.healthline.com/health/flu/flu-what-to-expect" class="title">Healthline</a>
+            <div class="summary">Find out what to expect when you have the flu.</div>
+        </div>
+    </div>
+    <div class="pagination">
+        <a href="?page=1">1</a>
+        <a href="?page=2">2</a>
+        <a href="?page=3">3</a>
+        <a href="?page=4">4</a>
+        <a href="?page=5">5</a>
+        <a href="?page=1" class="active">1</a>
+    </div>
+</body>
+</html>

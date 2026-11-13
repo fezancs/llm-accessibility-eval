@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Settings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .settings-panel {
+            width: 300px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .toggle {
+            margin-bottom: 10px;
+        }
+        .large-text-mode {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-panel">
+        <h2>Notification Settings</h2>
+        <div class="toggle">
+            <label>
+                <input type="checkbox" id="sms-reminders">
+                SMS Reminders
+            </label>
+        </div>
+        <div class="toggle">
+            <label>
+                <input type="checkbox" id="email-reminders">
+                Email Reminders
+            </label>
+        </div>
+        <div class="toggle">
+            <label>
+                <input type="checkbox" id="large-text-mode">
+                Large Text Mode
+            </label>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('large-text-mode').addEventListener('change', function() {
+            if (this.checked) {
+                document.body.classList.add('large-text-mode');
+            } else {
+                document.body.classList.remove('large-text-mode');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -28,7 +28,8 @@ import re
 from . import config, llm
 
 KEY_ENV = {"anthropic": "ANTHROPIC_API_KEY", "openai": "OPENAI_API_KEY", "google": "GOOGLE_API_KEY",
-           "deepseek": "DEEPSEEK_API_KEY", "openrouter": "OPENROUTER_API_KEY"}
+           "deepseek": "DEEPSEEK_API_KEY", "openrouter": "OPENROUTER_API_KEY",
+           "local": None}             # self-hosted server (Ollama / llama.cpp): no key needed
 TOOLS = json.loads(config.prompt("e2_tools.json"))
 IMAGE = config.DATA / "corpus" / "base" / "images" / "cc-reception.png"
 SYSTEM = "You are a test agent."
@@ -71,8 +72,9 @@ def injected_history() -> list[dict]:
 def check_model(client: llm.LLM, key: str) -> dict:
     m = config.model(key)
     out = {"key": key, "provider": m["provider"]}
-    if not os.environ.get(KEY_ENV[m["provider"]]):
-        return {**out, "skipped": f"{KEY_ENV[m['provider']]} not set"}
+    env = KEY_ENV[m["provider"]]
+    if env and not os.environ.get(env):
+        return {**out, "skipped": f"{env} not set"}
     out["text"] = _check(lambda: client.call(key, [llm.user("Reply with the single word OK.")],
                                              item_id=f"setup/{key}/text", max_tokens=2048))
     if "e3_judge" in m["roles"]:

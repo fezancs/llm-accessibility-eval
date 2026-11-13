@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rotating Announcements</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+  }
+  .announcements {
+    width: 80%;
+    max-width: 800px;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  .slide {
+    display: none;
+    text-align: center;
+    padding: 20px;
+    font-size: 1.5em;
+    color: #333;
+  }
+  .slide.active {
+    display: block;
+  }
+  .controls {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+  }
+  .controls button {
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .controls button:hover {
+    background-color: #0056b3;
+  }
+</style>
+</head>
+<body>
+<div class="announcements">
+  <div class="slide active">Flu vaccinations are now available</div>
+  <div class="slide">New evening hours at Riverside</div>
+  <div class="slide">Download the CityCare app</div>
+  <div class="controls">
+    <button id="prev">Previous</button>
+    <button id="next">Next</button>
+  </div>
+</div>
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let currentSlide = 0;
+  const slidesLength = slides.length;
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.style.display = i === index ? 'block' : 'none';
+    });
+  }
+
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % slidesLength;
+    showSlide(currentSlide);
+  }
+
+  function prevSlide() {
+    currentSlide = (currentSlide - 1 + slidesLength) % slidesLength;
+    showSlide(currentSlide);
+  }
+
+  document.getElementById('next').addEventListener('click', nextSlide);
+  document.getElementById('prev').addEventListener('click', prevSlide);
+
+  setInterval(nextSlide, 5000);
+</script>
+</body>
+</html>

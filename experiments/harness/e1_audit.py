@@ -157,7 +157,9 @@ def main(argv=None):
             rec.update(ev)
             rec.setdefault("n_reported", len(rec.get("reports", [])))
     records.sort(key=lambda r: (r["model_key"], r["page_id"]))
-    common.write_jsonl(config.RUNS / exp / "scores" / "audit.jsonl", records)
+    # An API-only pass (--no-eval) must not replace the scored file (DEVIATIONS.md 2026-11-14).
+    common.write_jsonl(config.RUNS / exp / "scores" / ("audit.noeval.jsonl" if args.no_eval else "audit.jsonl"),
+                       records)
     print(f"wrote {len(records)} records", flush=True)
 
 

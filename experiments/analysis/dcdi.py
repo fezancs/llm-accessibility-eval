@@ -16,6 +16,7 @@ Interpretations:
   T_reg rows (Lambda = input tokens of the step's first in-session call), cluster-robust SEs
   by run; the CI uses t with G - 1 degrees of freedom (G = number of runs).
 - S_C3 = mean in-session adherence over T_reg; S_C5 = 1 - clip(DCDI, 0, 1).
+- A statistic resting on a single run x step cluster has no CI (bootstrap.no_ci).
 - The drift figure uses the same T_reg rows, so the gap between the lines is what DCDI sums.
 """
 from __future__ import annotations
@@ -25,7 +26,7 @@ import pandas as pd
 import statsmodels.formula.api as smf
 from scipy import stats
 
-from .bootstrap import B_DEFAULT, SEED, Est, cluster_sums, counts_matrix, ratio_reps
+from .bootstrap import B_DEFAULT, SEED, Est, cluster_sums, counts_matrix, no_ci, ratio_reps
 
 LAMBDA0 = 8192
 
@@ -120,6 +121,8 @@ def dcdi(pairs: pd.DataFrame, b: int = B_DEFAULT, seed: int = SEED) -> dict:
         s3_reps = ratio_reps(counts, s["a_s"], s["one"])
         e_s3 = Est.from_reps(s["a_s"].sum() / s["one"].sum(), s3_reps, n=len(d))
         e_s5 = Est.from_reps(1 - min(max(est, 0.0), 1.0), 1 - np.clip(reps, 0.0, 1.0), n=len(d))
+        for e in (e_dcdi, e_s3, e_s5):               # one run x step cluster: no CI
+            no_ci(e, d["key"].nunique())
         out[m] = {"dcdi": e_dcdi, "s3": e_s3, "s5": e_s5,
                   "fresh_mean": float(d["a_f"].mean()), "session_mean": float(d["a_s"].mean())}
     return {"models": out, "keys": keys, "counts": counts}
@@ -145,7 +148,8 @@ def decomposition(pairs: pd.DataFrame, b: int = B_DEFAULT, seed: int = SEED) -> 
             continue
         res = {}
         for part in ("tot", "len", "hist"):
-            res[part] = Est.from_reps(s[part].sum() / den, ratio_reps(counts, s[part], s["a_f"]), n=len(d))
+            res[part] = no_ci(Est.from_reps(s[part].sum() / den, ratio_reps(counts, s[part], s["a_f"]), n=len(d)),
+                              d["key"].nunique())
         out[m] = res
     return {"models": out}
 

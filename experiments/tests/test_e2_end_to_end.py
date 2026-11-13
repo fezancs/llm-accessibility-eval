@@ -260,6 +260,10 @@ def test_e2_end_to_end_and_resume(monkeypatch, tmp_path, capsys):
 
 
 def test_plan_profiles(monkeypatch):
+    # The profiles under test are the paid cloud ones; the study's free_only switch would drop them.
+    from harness import config
+    budget_cfg = {**config.budget_config(), "free_only": False}
+    monkeypatch.setattr(config, "budget_config", lambda: budget_cfg)
     args = e2_run.parse_args(["--pilot", "--models", "fake-x"])
     p = e2_run.plan(args)
     assert p["exp"] == "pilot" and p["runs"] == 1 and p["positions"] == 6 and p["padded"] == [] and p["seeds"] == [101]
@@ -274,7 +278,6 @@ def test_plan_profiles(monkeypatch):
     assert "gemini-4-argon" in p["models"]                      # verified in models.yaml (2026-10-28)
     assert "claude-opus-5-5" in p["models"] and "deepseek-v4-pro" in p["models"]
     # Argon is run only if available: marked unavailable, the full profile skips it.
-    from harness import config
     reg = config.models_config()
     patched = {**reg, "models": [{**m, "available": False} if m["key"] == "gemini-4-argon" else m
                                  for m in reg["models"]]}

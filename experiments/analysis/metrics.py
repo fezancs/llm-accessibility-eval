@@ -11,13 +11,16 @@ Interpretations (most literal reading of SPEC + harness/SCHEMAS.md):
   run x step (perm_seed:step_id) for E2. All models share the cluster resamples, so
   between-model differences are paired.
 - S_audit is micro-F1 over all faults: 2TP / (2TP + FP + FN) from per-page counts.
+- E2 statistics resting on a single run x step cluster have no CI (bootstrap.no_ci).
+- Duplicate E1 pages (byte-identical variants, DEVIATIONS.md 2026-11-14) stay in the main
+  estimates; `e1_distinct` finds them so run_all can report a sensitivity analysis without them.
 """
 from __future__ import annotations
 
 import numpy as np
 import pandas as pd
 
-from .bootstrap import B_DEFAULT, SEED, Est, counts_matrix, ratio_est
+from .bootstrap import B_DEFAULT, SEED, Est, counts_matrix, no_ci, ratio_est
 
 
 def _bool(s: pd.Series) -> pd.Series:
@@ -193,6 +196,29 @@ def e1_audit(aud: pd.DataFrame, b: int = B_DEFAULT, seed: int = SEED) -> dict:
     return {"models": out, "pages": pages, "counts": counts}
 
 
+def e1_distinct(rep: pd.DataFrame, aud: pd.DataFrame, content: dict[str, str]) -> dict:
+    """Duplicate E1-Repair/Audit pages and the distinct page and fault counts.
+
+    `content` maps page_id to a hash of its variant HTML. In page_id order, a page whose hash
+    equals an earlier page's is a duplicate; a page without a hash is taken as distinct.
+    Distinct faults = injected faults summed over the distinct pages."""
+    frames = [df[["page_id", "faults"]] for df in (rep, aud) if not df.empty and "faults" in df]
+    if not frames:
+        return {}
+    pages = pd.concat(frames).drop_duplicates("page_id").sort_values("page_id")
+    seen, dup = set(), []
+    for p in pages["page_id"]:
+        h = content.get(p)
+        if h is None:
+            continue
+        if h in seen:
+            dup.append(p)
+        seen.add(h)
+    kept = pages[~pages["page_id"].isin(dup)]
+    return {"duplicates": dup, "pages": int(len(pages)), "distinct_pages": int(len(kept)),
+            "distinct_faults": int(sum(len(f) if isinstance(f, list) else 0 for f in kept["faults"]))}
+
+
 # =========================================================================== E2 summaries
 
 def step_key(df: pd.DataFrame) -> pd.Series:
@@ -219,8 +245,10 @@ def e2_pressure(steps: pd.DataFrame, b: int = B_DEFAULT, seed: int = SEED) -> di
         per_step = {}
         for sid, ds in ps.groupby("step_id"):
             per_step[sid] = float(ds["ps"].mean())
-        out[m] = {"pressure": ratio_est(ps, "key", keys, "ps", "one", counts) if not ps.empty else Est(None),
-                  "intent_met": ratio_est(im, "key", keys, "im", "one", counts) if not im.empty else Est(None),
+        out[m] = {"pressure": no_ci(ratio_est(ps, "key", keys, "ps", "one", counts), ps["key"].nunique())
+                  if not ps.empty else Est(None),
+                  "intent_met": no_ci(ratio_est(im, "key", keys, "im", "one", counts), im["key"].nunique())
+                  if not im.empty else Est(None),
                   "per_step": per_step, "n": {"pressure_rows": len(ps), "intent_rows": len(im)}}
     return {"models": out, "keys": keys, "counts": counts}
 
@@ -244,7 +272,8 @@ def e2_sessions(sessions: pd.DataFrame, b: int = B_DEFAULT, seed: int = SEED) ->
         em = ea[ea["model_key"] == m] if not ea.empty else ea
         tc = _num(sm, "total_tool_calls").dropna()
         ce = int(_col(sm, "context_exhausted_at").notna().sum())
-        out[m] = {"end_regression": ratio_est(em, "key", keys, "fell", "one", counts) if not em.empty else Est(None),
+        out[m] = {"end_regression": no_ci(ratio_est(em, "key", keys, "fell", "one", counts), em["key"].nunique())
+                  if not em.empty else Est(None),
                   "tool_cycles_mean": float(tc.mean()) if len(tc) else None,
                   "tool_cycles_min": float(tc.min()) if len(tc) else None,
                   "tool_cycles_max": float(tc.max()) if len(tc) else None,

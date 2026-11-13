@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Clinic Opening Hours</title>
+<style>
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: center;
+}
+th {
+  cursor: pointer;
+}
+</style>
+<script>
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch;
+  table = document.getElementById("clinics");
+  switching = true;
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+    }
+  }
+}
+</script>
+</head>
+<body>
+<table id="clinics">
+  <tr>
+    <th onclick="sortTable(0)">Clinic Name</th>
+    <th>Monday</th>
+    <th>Tuesday</th>
+    <th>Wednesday</th>
+    <th>Thursday</th>
+    <th>Friday</th>
+    <th>Saturday</th>
+    <th>Sunday</th>
+  </tr>
+  <tr>
+    <td>Harbour</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+  </tr>
+  <tr>
+    <td>Northside</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+  </tr>
+  <tr>
+    <td>Old Town</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+  </tr>
+  <tr>
+    <td>Riverside</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+  </tr>
+  <tr>
+    <td>Hilltop</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+    <td>8:00 AM</td>
+  </tr>
+</table>
+</body>
+</html>

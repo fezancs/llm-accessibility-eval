@@ -106,3 +106,45 @@ def test_unmatched_padded_rows_are_excluded_and_counted():
     assert dec["len"].est == pytest.approx(0.1) and dec["hist"].est == pytest.approx(0.1)
     assert dcdi.drops(pairs)["m"]["padded_length_unmatched"] == 1
     assert dcdi.dcdi(pairs, b=50)["models"]["m"]["dcdi"].est == pytest.approx(0.2)   # DCDI itself unaffected
+
+
+def test_single_cluster_statistics_have_no_ci():
+    """One run, one T_reg step (one checkpoint): every replicate equals the estimate, so the
+    percentile 'CI' would be [est, est]. lo/hi are blanked, the replicates are kept."""
+    rs = [row("m", 0, 8, "R01", "regular", "fresh", 1.0), row("m", 0, 8, "R01", "regular", "padded", 0.9),
+          row("m", 0, 8, "R01", "regular", "session", 0.7)]
+    pairs = dcdi.paired(pd.DataFrame(rs))
+    out = dcdi.dcdi(pairs, b=50)["models"]["m"]
+    for k in ("dcdi", "s3", "s5"):
+        e = out[k]
+        assert e.ok and e.lo is None and e.hi is None and e.reps is not None and e.ci_withheld, k
+    assert out["dcdi"].est == pytest.approx(0.3)
+    dec = dcdi.decomposition(pairs, b=50)["models"]["m"]
+    assert all(dec[p].lo is None and dec[p].reps is not None for p in ("tot", "len", "hist"))
+    # two clusters: the CI is kept
+    rs2 = rs + [row("m", 0, 12, "R02", "regular", "fresh", 1.0), row("m", 0, 12, "R02", "regular", "session", 0.9)]
+    two = dcdi.dcdi(dcdi.paired(pd.DataFrame(rs2)), b=50)["models"]["m"]["dcdi"]
+    assert two.lo is not None and two.hi is not None
+
+
+def test_drift_figure_one_panel_at_column_width_without_zero_width_bands(tmp_path, monkeypatch):
+    import re
+
+    import matplotlib.axes
+
+    from analysis import figures
+    rs = []
+    for pos, sid in ((5, "R01"), (6, "R02"), (8, "R03")):
+        rs += [row("m", 0, pos, sid, "regular", "fresh", 1.0), row("m", 0, pos, sid, "regular", "session", 0.8)]
+    curves = dcdi.curves(dcdi.paired(pd.DataFrame(rs)), b=20)
+    fills = []
+    real = matplotlib.axes.Axes.fill_between
+    monkeypatch.setattr(matplotlib.axes.Axes, "fill_between", lambda self, *a, **k: fills.append(1) or real(self, *a, **k))
+    p = figures.drift(curves, {"m": "Model M"}, tmp_path)
+    box = re.search(rb"/MediaBox\s*\[\s*0 0 ([\d.]+) ([\d.]+)", p.read_bytes())
+    assert float(box.group(1)) == pytest.approx(figures.COL_W * 72, abs=0.5)     # 252 pt, not 515 pt
+    assert fills == []                                                           # one run: no bands
+    multi = {"m": curves["m"].assign(n=3), "k": curves["m"].assign(n=3)}
+    p = figures.drift(multi, {"m": "M", "k": "K"}, tmp_path)
+    box = re.search(rb"/MediaBox\s*\[\s*0 0 ([\d.]+) ([\d.]+)", p.read_bytes())
+    assert float(box.group(1)) == pytest.approx(figures.TEXT_W * 72, abs=0.5) and len(fills) == 4

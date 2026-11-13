@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results for "flu"</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .search-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .search-result {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination a {
+            margin: 0 5px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .pagination a.active {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-results">
+        <div class="search-result">
+            <a href="#">Symptoms of Flu</a>
+            <p>Learn about the common symptoms of the flu.</p>
+        </div>
+        <div class="search-result">
+            <a href="#">Preventing Flu</a>
+            <p>Discover ways to prevent the flu from spreading.</p>
+        </div>
+        <div class="search-result">
+            <a href="#">Flu Vaccination</a>
+            <p>Find out more about flu vaccinations and their importance.</p>
+        </div>
+        <div class="search-result">
+            <a href="#">Flu Season</a>
+            <p>Get information on when the flu season typically occurs.</p>
+        </div>
+        <div class="search-result">
+            <a href="#">Flu Treatment</a>
+            <p>Explore treatment options for flu.</p>
+        </div>
+        <div class="search-result">
+            <a href="#">Flu in Children</a>
+            <p>Learn about flu symptoms and treatment for children.</p>
+        </div>
+        <div class="search-result">
+            <a href="#">Flu in Seniors</a>
+            <p>Discover flu prevention and treatment for seniors.</p>
+        </div>
+        <div class="search-result">
+            <a href="#">Flu in Pregnant Women</a>
+            <p>Find out about flu risks and precautions for pregnant women.</p>
+        </div>
+        <div class="search-result">
+            <a href="#">Flu in Pets</a>
+            <p>Learn about flu in pets and how to prevent it.</p>
+        </div>
+        <div class="search-result">
+            <a href="#">Flu in Animals</a>
+            <p>Discover information on flu in animals.</p>
+        </div>
+    </div>
+    <div class="pagination">
+        <a href="?page=1" class="active">1</a>
+        <a href="?page=2">2</a>
+        <a href="?page=3">3</a>
+        <a href="?page=4">4</a>
+        <a href="?page=5">5</a>
+        <a href="?page=2">Previous</a>
+        <a href="?page=3">Next</a>
+    </div>
+</body>
+</html>

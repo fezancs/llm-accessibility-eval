@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notification Settings</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.settings-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.toggle label {
+  cursor: pointer;
+}
+.toggle input {
+  display: none;
+}
+.toggle input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  background-color: #fff;
+  transition: transform 0.2s ease;
+}
+.toggle input[type="checkbox"]:checked + span {
+  transform: translateX(20px);
+}
+.toggle span {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #007bff;
+  border-radius: 50%;
+}
+.toggle label {
+  font-size: 14px;
+  color: #333;
+}
+</style>
+</head>
+<body>
+<div class="settings-panel">
+  <div class="toggle">
+    <input type="checkbox" id="sms-reminders">
+    <label for="sms-reminders">SMS reminders</label>
+  </div>
+  <div class="toggle">
+    <input type="checkbox" id="email-reminders">
+    <label for="email-reminders">Email reminders</label>
+  </div>
+  <div class="toggle">
+    <input type="checkbox" id="large-text-mode">
+    <label for="large-text-mode">Large text mode</label>
+  </div>
+</div>
+<script>
+document.querySelectorAll('.toggle input[type="checkbox"]').forEach(toggle => {
+  toggle.addEventListener('change', () => {
+    const label = toggle.nextElementSibling;
+    if (toggle.checked) {
+      label.style.transform = 'translateX(20px)';
+    } else {
+      label.style.transform = 'translateX(0)';
+    }
+  });
+});
+</script>
+</body>
+</html>

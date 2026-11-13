@@ -44,7 +44,9 @@ def drift(curves: dict, names: dict, out_dir: pathlib.Path) -> pathlib.Path | No
     """Small multiples: in-session (solid) vs fresh-control (dashed) adherence by position.
 
     Panels follow the registry order in `names` (models.yaml), so each vendor's larger and
-    smaller model sit side by side (H1)."""
+    smaller model sit side by side (H1). One panel is drawn at column width (the local-run paper
+    includes it at \\columnwidth), several at text width. Bootstrap bands are drawn only where a
+    position has more than one run (one run gives zero-width bands)."""
     rank = {m: i for i, m in enumerate(names)}
     models = sorted((m for m in curves if len(curves[m])), key=lambda m: (rank.get(m, len(rank)), m))
     if not models:
@@ -54,8 +56,9 @@ def drift(curves: dict, names: dict, out_dir: pathlib.Path) -> pathlib.Path | No
     rows = 1 if n <= 4 else 2
     lo = min(min(c["session_lo"].min(), c["fresh_lo"].min()) for c in curves.values() if len(c))
     ymin = max(0.0, math.floor((lo - 0.05) * 10) / 10)
+    width = COL_W if n == 1 else TEXT_W
     with plt.rc_context(RC):
-        fig, axes = plt.subplots(rows, cols, figsize=(TEXT_W, 1.55 * rows + 0.35), sharex=True, sharey=True,
+        fig, axes = plt.subplots(rows, cols, figsize=(width, 1.55 * rows + 0.35), sharex=True, sharey=True,
                                  squeeze=False)
         for i, ax in enumerate(axes.flat):
             if i >= n:
@@ -64,8 +67,9 @@ def drift(curves: dict, names: dict, out_dir: pathlib.Path) -> pathlib.Path | No
             m = models[i]
             c = curves[m]
             x = c["position"].to_numpy()
-            ax.fill_between(x, c["fresh_lo"], c["fresh_hi"], color=VERMILLION, alpha=0.12, linewidth=0)
-            ax.fill_between(x, c["session_lo"], c["session_hi"], color=BLUE, alpha=0.12, linewidth=0)
+            if (c["n"] > 1).any():
+                ax.fill_between(x, c["fresh_lo"], c["fresh_hi"], color=VERMILLION, alpha=0.12, linewidth=0)
+                ax.fill_between(x, c["session_lo"], c["session_hi"], color=BLUE, alpha=0.12, linewidth=0)
             ax.plot(x, c["fresh"], color=VERMILLION, linestyle=(0, (4, 2)), linewidth=1.2)
             ax.plot(x, c["session"], color=BLUE, linestyle="-", linewidth=1.2)
             ax.set_title(names.get(m, m), loc="left", pad=2)

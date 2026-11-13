@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CityCare Appointment Request</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-top: 0;
+    }
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    .error {
+      color: #d9534f;
+      font-size: 0.9em;
+      display: none;
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .checkbox-group label {
+      margin-right: 10px;
+    }
+    .checkbox-group input {
+      margin-right: 5px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 1em;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      margin-bottom: 10px;
+    }
+    .form-group label {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>CityCare Appointment Request</h2>
+    <form onsubmit="return validateForm(event)">
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" name="fullName" required />
+        <span class="error" id="fullNameError">Please enter your full name.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="dob">Date of Birth</label>
+        <input type="date" id="dob" name="dob" required />
+        <span class="error" id="dobError">Please enter your date of birth.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required />
+        <span class="error" id="emailError">Please enter a valid email address.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="e.g., 123-456-7890" />
+      </div>
+
+      <div class="form-group">
+        <label for="clinic">Preferred Clinic</label>
+        <select id="clinic" name="clinic" required>
+          <option value="">Select a clinic</option>
+          <option value="Northside">Northside</option>
+          <option value="Riverside">Riverside</option>
+          <option value="Old Town">Old Town</option>
+          <option value="Harbour">Harbour</option>
+        </select>
+        <span class="error" id="clinicError">Please select a clinic.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="consultationType">Consultation Type</label>
+        <div class="checkbox-group">
+          <input type="radio" id="inPerson" name="consultationType" value="in person" required />
+          <label for="inPerson">In Person</label>
+        </div>
+        <div class="checkbox-group">
+          <input type="radio" id="videoCall" name="consultationType" value="video call" />
+          <label for="videoCall">Video Call</label>
+        </div>
+        <div class="checkbox-group">
+          <input type="radio" id="phoneCall" name="consultationType" value="phone call" />
+          <label for="phoneCall">Phone Call</label>
+        </div>
+        <span class="error" id="consultationTypeError">Please select a consultation type.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Notes</label>
+        <textarea id="notes" name="notes" rows="4" placeholder="Additional information..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <div class="checkbox-group">
+          <input type="checkbox" id="privacy" name="privacy" required />
+          <label for="privacy">I agree to the privacy notice.</label>
+        </div>
+        <span class="error" id="privacyError">You must agree to the privacy notice.</span>
+      </div>
+
+      <button type="submit">Request Appointment</button>
+    </form>
+  </div>
+
+  <script>
+    function validateForm(event) {
+      event.preventDefault(); // Prevent form submission
+      let isValid = true;
+
+      // Reset error messages
+      document.querySelectorAll('.error').forEach(error => {
+        error.style.display = 'none';
+      });
+
+      // Validate Full Name
+      const fullName = document.getElementById('fullName').value.trim();
+      if (!fullName) {
+        document.getElementById('fullNameError').style.display = 'block';
+        isValid = false;
+      }
+
+      // Validate Date of Birth
+      const dob = document.getElementById('dob').value.trim();
+      if (!dob) {
+        document.getElementById('dobError').style.display = 'block';
+        isValid = false;
+      }
+
+      // Validate Email
+      const email = document.getElementById('email').value.trim();
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !emailPattern.test(email)) {
+        document.getElementById('emailError').style.display = 'block';
+        isValid = false;
+      }
+
+      // Validate Clinic
+      const clinic = document.getElementById('clinic').value;
+      if (!clinic) {
+        document.getElementById('clinicError').style.display = 'block';
+        isValid = false;
+      }
+
+      // Validate Consultation Type
+      const consultationType = document.querySelector('input[name="consultationType"]:checked');
+      if (!consultationType) {
+        document.getElementById('consultationTypeError').style.display = 'block';
+        isValid = false;
+      }
+
+      // Validate Privacy Checkbox
+      const privacy = document.getElementById('privacy').checked;
+      if (!privacy) {
+        document.getElementById('privacyError').style.display = 'block';
+        isValid = false;
+      }
+
+      if (isValid) {
+        // Submit form or handle success
+        alert('Appointment requested successfully!');
+        // Uncomment the following line to actually submit the form
+        // event.target.submit();
+      }
+
+      return false; // Prevent form submission if not valid
+    }
+  </script>
+</body>
+</html>

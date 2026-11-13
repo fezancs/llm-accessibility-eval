@@ -34,9 +34,15 @@ Interpretations fixed here:
   available orders of 1[canonical candidate preferred], categories {0, 0.5, 1}.
 - Pointwise: CMBPE panel score = mean over judges of per-judge z-scores (within data set);
   naive panel = mean raw score; length-only = description length in characters.
-- Leakage check: pooled out-of-fold accuracy of a 5-fold (stratified, seeded) logistic
-  regression on character 3-5-gram TF-IDF features, with a Wilson 95% interval, against the
-  majority-class share.
+- Leakage check: pooled out-of-fold accuracy of a 5-fold (stratified, grouped by image,
+  seeded) logistic regression on character 3-5-gram TF-IDF features, with a Wilson 95%
+  interval, against the majority-class share. All texts of an image fall in the same fold: an
+  image's texts by the other families share its content words, so ungrouped folds push
+  predictions to a wrong family and bias accuracy below chance (DEVIATIONS.md 2026-11-14).
+  A text without an image_id is its own group.
+- E3c identification: theta (and so S_C4 and eta) is identified only if the generators are
+  connected through the non-recused comparisons; otherwise they are reported as not
+  identified rather than as the ridge's 0 (S_C4 = 0.5).
 """
 from __future__ import annotations
 
@@ -165,7 +171,13 @@ def e3c(gen_pairs: pd.DataFrame, models: dict, b: int = B_DEFAULT, seed: int = S
         return {}
     df = gen_pairs.rename(columns={"gen_first": "first", "gen_second": "second"}).copy()
     n_all = len(df)
+    ida, idb = ("id_first", "id_second") if "id_first" in df else ("first", "second")
+    lo_id = df[[ida, idb]].astype(str).min(axis=1)
+    hi_id = df[[ida, idb]].astype(str).max(axis=1)
+    n_pairs = int((df["image_id"].astype(str) + "|" + lo_id + "|" + hi_id).nunique())   # unordered, judged or not
     df = df[df["y"].notna()].copy()
+    if df.empty:                                     # every verdict missing: nothing to fit
+        return {}
     df["y"] = df["y"].astype(float)
     fam_of = {m: family(models, m) for m in set(df["first"]) | set(df["second"]) | set(df["judge"])}
     df["fam_j"] = df["judge"].map(fam_of)
@@ -174,6 +186,15 @@ def e3c(gen_pairs: pd.DataFrame, models: dict, b: int = B_DEFAULT, seed: int = S
     cands = sorted(set(df["first"]) | set(df["second"]))
     judges = sorted(df["judge"].unique())
     agg = df[~recuse].reset_index(drop=True)
+    # theta is identified only if the non-recused comparisons connect every generator; else a
+    # generator with no comparison would sit at the ridge's 0 (S_C4 = 0.5 in every replicate).
+    comp = {c: frozenset([c]) for c in cands}
+    for a, b2 in agg[["first", "second"]].drop_duplicates().itertuples(index=False):
+        merged = comp[a] | comp[b2]
+        for c in merged:
+            comp[c] = merged
+    connected = len(comp[cands[0]]) == len(cands)
+    NI = "not identified: generators not connected after recusal"
     d = design(agg, cands, judges, sd_len)
     beta, conv = logit_fit(d.X, d.y, d.pen)
     point = unpack(d, beta)
@@ -225,14 +246,18 @@ def e3c(gen_pairs: pd.DataFrame, models: dict, b: int = B_DEFAULT, seed: int = S
 
     out = {"converged": conv, "sd_len": sd_len, "n_judgments": n_all, "n_valid": int(len(df)),
            "n_recused": int(recuse.sum()), "n_aggregated": int(len(agg)), "n_images": len(images),
-           "theta": {c: Est.from_reps(point["theta"][c], theta_r[:, i], n=len(agg)) for i, c in enumerate(cands)},
-           "s4": {c: Est.from_reps(s4[c], s4_r[:, i], n=len(agg)) for i, c in enumerate(cands)},
+           "n_pairs": n_pairs, "connected": connected,
+           "theta": {c: (Est.from_reps(point["theta"][c], theta_r[:, i], n=len(agg)) if connected else Est(None, note=NI))
+                     for i, c in enumerate(cands)},
+           "s4": {c: (Est.from_reps(s4[c], s4_r[:, i], n=len(agg)) if connected else Est(None, note=NI))
+                  for i, c in enumerate(cands)},
            "delta": {j: Est.from_reps(point["delta"][j], delta_r[:, i], n=int((agg["judge"] == j).sum()))
                      for i, j in enumerate(judges)},
            "gamma": {j: Est.from_reps(point["gamma"][j], gamma_r[:, i], n=int((agg["judge"] == j).sum()))
                      for i, j in enumerate(judges)},
            "eta": {j: (Est.from_reps(eta_point[j], eta_r[j], n=int((df["judge"] == j).sum()))
-                       if eta_point[j] is not None else Est(None, note="no own-family candidates"))
+                       if eta_point[j] is not None and connected
+                       else Est(None, note="no own-family candidates" if connected else NI))
                    for j in judges},
            "missing_by_judge": {j: int(((gen_pairs["judge"] == j) & gen_pairs["y"].isna()).sum()) for j in judges},
            "first_pref_rate": {j: float(df.loc[df["judge"] == j, "y"].mean()) for j in judges},
@@ -487,7 +512,7 @@ def blv_pairs(bp: pd.DataFrame, items: pd.DataFrame, judges: list[str], biases: 
     r["len_second"] = np.where(a_first, lb, la)
     r["y"] = pd.to_numeric(r["y"], errors="coerce")
     if biases is None:
-        return {"note": "E3c unavailable: CMBPE not computed on BLV pairs",
+        return {"note": "E3c unavailable: CMBPE not computed on BLV pairs", "n_pairs": int(r["pair"].nunique()),
                 "accuracy": summarize_accuracy(accuracy_methods(r, judges, None, None, seed, "e3a"),
                                                [f"single:{j}" for j in judges] + ["naive"],
                                                sorted(r["image"].unique()), b, seed, "e3a")}
@@ -589,7 +614,7 @@ def pointwise(pw: pd.DataFrame, items: pd.DataFrame, judges: list[str], b: int =
 def leakage(generated: pd.DataFrame, models: dict, seed: int = SEED) -> dict:
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.linear_model import LogisticRegression
-    from sklearn.model_selection import StratifiedKFold
+    from sklearn.model_selection import StratifiedGroupKFold
     from sklearn.pipeline import make_pipeline
 
     if generated.empty:
@@ -600,14 +625,19 @@ def leakage(generated: pd.DataFrame, models: dict, seed: int = SEED) -> dict:
         return {}
     g["fam"] = g["generator"].map(lambda m: family(models, m))
     vc = g["fam"].value_counts()
-    folds = int(min(5, vc.min())) if len(vc) > 1 else 0
+    # Folds grouped by image: an image's texts by the other families share its content words,
+    # so ungrouped folds steer predictions to a wrong family (accuracy below chance).
+    row_ids = pd.Series([f"row{i}" for i in range(len(g))], index=g.index)
+    groups = (g["image_id"].where(g["image_id"].notna(), row_ids) if "image_id" in g else row_ids)
+    groups = groups.astype(str).to_numpy()
+    folds = int(min(5, vc.min(), len(set(groups)))) if len(vc) > 1 else 0
     majority = float(vc.max() / vc.sum())
     if folds < 2:
         return {"accuracy": None, "majority": majority, "n": int(len(g)), "note": "too few texts per family"}
-    skf = StratifiedKFold(n_splits=folds, shuffle=True, random_state=seed % (2 ** 31))
+    skf = StratifiedGroupKFold(n_splits=folds, shuffle=True, random_state=seed % (2 ** 31))
     X, y = g["alt_clean"].astype(str).to_numpy(), g["fam"].to_numpy()
     correct = 0
-    for tr, te in skf.split(X, y):
+    for tr, te in skf.split(X, y, groups):
         clf = make_pipeline(TfidfVectorizer(analyzer="char", ngram_range=(3, 5), sublinear_tf=True),
                             LogisticRegression(max_iter=5000))
         clf.fit(X[tr], y[tr])
@@ -618,7 +648,7 @@ def leakage(generated: pd.DataFrame, models: dict, seed: int = SEED) -> dict:
     centre = (acc + z * z / (2 * n)) / (1 + z * z / n)
     half = z * np.sqrt(acc * (1 - acc) / n + z * z / (4 * n * n)) / (1 + z * z / n)
     return {"accuracy": acc, "lo": centre - half, "hi": centre + half, "majority": majority, "n": n,
-            "folds": folds, "families": {k: int(v) for k, v in vc.items()}}
+            "folds": folds, "groups": int(len(set(groups))), "families": {k: int(v) for k, v in vc.items()}}
 
 
 def transforms_report(generated: pd.DataFrame) -> dict:

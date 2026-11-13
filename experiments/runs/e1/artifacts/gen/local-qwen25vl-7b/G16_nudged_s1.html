@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient ID Input</title>
+<style>
+  .tooltip {
+    position: relative;
+    display: inline-block;
+  }
+
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .form-field {
+    display: flex;
+    align-items: center;
+  }
+
+  .form-field input {
+    padding: 5px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+
+  .form-field .question-mark {
+    font-size: 16px;
+    cursor: help;
+  }
+</style>
+</head>
+<body>
+  <div class="form-field">
+    <input type="text" id="patient-id" placeholder="Patient ID number" required>
+    <div class="tooltip question-mark">
+      <span class="tooltiptext">Your 10-digit patient ID is printed on your clinic card.</span>
+    </div>
+  </div>
+
+  <script>
+    // No JavaScript needed for this simple form field
+  </script>
+</body>
+</html>

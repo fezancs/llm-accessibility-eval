@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CityCare Appointment Request</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f4f4f4;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .error {
+      color: red;
+      display: none;
+      font-size: 0.9em;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <form id="appointmentForm" onsubmit="validateForm(event)">
+    <div>
+      <label for="fullName">Full Name:</label>
+      <input type="text" id="fullName">
+      <span class="error" id="fullNameError">Full name is required.</span>
+    </div>
+    <div>
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="dob">
+      <span class="error" id="dobError">Date of birth is required.</span>
+    </div>
+    <div>
+      <label for="phone">Phone Number:</label>
+      <input type="text" id="phone">
+    </div>
+    <div>
+      <label for="email">Email Address:</label>
+      <input type="email" id="email">
+      <span class="error" id="emailError">Email is required.</span>
+    </div>
+    <div>
+      <label for="clinic">Preferred Clinic:</label>
+      <select id="clinic">
+        <option value="">Select a clinic</option>
+        <option value="Northside">Northside</option>
+        <option value="Riverside">Riverside</option>
+        <option value="Old Town">Old Town</option>
+        <option value="Harbour">Harbour</option>
+      </select>
+      <span class="error" id="clinicError">Please select a clinic.</span>
+    </div>
+    <div>
+      <label for="consultationType">Consultation Type:</label>
+      <div>
+        <input type="radio" id="inPerson" name="consultationType" value="in person">
+        <label for="inPerson">In Person</label>
+      </div>
+      <div>
+        <input type="radio" id="videoCall" name="consultationType" value="video call">
+        <label for="videoCall">Video Call</label>
+      </div>
+      <div>
+        <input type="radio" id="phoneCall" name="consultationType" value="phone call">
+        <label for="phoneCall">Phone Call</label>
+      </div>
+    </div>
+    <div>
+      <label for="notes">Notes:</label>
+      <textarea id="notes" rows="4"></textarea>
+    </div>
+    <div>
+      <label>
+        <input type="checkbox" id="privacy">
+        I agree to the privacy notice.
+      </label>
+      <span class="error" id="privacyError">You must agree to the privacy notice.</span>
+    </div>
+    <button type="submit">Request Appointment</button>
+  </form>
+
+  <script>
+    function validateForm(event) {
+      event.preventDefault();
+      let isValid = true;
+
+      const fullName = document.getElementById('fullName').value.trim();
+      const fullNameError = document.getElementById('fullNameError');
+      if (!fullName) {
+        fullNameError.style.display = 'block';
+        isValid = false;
+      } else {
+        fullNameError.style.display = 'none';
+      }
+
+      const dob = document.getElementById('dob').value;
+      const dobError = document.getElementById('dobError');
+      if (!dob) {
+        dobError.style.display = 'block';
+        isValid = false;
+      } else {
+        dobError.style.display = 'none';
+      }
+
+      const email = document.getElementById('email').value.trim();
+      const emailError = document.getElementById('emailError');
+      if (!email) {
+        emailError.style.display = 'block';
+        isValid = false;
+      } else {
+        emailError.style.display = 'none';
+      }
+
+      const clinic = document.getElementById('clinic').value;
+      const clinicError = document.getElementById('clinicError');
+      if (!clinic) {
+        clinicError.style.display = 'block';
+        isValid = false;
+      } else {
+        clinicError.style.display = 'none';
+      }
+
+      const privacy = document.getElementById('privacy').checked;
+      const privacyError = document.getElementById('privacyError');
+      if (!privacy) {
+        privacyError.style.display = 'block';
+        isValid = false;
+      } else {
+        privacyError.style.display = 'none';
+      }
+
+      if (!isValid) {
+        return;
+      }
+
+      alert('Appointment requested successfully!');
+    }
+  </script>
+</body>
+</html>

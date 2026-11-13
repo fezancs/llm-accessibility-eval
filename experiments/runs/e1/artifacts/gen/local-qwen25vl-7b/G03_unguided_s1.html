@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CityCare Services</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  .tabs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+  }
+  .tab {
+    padding: 0 10px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: border-bottom 0.3s ease;
+  }
+  .tab.active {
+    border-bottom: 2px solid #333;
+  }
+  .content {
+    display: none;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-top: none;
+    margin-top: 10px;
+  }
+  .content.active {
+    display: block;
+  }
+</style>
+</head>
+<body>
+<div class="tabs">
+  <div class="tab active" onclick="showContent('vaccinations')">Vaccinations</div>
+  <div class="tab" onclick="showContent('check-ups')">Check-ups</div>
+  <div class="tab" onclick="showContent('pharmacy')">Pharmacy</div>
+</div>
+<div class="content active" id="vaccinations">
+  <h2>Vaccinations</h2>
+  <p>CityCare offers a wide range of vaccinations to protect against various diseases. Our team of healthcare professionals administers vaccines in a safe and comfortable environment.</p>
+</div>
+<div class="content" id="check-ups">
+  <h2>Check-ups</h2>
+  <p>Regular check-ups are essential for maintaining good health. CityCare provides comprehensive check-ups that include blood tests, physical examinations, and advice on lifestyle changes.</p>
+</div>
+<div class="content" id="pharmacy">
+  <h2>Pharmacy</h2>
+  <p>Our pharmacy is stocked with a variety of medications and health products. We offer personalized advice on prescription medications and over-the-counter options.</p>
+</div>
+<script>
+  function showContent(tab) {
+    const content = document.querySelector('.content.active');
+    if (content) content.classList.remove('active');
+    document.querySelector(`.content#${tab}`).classList.add('active');
+  }
+</script>
+</body>
+</html>

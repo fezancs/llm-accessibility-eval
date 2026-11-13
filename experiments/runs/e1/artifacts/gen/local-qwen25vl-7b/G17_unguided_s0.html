@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referral Letter Upload</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+    }
+    .upload-area {
+        width: 300px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 20px;
+        text-align: center;
+    }
+    .file-list {
+        list-style-type: none;
+        padding: 0;
+    }
+    .file-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+    }
+    .file-list li:last-child {
+        border-bottom: none;
+    }
+    .remove-button {
+        cursor: pointer;
+        font-size: 1.5em;
+        color: #dc3545;
+    }
+</style>
+</head>
+<body>
+<div class="upload-area">
+    <h2>Upload Referral Letter</h2>
+    <input type="file" id="fileInput" multiple>
+    <ul id="fileList" class="file-list"></ul>
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const files = event.target.files;
+            for (let file of files) {
+                const li = document.createElement('li');
+                li.textContent = file.name + ' (' + file.size + ' bytes)';
+                li.appendChild(document.createElement('button')).textContent = 'x';
+                li.querySelector('button').addEventListener('click', function() {
+                    const index = Array.from(document.querySelectorAll('li')).indexOf(li);
+                    if (index !== -1) {
+                        document.getElementById('fileInput').files = document.getElementById('fileInput').files.slice(0, index).concat(document.getElementById('fileInput').files.slice(index + 1));
+                        document.getElementById('fileList').removeChild(li);
+                    }
+                });
+                document.getElementById('fileList').appendChild(li);
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

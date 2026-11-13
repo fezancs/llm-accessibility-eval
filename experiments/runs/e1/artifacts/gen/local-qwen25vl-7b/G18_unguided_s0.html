@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .step {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .step .indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ccc;
+        }
+        .step .indicator.active {
+            background-color: #007bff;
+        }
+        .step .label {
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .form-group textarea {
+            height: 100px;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="step">
+            <div class="indicator active"></div>
+            <div class="label">Step 1</div>
+        </div>
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required>
+        </div>
+        <div class="step">
+            <div class="indicator"></div>
+            <div class="label">Step 2</div>
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="step">
+            <div class="indicator"></div>
+            <div class="label">Step 3</div>
+        </div>
+        <div class="form-group">
+            <button type="button" onclick="previousStep()">Back</button>
+            <button type="button" onclick="nextStep()">Next</button>
+        </div>
+    </div>
+    <script>
+        let currentStep = 1;
+        const steps = document.querySelectorAll('.step');
+        const formGroups = document.querySelectorAll('.form-group');
+        const backButton = document.querySelector('.form-group button:first-child');
+        const nextButton = document.querySelector('.form-group button:last-child');
+
+        function showStep(stepNumber) {
+            steps.forEach((step, index) => {
+                if (index + 1 === stepNumber) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+                formGroups[currentStep - 1].style.display = 'block';
+                formGroups[currentStep].style.display = 'none';
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < 3) {
+                currentStep++;
+                showStep(currentStep);
+                formGroups[currentStep - 1].style.display = 'none';
+                formGroups[currentStep].style.display = 'block';
+            }
+        }
+
+        showStep(currentStep);
+        formGroups[currentStep - 1].style.display = 'block';
+        formGroups[currentStep].style.display = 'none';
+    </script>
+</body>
+</html>

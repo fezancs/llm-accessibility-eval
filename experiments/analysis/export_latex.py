@@ -156,6 +156,11 @@ def models_used(inputs) -> dict[str, set]:
     return use
 
 
+def optional_hosted(m: dict) -> bool:
+    """'Optional (budget permitting)' applies to hosted models only; a self-hosted model costs $0."""
+    return m.get("tier") == "optional" and m.get("provider") != "local"
+
+
 def table_models(inputs) -> str:
     use = models_used(inputs)
     rows, notes = [], set()
@@ -163,7 +168,7 @@ def table_models(inputs) -> str:
         if key not in use:
             continue
         name = tex_escape(m.get("display", key))
-        if m.get("tier") == "optional":
+        if optional_hosted(m):
             name += "$^{\\dagger}$"
             notes.add("dagger")
         price = m.get("price") or {}
@@ -206,9 +211,11 @@ def table_models(inputs) -> str:
         if isinstance(n, tuple) and n[0] == "c":
             half = n[1] is not None and n[2] and abs(n[1] * 2 - n[2]) < 1e-9
             foot.append("$^{c}$Peak hours; " + ("half price off-peak." if half else "lower price off-peak."))
-    foot.append("Open-weight prices are those of the hosting provider used.")
+    if any(inputs.models[k].get("provider") != "local" for k in use if k in inputs.models):
+        foot.append("Open-weight prices are those of the hosting provider used.")
     body = HEADER + "% Models actually run and the prices used (config/models.yaml).\n" + "\n".join(rows) + "\n"
-    body += "\\multicolumn{7}{@{}p{0.95\\columnwidth}@{}}{\\tiny " + " ".join(foot) + "}\\\\\n"
+    if foot:
+        body += "\\multicolumn{7}{@{}p{0.95\\columnwidth}@{}}{\\tiny " + " ".join(foot) + "}\\\\\n"
     return body
 
 
@@ -223,13 +230,13 @@ def table_main(res: dict, inputs) -> str:
     for key, m in inputs.models.items():
         if key not in dims and key not in cp["cpds"].get("batch", {}) and key not in cp["cpds"].get("interactive", {}):
             continue
-        name = tex_escape(m.get("display", key)) + ("$^{\\dagger}$" if m.get("tier") == "optional" else "")
+        name = tex_escape(m.get("display", key)) + ("$^{\\dagger}$" if optional_hosted(m) else "")
         d = dims.get(key, {})
         cells = [cell(d.get(k)) for k in ("S1", "S2", "S3", "S4", "S5", "S6")]
         cells.append(cell(scores.get(key, {}).get("ccs")))
         e = dc.get(key, {}).get("dcdi")
-        cells.append(f"{num(e.est)} [{num(e.lo)}, {num(e.hi)}]" if e is not None and e.ok and e.lo is not None
-                     else "--")
+        cells.append("--" if e is None or not e.ok else          # no CI from fewer than 2 clusters: bare estimate
+                     f"{num(e.est)} [{num(e.lo)}, {num(e.hi)}]" if e.lo is not None else num(e.est))
         b = cp["cpds"].get("batch", {}).get(key)
         i = cp["cpds"].get("interactive", {}).get(key)
         cells += [num(b) if b is not None else "--", num(i) if i is not None else "--",
@@ -309,7 +316,13 @@ def values(res: dict, inputs) -> Values:
             V.add("n-models-e3gen", str(g["generator"].nunique()))
     sc = study_calls(inputs.calls)
     if not sc.empty:
+        # every logged attempt; failed = status "error" (refusals are answered calls)
+        failed = sc["status"].eq("error") if "status" in sc else pd.Series(False, index=sc.index)
         V.add("total-calls", integer(len(sc)))
+        V.add("total-calls-failed", integer(int(failed.sum())))
+        V.add("total-calls-answered", integer(int((~failed).sum())))
+        if (sc["experiment"] == "e2").any():          # E2 run 0 replays the pilot (DEVIATIONS 2026-11-14)
+            V.add("e2-calls-from-pilot", integer(int(sc["from_pilot"].sum()) if "from_pilot" in sc else 0))
         V.add("total-cost", usd(float(pd.to_numeric(sc["cost_usd"], errors="coerce").fillna(0).sum())))
         V.add("run-dates", _date_range(sc))
     meta = inputs.meta or {}
@@ -347,6 +360,17 @@ def values(res: dict, inputs) -> Values:
         V.est(f"audit-precision-{m}", r["precision"])
         V.est(f"audit-recall-{m}", r["recall"])
         V.est(f"audit-parsefail-{m}", r["parse_fail"])
+    # sensitivity without the byte-identical duplicate pages (main estimates keep all pages)
+    dd = res.get("e1_distinct") or {}
+    if dd:
+        V.add("e1-distinct-pages", integer(dd["distinct_pages"]))
+        V.add("e1-distinct-faults", integer(dd["distinct_faults"]))
+    for m, r in (res.get("rep_dedup") or {}).get("models", {}).items():
+        V.est(f"srep-dedup-{m}", r["srep"])
+        V.est(f"fullrepair-dedup-{m}", r["full_repair"])
+    for m, r in (res.get("aud_dedup") or {}).get("models", {}).items():
+        V.est(f"saudit-dedup-{m}", r["saudit"])
+        V.est(f"audit-recall-dedup-{m}", r["recall"])
 
     # ---- E2
     for m, r in res["dcdi"]["models"].items():
@@ -378,6 +402,26 @@ def values(res: dict, inputs) -> Values:
     for m, d in res["drops"].items():
         V.add(f"e2-drops-{m}", str(d["pairs"] - d["kept"]))
         V.add(f"e2-kept-{m}", str(d["kept"]))
+        V.add(f"e2-missing-session-{m}", str(d["missing_session"]))           # e.g. the exhausted step
+        V.add(f"e2-functional-drops-{m}",
+              str(d["session_not_functional"] + d["fresh_not_functional"] - d["both_not_functional"]))
+        V.add(f"e2-checkpoints-{m}", str(d["checkpoint_pairs"]))
+        V.add(f"e2-padded-unmatched-{m}", str(d["padded_length_unmatched"]))
+    ses = inputs.sessions
+    for m, sm in (ses.groupby("model_key") if not ses.empty and "model_key" in ses else []):
+        cs = pd.to_numeric(sm["completed_steps"], errors="coerce").dropna() if "completed_steps" in sm else []
+        if len(cs):
+            V.add(f"e2-completed-{m}", integer(cs.mean()) if float(cs.mean()).is_integer() else num(cs.mean(), 1))
+        ex = pd.to_numeric(sm["context_exhausted_at"], errors="coerce").dropna() \
+            if "context_exhausted_at" in sm else pd.Series(dtype=float)
+        V.add(f"e2-exhausted-runs-{m}", str(len(ex)))
+        if len(ex):
+            V.add(f"e2-exhausted-at-{m}", ", ".join(str(int(x)) for x in sorted(ex)))
+    if not inputs.steps.empty and "Lambda" in inputs.steps:
+        for m, d in inputs.steps[inputs.steps["arm"] == "session"].groupby("model_key"):
+            lam = pd.to_numeric(d["Lambda"], errors="coerce").dropna()
+            if len(lam):
+                V.add(f"e2-lambda-max-{m}", integer(lam.max()))
 
     # ---- dimensions, CCS
     for m, d in res["dims"].items():
@@ -444,6 +488,12 @@ def values(res: dict, inputs) -> Values:
         V.add("e3c-judgments", integer(c["n_judgments"]))
         V.add("e3c-recused", integer(c["n_recused"]))
         V.add("e3c-images", integer(c["n_images"]))
+        V.add("e3c-valid", integer(c["n_valid"]))
+        V.add("e3c-aggregated", integer(c["n_aggregated"]))
+        V.add("e3c-pairs", integer(c["n_pairs"]))
+        for j in c["judges"]:
+            V.add(f"e3c-missing-{j}", integer(c["missing_by_judge"].get(j, 0)))
+            V.add(f"e3c-firstpref-{j}", num(c["first_pref_rate"][j]))
     kn = e3.get("known", {})
     if kn:
         for grp, accs in kn["accuracy"].items():
@@ -453,11 +503,25 @@ def values(res: dict, inputs) -> Values:
                 V.est(key, e)
         V.est("h4b-diff", kn.get("h4b"))
         V.add("kalpha-e3b", num(kn.get("kalpha")))
+        V.add("e3b-pairs", integer(kn["n_pairs"]))
+        for j, n in kn.get("missing_by_judge", {}).items():
+            V.add(f"e3b-missing-{j}", integer(n))
         for j, e in kn.get("pc", {}).items():
             V.est(f"pc-known-{j}", e)
     bp = e3.get("blv_pairs", {})
     for mth, e in (bp.get("accuracy", {}).get("all", {}) if bp else {}).items():
         V.est(f"acc-blvpairs-{mth.replace('single:', '')}", e)
+    if bp.get("n_pairs") is not None:
+        V.add("e3a-pairs", integer(bp["n_pairs"]))
+    if not inputs.items.empty and "image_id" in inputs.items:
+        it = inputs.items
+        V.add("e3-images", integer(it[[c for c in ("dataset", "image_id") if c in it]].drop_duplicates().shape[0]))
+    for ds, tag in (("blv", "blv"), ("cr", "crowd")):
+        for j, n in e3.get("pointwise", {}).get(ds, {}).get("missing_by_judge", {}).items():
+            V.add(f"pw-missing-{tag}-{j}", integer(n))
+    if not inputs.generated.empty and {"generator", "status"} <= set(inputs.generated.columns):
+        for (m, st), n in inputs.generated.groupby(["generator", "status"]).size().items():
+            V.add(f"e3gen-{st}-{m}", integer(n))
     for ds, tag in (("blv", "blv"), ("cr", "crowd")):
         for mth, v in e3.get("pointwise", {}).get(ds, {}).items():
             if isinstance(v, dict) and "r" in v:

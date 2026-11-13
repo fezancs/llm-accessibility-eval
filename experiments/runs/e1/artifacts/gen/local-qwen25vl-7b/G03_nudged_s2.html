@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CityCare Services</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .tab {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  .tab.active {
+    background-color: #ddd;
+    color: #333;
+  }
+  .content {
+    display: none;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    width: 60%;
+    margin-bottom: 20px;
+  }
+  .content.active {
+    display: block;
+  }
+</style>
+<script>
+  function showContent(tabId) {
+    const tabs = document.querySelectorAll('.tab');
+    const contents = document.querySelectorAll('.content');
+    tabs.forEach(tab => tab.classList.remove('active'));
+    contents.forEach(content => content.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+  }
+</script>
+</head>
+<body>
+  <div class="tabs">
+    <button class="tab active" onclick="showContent('vaccinations')">Vaccinations</button>
+    <button class="tab" onclick="showContent('check-ups')">Check-ups</button>
+    <button class="tab" onclick="showContent('pharmacy')">Pharmacy</button>
+  </div>
+  <div class="content active" id="vaccinations">
+    <h2>Vaccinations</h2>
+    <p>CityCare offers a wide range of vaccinations to protect against various diseases. Our team of healthcare professionals administers vaccines to ensure you and your family are protected.</p>
+  </div>
+  <div class="content" id="check-ups">
+    <h2>Check-ups</h2>
+    <p>Regular check-ups are essential for maintaining good health. CityCare provides comprehensive check-ups that include blood tests, physical examinations, and advice on lifestyle changes.</p>
+  </div>
+  <div class="content" id="pharmacy">
+    <h2>Pharmacy</h2>
+    <p>Our pharmacy is stocked with a variety of medications and health products. We offer prescription refills, over-the-counter medications, and advice on how to manage your medication effectively.</p>
+  </div>
+</body>
+</html>

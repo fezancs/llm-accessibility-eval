@@ -93,6 +93,20 @@ def run_turn(client: llm.LLM, model: str, system: str, tools: list, messages: li
             out["Lambda"] = budget.prompt_tokens(r.usage)
         k += 1
         out["final_text"] = r.text
+        window = config.model(model).get("context_tokens")
+        prompt_tok = budget.prompt_tokens(r.usage)
+        if (r.stop_reason == "max_tokens" and window and prompt_tok >= window // 2
+                and prompt_tok + (r.usage.get("output_tokens") or 0) >= window - 16):
+            # Prompt plus output filled the model's window: a self-hosted llama.cpp server with
+            # --no-context-shift stops with finish_reason "length" instead of rejecting the
+            # request. That is context exhaustion (SPEC 6.1): the truncated output is neither
+            # executed nor kept in the history, and the run ends. A max_tokens stop on a short
+            # prompt (a runaway thinking loop) stays an empty response (SPEC 13.3a).
+            # DEVIATIONS.md, 2026-11-14.
+            out["status"] = "context_exhausted"
+            out["error"] = (f"context window full: {prompt_tok} prompt + {r.usage.get('output_tokens')} "
+                            f"output tokens of {window} (finish_reason length)")
+            break
         if r.status == "refusal":
             out["refusal"] = True
             break

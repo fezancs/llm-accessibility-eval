@@ -57,8 +57,10 @@ def run_one(client: llm.LLM, model: str, task: dict, condition: str, sample: int
             sa_cost += s2.cost_usd
             val = common.parse_json(s2.text, dict)
         if val and isinstance(val.get("conforms_wcag22_aa"), bool):
+            ki = val.get("known_issues")
+            ki = ki if isinstance(ki, list) else []      # a model may answer true or a number here
             rec["selfassess"].update(conforms=val["conforms_wcag22_aa"], parse_ok=True,
-                                     known_issues=[str(x)[:200] for x in (val.get("known_issues") or [])][:20])
+                                     known_issues=[str(x)[:200] for x in ki][:20])
     except llm.LLMError as e:
         rec["selfassess"]["error"] = str(e)[:200]
     rec["selfassess"]["cost_usd"] = sa_cost
@@ -116,7 +118,9 @@ def main(argv=None):
             rec["probe_details"] = [{"probe": p["probe"], "applicable": p["applicable"], "passed": p["passed"]}
                                     for p in ev["probes"]]
     records.sort(key=lambda r: (r["model_key"], r["task_id"], r["condition"], r["sample_idx"]))
-    common.write_jsonl(config.RUNS / exp / "scores" / "gen.jsonl", records)
+    # An API-only pass (--no-eval) has no scores: it must not replace the scored file, which also
+    # holds the other models' records (DEVIATIONS.md 2026-11-14).
+    common.write_jsonl(config.RUNS / exp / "scores" / ("gen.noeval.jsonl" if args.no_eval else "gen.jsonl"), records)
     print(f"wrote {len(records)} records", flush=True)
 
 

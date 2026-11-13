@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cookie Consent Banner</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+.cookie-consent {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  z-index: 1000;
+}
+.cookie-consent button {
+  margin: 5px 10px;
+  padding: 5px 10px;
+  border: none;
+  background-color: #007BFF;
+  color: white;
+  cursor: pointer;
+}
+.cookie-consent button:hover {
+  background-color: #0056b3;
+}
+.cookie-consent .cookie-settings {
+  display: none;
+  position: fixed;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 10px;
+  width: 300px;
+  z-index: 1001;
+}
+.cookie-consent .cookie-settings label {
+  display: block;
+  margin-bottom: 5px;
+}
+.cookie-consent .cookie-settings input[type="checkbox"] {
+  margin-right: 5px;
+}
+.cookie-consent .cookie-settings button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: #007BFF;
+  color: white;
+  cursor: pointer;
+}
+.cookie-consent .cookie-settings button:hover {
+  background-color: #0056b3;
+}
+</style>
+</head>
+<body>
+<div class="cookie-consent">
+  <p>We use cookies to make this site work and to understand how it is used.</p>
+  <button onclick="showCookieSettings()">Cookie settings</button>
+  <button onclick="acceptAll()">Accept all</button>
+  <button onclick="rejectAll()">Reject all</button>
+</div>
+<div class="cookie-settings" id="cookie-settings">
+  <label><input type="checkbox" checked disabled>Necessary</label>
+  <label><input type="checkbox">Analytics</label>
+  <label><input type="checkbox">Marketing</label>
+  <button onclick="savePreferences()">Save preferences</button>
+</div>
+<script>
+function showCookieSettings() {
+  document.getElementById('cookie-settings').style.display = 'block';
+}
+function acceptAll() {
+  document.getElementById('cookie-settings').style.display = 'none';
+  document.getElementById('cookie-consent').style.display = 'none';
+}
+function rejectAll() {
+  document.getElementById('cookie-settings').style.display = 'none';
+  document.getElementById('cookie-consent').style.display = 'none';
+}
+function savePreferences() {
+  document.getElementById('cookie-settings').style.display = 'none';
+  document.getElementById('cookie-consent').style.display = 'none';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Facilities</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    padding: 20px;
+  }
+  .gallery img {
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  .gallery img:hover {
+    transform: scale(1.1);
+  }
+  .gallery img.gallery-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  .gallery img.gallery-close {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<div class="gallery">
+  <img src="images/reception.jpg" alt="Reception" class="gallery-image" onclick="showImage('images/reception.jpg', 'Reception')">
+  <img src="images/play-area.jpg" alt="Play Area" class="gallery-image" onclick="showImage('images/play-area.jpg', 'Play Area')">
+  <img src="images/step-free-entrance.jpg" alt="Step-Free Entrance" class="gallery-image" onclick="showImage('images/step-free-entrance.jpg', 'Step-Free Entrance')">
+  <img src="images/pharmacy-counter.jpg" alt="Pharmacy Counter" class="gallery-image" onclick="showImage('images/pharmacy-counter.jpg', 'Pharmacy Counter')">
+  <img src="images/waiting-room.jpg" alt="Waiting Room" class="gallery-image" onclick="showImage('images/waiting-room.jpg', 'Waiting Room')">
+  <img src="images/garden.jpg" alt="Garden" class="gallery-image" onclick="showImage('images/garden.jpg', 'Garden')">
+</div>
+<div id="galleryModal" class="gallery-modal">
+  <span class="gallery-modal-close" onclick="closeModal()">&times;</span>
+  <img id="galleryModalImage" class="gallery-modal-image">
+</div>
+<script>
+function showImage(src, alt) {
+  document.getElementById('galleryModalImage').src = src;
+  document.getElementById('galleryModalImage').alt = alt;
+  document.getElementById('galleryModal').style.display = 'block';
+}
+
+function closeModal() {
+  document.getElementById('galleryModal').style.display = 'none';
+}
+
+document.getElementById('galleryModal').style.display = 'none';
+</script>
+</body>
+</html>

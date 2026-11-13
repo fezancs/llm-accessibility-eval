@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notification Settings</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f4f4f4;
+  color: #333;
+}
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+input[type="checkbox"]:checked + label {
+  color: #007bff;
+}
+input[type="checkbox"]:disabled + label {
+  color: #aaa;
+  cursor: not-allowed;
+}
+</style>
+</head>
+<body>
+<h1>Notification Settings</h1>
+<form>
+  <label for="smsReminders">SMS reminders</label>
+  <input type="checkbox" id="smsReminders" name="smsReminders">
+  <br>
+  <label for="emailReminders">Email reminders</label>
+  <input type="checkbox" id="emailReminders" name="emailReminders">
+  <br>
+  <label for="largeTextMode">Large text mode</label>
+  <input type="checkbox" id="largeTextMode" name="largeTextMode">
+</form>
+<script>
+document.getElementById('largeTextMode').addEventListener('change', function() {
+  if (this.checked) {
+    document.body.style.fontSize = '160%'; // Increase font size
+  } else {
+    document.body.style.fontSize = '100%'; // Reset font size
+  }
+});
+</script>
+</body>
+</html>

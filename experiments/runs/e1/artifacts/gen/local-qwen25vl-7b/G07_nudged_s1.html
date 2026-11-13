@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Facilities</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    max-width: 1200px;
+    padding: 20px;
+  }
+  .gallery img {
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  .gallery img:hover {
+    transform: scale(1.1);
+  }
+  .gallery img.gallery-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  .gallery img.gallery-image-large {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  .gallery img.gallery-image-large-close {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .gallery img.gallery-image-large:hover + .gallery-image-large-close {
+    opacity: 1;
+  }
+</style>
+</head>
+<body>
+<div class="gallery">
+  <img src="images/reception.jpg" alt="Reception" class="gallery-image" onclick="showImage('images/reception.jpg', 'Reception', 'gallery-image-large')">
+  <img src="images/play-area.jpg" alt="Play Area" class="gallery-image" onclick="showImage('images/play-area.jpg', 'Play Area', 'gallery-image-large')">
+  <img src="images/step-free-entrance.jpg" alt="Step-Free Entrance" class="gallery-image" onclick="showImage('images/step-free-entrance.jpg', 'Step-Free Entrance', 'gallery-image-large')">
+  <img src="images/pharmacy-counter.jpg" alt="Pharmacy Counter" class="gallery-image" onclick="showImage('images/pharmacy-counter.jpg', 'Pharmacy Counter', 'gallery-image-large')">
+  <img src="images/waiting-room.jpg" alt="Waiting Room" class="gallery-image" onclick="showImage('images/waiting-room.jpg', 'Waiting Room', 'gallery-image-large')">
+  <img src="images/garden.jpg" alt="Garden" class="gallery-image" onclick="showImage('images/garden.jpg', 'Garden', 'gallery-image-large')">
+</div>
+<div id="gallery-image-large" class="gallery-image-large" style="display: none;">
+  <img id="gallery-image-large-image" class="gallery-image-large-image" src="" alt="" onclick="closeImage()">
+  <button id="gallery-image-large-close" class="gallery-image-large-close" onclick="closeImage()">Close</button>
+</div>
+<script>
+function showImage(src, alt, id) {
+  document.getElementById('gallery-image-large-image').src = src;
+  document.getElementById('gallery-image-large-image').alt = alt;
+  document.getElementById('gallery-image-large').style.display = 'block';
+  document.getElementById('gallery-image-large-close').style.opacity = 1;
+}
+
+function closeImage() {
+  document.getElementById('gallery-image-large').style.display = 'none';
+  document.getElementById('gallery-image-large-close').style.opacity = 0;
+}
+</script>
+</body>
+</html>

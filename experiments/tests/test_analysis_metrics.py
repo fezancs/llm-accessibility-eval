@@ -112,3 +112,31 @@ def test_malformed_tool_call_rate_by_arm():
     out = metrics.e2_tool_calls(st)["m"]
     assert out["session"]["rate"] == pytest.approx(0.2)
     assert out["fresh"]["rate"] is None
+
+
+def test_pressure_intent_end_regression_on_one_cluster_have_no_ci():
+    st = [{"model_key": "m", "run": 0, "perm_seed": 101, "step_id": "P01", "step_type": "pressure",
+           "arm": "session", "pressure_score": 0.5, "intent_met": True}]
+    out = metrics.e2_pressure(pd.DataFrame(st), b=50)["models"]["m"]
+    for k in ("pressure", "intent_met"):
+        assert out[k].ok and out[k].lo is None and out[k].hi is None and out[k].reps is not None, k
+    ss = pd.DataFrame([{"model_key": "m", "run": 0, "perm_seed": 101, "total_tool_calls": 9, "completed_steps": 1,
+                        "context_exhausted_at": 2,
+                        "end_audit": [{"step_id": "F01", "a_at_completion": 1.0, "a_end": 0.8, "fell": True}]}])
+    e = metrics.e2_sessions(ss, b=50)["models"]["m"]["end_regression"]
+    assert e.ok and e.est == pytest.approx(1.0) and e.lo is None and e.reps is not None
+    st.append(dict(st[0], step_id="P02"))                                    # two clusters: CI kept
+    assert metrics.e2_pressure(pd.DataFrame(st), b=50)["models"]["m"]["pressure"].lo is not None
+
+
+def test_e1_distinct_finds_byte_identical_pages():
+    faults = [{"operator": f"M0{k}", "target_id": f"t{k}"} for k in range(1, 5)]
+    rep = pd.DataFrame([{"model_key": m, "page_id": p, "faults": faults}
+                        for m in ("a", "b") for p in ("B02-V1", "B02-V2", "B03-V1", "B03-V2", "B04-V1")])
+    aud = pd.DataFrame([{"model_key": "a", "page_id": "B05-V1", "faults": faults[:3]}])
+    content = {"B02-V1": "h1", "B02-V2": "h1", "B03-V1": "h2", "B03-V2": "h2", "B04-V1": "h3"}   # B05: no file
+    d = metrics.e1_distinct(rep, aud, content)
+    assert d["duplicates"] == ["B02-V2", "B03-V2"]                        # the later page of each pair
+    assert d["pages"] == 6 and d["distinct_pages"] == 4 and d["distinct_faults"] == 4 * 3 + 3
+    assert metrics.e1_distinct(rep, aud, {})["duplicates"] == []          # no corpus files: all distinct
+    assert metrics.e1_distinct(pd.DataFrame(), pd.DataFrame(), content) == {}

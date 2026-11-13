@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frequently Asked Questions</title>
+<style>
+  .faq {
+    margin: 20px;
+    font-family: Arial, sans-serif;
+  }
+  .faq .question {
+    cursor: pointer;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  .faq .answer {
+    display: none;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+</style>
+<script>
+  function toggleAnswer(e) {
+    const question = e.target;
+    const answer = question.nextElementSibling;
+    if (answer.style.display === 'none') {
+      answer.style.display = 'block';
+    } else {
+      answer.style.display = 'none';
+    }
+  }
+</script>
+</head>
+<body>
+<div class="faq">
+  <div class="question" onclick="toggleAnswer(event)">How do I book an appointment?</div>
+  <div class="answer" style="display: none;">To book an appointment, please visit our website or call our customer service at 123-456-7890. You can also stop by our office at 123 Main Street, Suite 100.</div>
+  <div class="question" onclick="toggleAnswer(event)">Can I bring someone with me?</div>
+  <div class="answer" style="display: none;">Yes, you are welcome to bring a friend or family member with you to your appointment. They can provide support and help you understand the information provided.</div>
+  <div class="question" onclick="toggleAnswer(event)">Is parking available?</div>
+  <div class="answer" style="display: none;">Parking is available in our lot, which is located behind our office. You can park there and walk to the building.</div>
+  <div class="question" onclick="toggleAnswer(event)">How do I get my test results?</div>
+  <div class="answer" style="display: none;">Your test results will be available within 24 hours after your appointment. You can access them online through our secure patient portal or by calling our office at 123-456-7890.</div>
+  <div class="question" onclick="toggleAnswer(event)">What if I need an interpreter?</div>
+  <div class="answer" style="display: none;">If you need an interpreter, please let us know when you book your appointment. We will arrange for a certified interpreter to be present during your visit.</div>
+</div>
+</body>
+</html>

@@ -82,6 +82,9 @@ def test_context_error_detection():
     e = llm.LLMError("BadRequestError: prompt is too long: 1200000 tokens > 1000000 maximum", 400, [], 0.0)
     assert e.context_exhausted
     assert not llm.LLMError("rate limited", 429, [], 0.0).context_exhausted
+    # llama.cpp server (local provider) rejects an over-long prompt with this HTTP 400 message
+    assert llm.LLMError("BadRequestError: Error code: 400 - request (40009 tokens) exceeds the available "
+                        "context size (32768 tokens), try increasing it", 400, [], 0.0).context_exhausted
 
 
 NEUTRAL = {"role": "assistant", "provider": "neutral", "content": [{"type": "text", "text": "Reading."}],

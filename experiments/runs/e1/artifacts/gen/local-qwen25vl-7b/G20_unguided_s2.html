@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CityCare Footer</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        footer a {
+            color: white;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        .social-icons {
+            display: inline-block;
+            margin: 10px 0;
+        }
+        .social-icons svg {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        .newsletter-form {
+            display: inline-block;
+            margin: 10px 0;
+        }
+        .newsletter-form input[type="email"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            width: 200px;
+            margin-right: 10px;
+        }
+        .newsletter-form button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .newsletter-form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <footer>
+        <p>CityCare | 1 Market Street, Old Town</p>
+        <p><a href="tel:1234567890">123-456-7890</a> | <a href="mailto:info@citycare.com">info@citycare.com</a></p>
+        <div class="social-icons">
+            <a href="https://facebook.com/citycare"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.256 278.06l12.705-12.68c6.165-6.124 6.165-15.882 0-21.996z"/></svg></a>
+            <a href="https://twitter.com/citycare"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.256 278.06l12.705-12.68c6.165-6.124 6.165-15.882 0-21.996z"/></svg></a>
+            <a href="https://instagram.com/citycare"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.256 278.06l12.705-12.68c6.165-6.124 6.165-15.882 0-21.996z"/></svg></a>
+            <a href="https://youtube.com/citycare"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.256 278.06l12.705-12.68c6.165-6.124 6.165-15.882 0-21.996z"/></svg></a>
+        </div>
+        <div class="newsletter-form">
+            <input type="email" placeholder="Email">
+            <button>Subscribe</button>
+        </div>
+    </footer>
+</body>
+</html>
