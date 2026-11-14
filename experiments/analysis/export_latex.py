@@ -345,6 +345,9 @@ def values(res: dict, inputs) -> Values:
         V.est(f"sgen-unguided-{m}", r["sgen_unguided"])
         V.est(f"gap-{m}", r["gap"])
         V.est(f"overclaim-{m}", r["overclaim"])
+        for cond in ("nudged", "unguided"):
+            if r.get(f"overclaim_{cond}") is not None:
+                V.est(f"overclaim-{cond}-{m}", r[f"overclaim_{cond}"])
         V.est(f"clean-nudged-{m}", r["clean_nudged"])
         V.add(f"gen-errors-{m}", str(r["n"]["error"]))
         V.add(f"vp100-nudged-{m}", num(r["vp100_nudged"], 1))
@@ -366,6 +369,8 @@ def values(res: dict, inputs) -> Values:
         V.est(f"audit-precision-{m}", r["precision"])
         V.est(f"audit-recall-{m}", r["recall"])
         V.est(f"audit-parsefail-{m}", r["parse_fail"])
+        for op, e in r["per_operator_recall"].items():
+            V.est(f"audit-recall-{op}-{m}", e)
     # sensitivity without the byte-identical duplicate pages (main estimates keep all pages)
     dd = res.get("e1_distinct") or {}
     if dd:

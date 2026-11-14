@@ -80,8 +80,14 @@ def e1_gen(gen: pd.DataFrame, b: int = B_DEFAULT, seed: int = SEED) -> dict:
         elig = dm[dm["oc_elig"] > 0]
         oc = ratio_est(elig, "task_id", tasks, "oc_yes", "one", counts) if not elig.empty else \
             Est(None, note="no functional sample with a < 1 and a parsed self-assessment")
+        by_cond = {}                       # overclaim per condition (descriptive; added 2026-11-14)
+        for cond, dc in (("nudged", nud), ("unguided", ung)):
+            ec = dc[dc["oc_elig"] > 0]
+            by_cond[cond] = ratio_est(ec, "task_id", tasks, "oc_yes", "one", counts) if not ec.empty else \
+                Est(None, note="no eligible sample in this condition")
         out[m] = {
             "sgen_nudged": s_n, "sgen_unguided": s_u, "gap": gap, "overclaim": oc,
+            "overclaim_nudged": by_cond["nudged"], "overclaim_unguided": by_cond["unguided"],
             "clean_nudged": ratio_est(nud, "task_id", tasks, "clean", "one", counts),
             "clean_unguided": ratio_est(ung, "task_id", tasks, "clean", "one", counts),
             "vp100_nudged": _mean(nud, "violations_per_100"),

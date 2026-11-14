@@ -49,23 +49,29 @@ A Drift-, Bias- and Cost-Aware Evaluation on an 8\,GB Consumer GPU}
 \maketitle
 
 \begin{abstract}
-Large language models (LLMs) now write and repair user-interface code, yet comparisons of
-LLMs rarely measure accessibility, usually test one-shot prompts, sometimes let a model judge
-its own output, and seldom report cost. We present an evaluation framework that measures
-accessible software engineering as it happens in practice. Six capability dimensions anchored in
-WCAG~2.2 are scored by real-browser oracles (axe-core and \res{probe-count} keyboard and
-semantics probes). The \emph{Dynamic Contextual Drift Index} (DCDI) measures how much
-accessibility adherence an agent loses over a long, tool-using session, against a fresh-context
-control and a length-matched padded control. \emph{Cross-Model Blind Peer Evaluation} (CMBPE)
-is an anonymised, family-recused, order-permuted and length-adjusted jury for alt text,
-calibrated against ratings by blind and low-vision people. \emph{Capability-per-Dollar-Second}
-(CPDS) relates capability to cost and latency with bootstrap Pareto membership. We apply the
-framework to four open-weight models that a small organisation can self-host for free on one
-8\,GB consumer GPU (\Q, \QV, \GM{} and \MI, 4-bit), with \res{total-calls} logged model calls
-on \res{run-dates}.
+LLMs now write and repair user-interface code, yet LLM comparisons rarely measure
+accessibility, mostly test one-shot prompts, sometimes let a model judge its own output, and
+seldom report cost. In our framework, six WCAG~2.2-anchored capability dimensions are scored by
+real-browser oracles (axe-core and \res{probe-count} keyboard and semantics probes). The
+\emph{Dynamic Contextual Drift Index} (DCDI) measures the accessibility adherence an agent loses
+over a long, tool-using session, against fresh-context and length-matched padded controls.
+\emph{Cross-Model Blind Peer Evaluation} (CMBPE) is an anonymised, family-recused,
+order-permuted and length-adjusted jury for alt text, calibrated against ratings by blind and
+low-vision (BLV) people. \emph{Capability-per-Dollar-Second} (CPDS) relates capability to cost
+and latency. We apply the framework to four 4-bit open-weight models that run for free on one
+8\,GB consumer GPU (\Q, \QV, \GM, \MI), with \res{total-calls-answered} answered calls.
 %FINDINGS-ABSTRACT
-Every reported value is computed by committed code from logged responses; code, prompts,
-logs and scores are public.
+Asked for accessibility, \Q{} generated pages that passed most checks
+($S_\text{gen}={}$\res{sgen-local-qwen3-8b}), but only a share of \res{clean-nudged-local-qwen3-8b}
+passed all, and the request made both E1 models far more likely to claim conformance for failing
+pages. In repair and audit, \Q{} scored \res{srep-local-qwen3-8b} and \res{saudit-local-qwen3-8b}
+(F1), \QV{} \res{srep-local-qwen25vl-7b} and \res{saudit-local-qwen25vl-7b}. In a 24-step agentic
+session, DCDI detected no drift (\res{dcdi-local-qwen3-8b}), yet in the second half \Q{} ended
+\res{e2-notool-s-h2-local-qwen3-8b} of \res{e2-half-steps} steps without touching a file while
+reporting the change as done; DCDI drops such steps. CMBPE beat the median single judge on
+known-answer alt-text pairs but tracked BLV ratings no better than description length.
+Self-hosted repair costs no money but about \res{rep-hours1000-local-qwen3-8b} GPU hours per
+1{,}000 pages. All values are computed by released code from logged responses.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -349,8 +355,9 @@ pain-level slider) and 6 \emph{pressure} requests that conflict with accessibili
 (placeholder-only labels, light-grey footer text, a click-only tile, removing focus outlines,
 colour-only validation errors, disabling zoom), in a fixed random order. A step ends when the
 model answers without a tool call or after 10 tool calls; history is never truncated or
-summarised. Pressure steps score 1 if the model keeps the page accessible, 0.5 for a partial
-outcome and 0 if it complies in an inaccessible way. Fresh controls run at every step, padded
+summarised. A pressure step scores 1 if the page passes all its checks afterwards and, for requests that can
+be met accessibly, the request was met; 0.5 if such a request was not met but the page passes;
+and 0 if the page fails a check afterwards, for whatever reason. Fresh controls run at every step, padded
 controls at positions 8, 12, 16, 20 and 24 (only where the session reaches them), and an
 end-of-session audit re-scores every earlier step.
 
@@ -393,56 +400,34 @@ a third local judge family (\MI), without which recusal removes every E3c verdic
 output budget for \Q{} (the plan's rule: the model's maximum output); the image-token cap; the E2
 padding transcript written by \Q{} instead of Claude Haiku 5.5, kept to the turns that fit its
 window; and one E2 run (seed 101) instead of three. No metric, prompt, task or scoring rule
-was changed. No public pre-registration tag was created before data collection, so this study
+was changed. During the run we fixed the harness and the run script without changing what is
+measured. A response that fills \Q's window is now recorded as context exhaustion, because
+llama.cpp signals a full window by stopping the output rather than by rejecting the request. A
+padded control runs only after a completed session step, and tool-call arguments that are not
+valid JSON are sent back to the model as an empty object. Leakage-check folds are grouped by
+image. The pipeline now checks which server profile is loaded and that the vision encoder works
+(see Threats to Validity). E2 run~0 is the pilot (same seed and model), so its first six
+positions reuse the pilot's cached responses. Two pairs of repair and audit pages turned out to
+be identical (B02-V1/V2 and B03-V1/V2), leaving \res{e1-distinct-pages} distinct pages with
+\res{e1-distinct-faults} distinct faults. We kept the frozen corpus and also report E1 without
+the duplicates. Every page is rechecked after 6\,s, not only pages with timers, which is equal
+to or stricter than the plan. After seeing the E2 data we added exploratory counts of tool use
+and functional steps per session half, and marked non-functional steps in the drift figure.
+After seeing the E1 data we added two descriptive values: audit recall per fault operator and the
+GPU time of repair. No public pre-registration tag was created before data collection, so this study
 is not pre-registered. The run's code was published (commit \texttt{7544be2}) before all but
 a handful of smoke-test calls, which used the same code.
 
 % ======================================================================================
 \section{Results}
 %RESULTS-BEGIN
-\emph{Draft: the paragraphs below cover the runs finished so far; red markers are values not
-computed yet.}
+\input{sections/results_e1}
 
-\subsection{RQ1: Capability profiles}
-\textbf{Generation (C2, C6).} \res{functional-gen-local-qwen25vl-7b-count} of
-\res{functional-gen-local-qwen25vl-7b-n} pages written by \QV{} passed their task's functional
-checks. Its nudged generation score was $S_\text{gen} = \res{sgen-local-qwen25vl-7b}$ (95\,\%
-CI \res{sgen-local-qwen25vl-7b-ci}), against \res{sgen-unguided-local-qwen25vl-7b} without the
-nudge. The default gap of \res{gap-local-qwen25vl-7b} (CI \res{gap-local-qwen25vl-7b-ci}) shows
-that the added accessibility sentence made no detectable difference. The share of nudged pages
-that passed every applicable check was \res{clean-nudged-local-qwen25vl-7b}, with
-\res{vp100-nudged-local-qwen25vl-7b} violating nodes per 100 elements
-(\res{vp100-unguided-local-qwen25vl-7b} unguided). Asked whether its page conformed to
-WCAG~2.2 AA, the model said yes for a share of \res{overclaim-local-qwen25vl-7b} (CI
-\res{overclaim-local-qwen25vl-7b-ci}) of the functional pages that failed at least one check.
+\input{sections/results_e2}
 
-\textbf{Repair (C2).} Repair was much harder than generation. \QV{} reached
-$S_\text{rep} = \res{srep-local-qwen25vl-7b}$ (CI \res{srep-local-qwen25vl-7b-ci}) and fully
-repaired no page (full-repair rate \res{fullrepair-local-qwen25vl-7b}). It often returned the
-page as it was:
-\res{unchanged-repair-local-qwen25vl-7b-count} of the \res{unchanged-repair-local-qwen25vl-7b-n}
-pages it returned were identical to the faulty input. \res{capped-repair-local-qwen25vl-7b-count}
-of its \res{capped-repair-local-qwen25vl-7b-n} answers stopped at the 8{,}192-token output cap
-before the page was complete. The preservation rate (text and structure kept) was
-\res{preserved-local-qwen25vl-7b}. The faults it did resolve were invalid ARIA
-attributes (M11, \res{resolve-m11-local-qwen25vl-7b}) and unnamed icon links (M05,
-\res{resolve-m05-local-qwen25vl-7b}); it resolved none of the other ten operators. Its score
-was \res{srep-w3c-local-qwen25vl-7b} on W3C-derived pages and
-\res{srep-authored-local-qwen25vl-7b} on authored pages.
+\input{sections/results_e3}
 
-\textbf{Audit (C1).} \QV{} found none of the 192 injected faults (micro-F1
-\res{saudit-local-qwen25vl-7b}, recall \res{audit-recall-local-qwen25vl-7b}), and none of the
-items it reported matched a fault (precision \res{audit-precision-local-qwen25vl-7b}). Its
-near-greedy decoding fell into loops that listed the same element again and again under
-consecutive success-criterion numbers. On page B03-V4, for example, it reported one select
-element three times under SC 1.4.8, 1.4.9 and 1.4.10, while the page's injected faults were a
-missing alt text, low contrast, a missing page language and a demoted heading
-(\texttt{runs/e1/scores/audit.jsonl}). \res{capped-audit-local-qwen25vl-7b-count} of its
-\res{capped-audit-local-qwen25vl-7b-n} first answers ran into the output cap, and a share of
-\res{audit-parsefail-local-qwen25vl-7b} of pages yielded no parseable list even after the JSON
-retry.
-
-\emph{\Q{} (E1, E2) and the E3 models are still running.}
+\input{sections/results_e4}
 %RESULTS-END
 
 \begin{table*}[t]
@@ -481,8 +466,10 @@ Method & $r_\text{BLV}$ & $r_\text{crowd}$ & Acc$_\text{known}$ & PC & $\gamma$ 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{\resdir/figures/fig_drift.pdf}
-\caption{E2 adherence by session position: in-session (solid) and fresh control (dashed),
-with bootstrap bands (generated).}
+\caption{E2 by session position (\Q, one run; generated). Top: adherence in the session (solid)
+and in the fresh control (dashed) on the steps functional in both arms, which DCDI sums. Grey:
+the in-session step was not functional and is dropped from DCDI. Bottom: tool calls per step;
+P marks pressure steps, which DCDI excludes.}
 \label{fig:drift}
 \end{figure}}{}
 
@@ -510,6 +497,16 @@ differently. Results describe these exact files (SHA-256 in the repository).
 no longer fits. DCDI is then measured over the steps completed, and late padded checkpoints may
 not exist.
 
+\textbf{The functional gate of DCDI.} DCDI compares adherence only on steps that are functional in
+both arms. A session that stops doing the work therefore leaves the comparison instead of
+lowering the score, as happened in E2 (Section~\ref{sec:rq2}). The functional checks are also
+lenient: they test that the step's anchor element and text exist, so a step whose anchor
+already existed passes without any change (the accordion and form-validation steps). DCDI and
+$S_5$ must therefore be read together with the functional and tool-use comparison with the
+fresh control. Similarly, a pressure step scores 0 whenever the page fails a check afterwards,
+even if the model changed nothing, so the pressure score, and with it $S_6$, also reflects
+failures that existed before the request.
+
 \textbf{Sampling and repetitions.} Provider defaults make \QV{} near-greedy, so its three E1
 samples are close to identical. E2 has one run, so drift intervals reflect steps within one
 session order.
@@ -521,6 +518,16 @@ ratings is measured on 68 descriptions.
 \textbf{Hardware.} Latency, and hence CPDS, depends on the GPU, the driver (NVK) and the
 quantisation; the cost of electricity is not included.
 
+\textbf{Run incidents.} The two \QV{} server profiles (text for E1, vision for E3) share one model
+name. The first E3 pass of \QV{} therefore ran against the text-only server, and every one of its
+image requests failed. Later, the vision encoder ran out of GPU memory and failed every image
+request while the server still reported itself healthy. In both cases the affected steps were
+run again on a verified vision server before any result was used. The run script now
+checks the loaded profile, warms up the vision encoder, restarts the server on encoder errors and
+marks a step done only if none of its requests failed. These incidents explain why
+\res{total-calls-failed} of the \res{total-calls} logged call attempts failed. Failed attempts are
+never cached or scored.
+
 \textbf{Process.} The plan was frozen in the repository but not publicly time-stamped before
 data collection; all later changes are listed with reasons.
 
@@ -530,6 +537,26 @@ data collection; all later changes are listed with reasons.
 We presented a framework that measures accessible software engineering with browser-based
 oracles, a drift index with counterfactual controls, a bias-controlled jury and a cost-aware
 efficiency score, and applied it to four models that run for free on one consumer GPU.
+
+For practitioners, the main lesson is not to trust a model's own account of its work. A
+one-sentence request for accessibility improved \Q's pages but not \QV's, and it made both
+models far more likely to claim conformance for pages that still failed checks; few pages from
+either model passed every check. Repair by these models is partial (full repairs were rare), and
+\Q's repairs sometimes added new failures. Their audits miss
+most known faults, and what a model lists is a poor guide to what it can fix. In a long session,
+\Q{} stopped using its tools as the session went on and still said the work was done. An agent's claims of
+completed changes must therefore be checked against the workspace, not read from its replies.
+For alt text, a jury of small local models catches gross errors but does not replace blind and
+low-vision readers.
+
+For evaluation, the study shows why the measures need their controls. DCDI alone would have
+reported a stable agent; tool use and functional steps, set against the fresh control, revealed
+the failure, so drift must be reported together with them. The padded control, meant to separate
+context length from history, did not reproduce the failure, and one run cannot separate the two. Without
+a price, Pareto membership reduces to a trade-off between capability and latency, and GPU time
+is the cost that matters. Each conclusion rests on 4--8B models at 4-bit, one E2 run and one
+machine. More E2 runs, larger local models and hosted models are the next steps; the harness
+already supports them.
 %CONCLUSION-END
 The harness, prompts, tasks, corpus, call logs and scores are public, so the same study can be
 repeated on other hardware or extended to API models by adding keys.
@@ -540,9 +567,10 @@ Code, configuration and data are on the \texttt{local-run-2026-11} branch of the
 repository. \texttt{experiments/local/serve\_llamacpp.sh} serves each model with the exact flags
 used, \texttt{experiments/local/run\_local.sh} runs the whole study, and
 \texttt{experiments/runs/} holds every call record (\texttt{calls.jsonl}), score file and E2
-transcript. All tables, figures and values in this paper are regenerated by
-\texttt{python -m analysis.run\_all --paper experiments/results/local-run-2026-11}.
-The study logged \res{total-calls} calls at a total token cost of \res{total-cost}.
+transcript. All tables, figures and values in this paper are regenerated, from \texttt{experiments/}, by
+\texttt{python -m analysis.run\_all --paper results/local-run-2026-11} and
+\texttt{python local/extra\_values.py}. The study logged \res{total-calls} call attempts
+(\res{total-calls-answered} answered) at a total token cost of \res{total-cost}.
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}

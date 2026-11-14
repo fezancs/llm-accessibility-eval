@@ -1,0 +1,35 @@
+% RQ4 results (CPDS, Pareto, cost). Every number is a res-macro key defined in values.tex
+% (export_latex.py) or extra_values.tex (local/extra_values.py).
+\subsection{RQ4: Efficiency and cost (CPDS)}\label{sec:rq4}
+\textbf{Cost and time.} Self-hosting made every call free: the study's token cost was
+\res{total-cost}, and repairing 1{,}000 pages would cost \res{cost1000-local-qwen3-8b} with either
+E1 model. The cost is GPU time; electricity was not metered. \Q{} took a median of
+\res{lat-gen-local-qwen3-8b}\,s per generation and \res{lat-rep-local-qwen3-8b}\,s per repair, against
+\res{lat-gen-local-qwen25vl-7b}\,s and \res{lat-rep-local-qwen25vl-7b}\,s for \QV{}. \Q{} decodes
+faster (\res{decode-tps-local-qwen3-8b} against \res{decode-tps-local-qwen25vl-7b} tokens/s,
+Table~\ref{tab:hw}) but writes more, because it reasons before it answers: a median of
+\res{rep-out-tokens-local-qwen3-8b} output tokens per repair, against
+\res{rep-out-tokens-local-qwen25vl-7b}. At the study's mean of \res{rep-mean-s-local-qwen3-8b}\,s
+per repair, 1{,}000 pages would occupy the GPU for about \res{rep-hours1000-local-qwen3-8b}\,h with
+\Q{} and \res{rep-hours1000-local-qwen25vl-7b}\,h with \QV{}. With its 32{,}768-token window, \Q{}
+also used almost all of the card's memory (median \res{vram-mib-local-qwen3-8b}\,MiB, all processes).
+
+\textbf{CPDS and Pareto membership.} With $C=0$, batch CPDS ($\alpha=1,\beta=0$) equals
+$S_\text{rep}$: \res{cpds-batch-local-qwen3-8b} for \Q{} and \res{cpds-batch-local-qwen25vl-7b} for
+\QV{}. Interactive CPDS divides $S_\text{gen}$ by the latency term, and \QV's lower latency puts it
+ahead (\res{cpds-interactive-local-qwen25vl-7b} against \res{cpds-interactive-local-qwen3-8b}).
+CPDS has no interval in this analysis, and the $S_\text{gen}$ difference behind it is not
+distinguishable from 0, so this ranking is not established. Both models are on both Pareto
+frontiers: $\pi_\text{batch}$ was \res{pi-batch-local-qwen3-8b} for \Q{} and
+\res{pi-batch-local-qwen25vl-7b} for \QV{}, and $\pi_\text{gen}$ \res{pi-gen-local-qwen3-8b} and
+\res{pi-gen-local-qwen25vl-7b}. With equal cost, the frontier trades capability against latency
+only, so \QV{} stays on it by being faster, even in repair, where its capability is near 0. H3 is
+\res{h3-result} (best open model \Q, $\pi={}$\res{h3-pi}), but trivially, because every model
+here is open-weight.
+
+\textbf{Answer to RQ4.} On this hardware, AI-assisted remediation costs no money but much GPU
+time: about \res{rep-hours1000-local-qwen3-8b} GPU hours per 1{,}000 pages with \Q, for an expected
+repair score of \res{srep-local-qwen3-8b} per page. About half of \Q's output in repair is reasoning. Without a price, Pareto membership says little: a slow model that repairs and a fast model
+that does not are both ``efficient''. For batch remediation, \Q{} is the only useful choice among
+the models tested; for interactive generation, the two models trade capability against speed, and
+this study cannot rank them.

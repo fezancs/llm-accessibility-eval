@@ -1,0 +1,120 @@
+% E1 results (RQ1; C1, C2, C6). Every number is a res-macro key defined in values.tex
+% (export_latex.py) or extra_values.tex (local/extra_values.py). Facts that are not numbers (which
+% pages lack a title or language after repair, the kinds of regressions, which task reached the
+% output cap, the audit loops) were checked in runs/e1/scores/*.jsonl and runs/e1/artifacts
+% (2026-11-14). Differences are <metric>-diff-local-qwen25vl-7b-local-qwen3-8b = QV minus Q3.
+\subsection{RQ1: Capability profiles (C1, C2, C6)}\label{sec:rq1}
+Table~\ref{tab:main} gives each model's scores. No model has all six: \Q{} reads no images (C4)
+and \QV{} ran no E2 session, so no CCS is reported. Differences below are \QV{} minus \Q{} on the
+same resamples; we call the two models different only when that interval excludes~0.
+
+\textbf{Generation (C2, C6).} \res{functional-gen-local-qwen3-8b-count} of the
+\res{functional-gen-local-qwen3-8b-n} pages of \Q{} and \res{functional-gen-local-qwen25vl-7b-count}
+of the \res{functional-gen-local-qwen25vl-7b-n} pages of \QV{} passed their task's functional
+checks. With the accessibility sentence, \Q{} reached $S_\text{gen}={}$\res{sgen-local-qwen3-8b}
+(95\,\% CI \res{sgen-local-qwen3-8b-ci}) and \QV{} \res{sgen-local-qwen25vl-7b} (CI
+\res{sgen-local-qwen25vl-7b-ci}); without it, \res{sgen-unguided-local-qwen3-8b} and
+\res{sgen-unguided-local-qwen25vl-7b}. Neither difference is distinguishable from 0 (nudged
+\res{sgen-diff-local-qwen25vl-7b-local-qwen3-8b}, CI \res{sgen-diff-local-qwen25vl-7b-local-qwen3-8b-ci};
+unguided \res{sgen-unguided-diff-local-qwen25vl-7b-local-qwen3-8b}, CI
+\res{sgen-unguided-diff-local-qwen25vl-7b-local-qwen3-8b-ci}). The models differ in how they respond
+to the sentence. It raised \Q's score by \res{gap-local-qwen3-8b} (CI \res{gap-local-qwen3-8b-ci})
+and cut its violating nodes per 100 elements from \res{vp100-unguided-local-qwen3-8b} to
+\res{vp100-nudged-local-qwen3-8b}, but made no detectable difference for \QV{} (default gap
+\res{gap-local-qwen25vl-7b}, CI \res{gap-local-qwen25vl-7b-ci}; difference of the gaps
+\res{gap-diff-local-qwen25vl-7b-local-qwen3-8b}, CI \res{gap-diff-local-qwen25vl-7b-local-qwen3-8b-ci}).
+H5, that most models gain from the sentence, holds for \res{h5-count} models and is therefore
+\res{h5-result} (Holm-adjusted $p={}$\res{h5-padj}). A high pass rate did not mean a clean page:
+a share of only \res{clean-nudged-local-qwen3-8b} of \Q's nudged pages and
+\res{clean-nudged-local-qwen25vl-7b} of \QV's passed every applicable check (difference
+\res{clean-nudged-diff-local-qwen25vl-7b-local-qwen3-8b}, CI
+\res{clean-nudged-diff-local-qwen25vl-7b-local-qwen3-8b-ci}).
+\res{capped-gen-local-qwen3-8b-count} of \Q's \res{capped-gen-local-qwen3-8b-n} answers, all for the
+icon-links task, reasoned until the output cap and contained no page; they score~0. Asked whether
+its page conformed to WCAG~2.2 AA, \Q{} said yes for a share of \res{overclaim-local-qwen3-8b} (CI
+\res{overclaim-local-qwen3-8b-ci}) of its functional pages that failed at least one check, and \QV{}
+for \res{overclaim-local-qwen25vl-7b} (CI \res{overclaim-local-qwen25vl-7b-ci}; difference
+\res{overclaim-diff-local-qwen25vl-7b-local-qwen3-8b}, CI
+\res{overclaim-diff-local-qwen25vl-7b-local-qwen3-8b-ci}). These pooled rates hide where the claims
+came from: almost all were made for nudged pages. On failing nudged pages the rate was
+\res{overclaim-nudged-local-qwen3-8b} for \Q{} (CI \res{overclaim-nudged-local-qwen3-8b-ci}) and
+\res{overclaim-nudged-local-qwen25vl-7b} for \QV{} (CI \res{overclaim-nudged-local-qwen25vl-7b-ci}),
+on failing unguided pages \res{overclaim-unguided-local-qwen3-8b} and
+\res{overclaim-unguided-local-qwen25vl-7b}. Asking for accessibility thus made both models far more
+likely to claim it, whether or not the page improved. The checks find only some failures, so
+these rates are lower bounds.
+
+\textbf{Repair (C2).} Repair was much harder than generation, and here the models differ clearly.
+\Q{} reached $S_\text{rep}={}$\res{srep-local-qwen3-8b} (CI \res{srep-local-qwen3-8b-ci}) and
+\QV{} \res{srep-local-qwen25vl-7b} (CI \res{srep-local-qwen25vl-7b-ci}; difference
+\res{srep-diff-local-qwen25vl-7b-local-qwen3-8b}, CI \res{srep-diff-local-qwen25vl-7b-local-qwen3-8b-ci}).
+Full repairs were rare: a share of \res{fullrepair-local-qwen3-8b} of \Q's pages and none of
+\QV's (\res{fullrepair-local-qwen25vl-7b}).
+The two models failed in opposite ways. \QV{} often changed nothing:
+\res{unchanged-repair-local-qwen25vl-7b-count} of the \res{unchanged-repair-local-qwen25vl-7b-n}
+pages it returned were identical to the faulty input, and \res{capped-repair-local-qwen25vl-7b-count}
+of its \res{capped-repair-local-qwen25vl-7b-n} answers stopped at the 8{,}192-token output cap before
+the page was complete. \Q{} changed every page it returned
+(\res{unchanged-repair-local-qwen3-8b-count} of \res{unchanged-repair-local-qwen3-8b-n} unchanged),
+but its edits introduced \res{regressions-local-qwen3-8b} new failures per page (CI
+\res{regressions-local-qwen3-8b-ci}), most of them ARIA attributes that the element's role does not
+allow. It preserved the text and structure of a share of \res{preserved-local-qwen3-8b} of the pages
+(\QV: \res{preserved-local-qwen25vl-7b}; difference \res{preserved-diff-local-qwen25vl-7b-local-qwen3-8b},
+CI \res{preserved-diff-local-qwen25vl-7b-local-qwen3-8b-ci}). Of \Q's pages that failed
+preservation, \res{capped-repair-local-qwen3-8b-count} contained no page: the prompt and the reasoning
+together filled the 32{,}768-token context window before the page was written. Most of the others
+had changed the visible text.
+
+\Q{} resolved most invalid ARIA attributes (M11,
+\res{resolve-m11-local-qwen3-8b}), placeholder-only labels (M02, \res{resolve-m02-local-qwen3-8b}),
+unnamed icon buttons (M04, \res{resolve-m04-local-qwen3-8b}) and removed focus indicators (M10,
+\res{resolve-m10-local-qwen3-8b}), but few faults of other kinds. It almost never restored what was removed at page level, the
+page title (M12, \res{resolve-m12-local-qwen3-8b}) and the page language (M06,
+\res{resolve-m06-local-qwen3-8b}): none of its returned pages had a title again, and only one had a
+language. Unnamed icon links (M05, \res{resolve-m05-local-qwen3-8b}) and low contrast (M03,
+\res{resolve-m03-local-qwen3-8b}) also mostly remained. It scored lower on the longer W3C-derived
+pages (\res{srep-w3c-local-qwen3-8b}, CI \res{srep-w3c-local-qwen3-8b-ci}) than on the authored
+pages (\res{srep-authored-local-qwen3-8b}, CI \res{srep-authored-local-qwen3-8b-ci}). \QV{} resolved
+only invalid ARIA attributes (M11, \res{resolve-m11-local-qwen25vl-7b}) and unnamed icon links
+(M05, \res{resolve-m05-local-qwen25vl-7b}).
+
+\textbf{Audit (C1).} \Q{} reached $S_\text{audit}={}$\res{saudit-local-qwen3-8b} (CI
+\res{saudit-local-qwen3-8b-ci}), with recall \res{audit-recall-local-qwen3-8b} (CI
+\res{audit-recall-local-qwen3-8b-ci}) and a precision of at least \res{audit-precision-local-qwen3-8b},
+and every page gave a parseable list (parse-failure rate \res{audit-parsefail-local-qwen3-8b}).
+Its hits came mostly from three operators: missing alt text (M01, \res{audit-recall-m01-local-qwen3-8b}),
+placeholder-only labels (M02, \res{audit-recall-m02-local-qwen3-8b}) and \texttt{div} elements
+used as buttons (M07, \res{audit-recall-m07-local-qwen3-8b}). It reported no removed page title or
+page language, no unnamed icon link and no positive \texttt{tabindex} (M12, M06, M05, M09:
+\res{audit-recall-m12-local-qwen3-8b} each), although the last is plain in the markup. It also
+rarely reported unnamed icon buttons and removed focus indicators (M04, M10:
+\res{audit-recall-m04-local-qwen3-8b} each), even though it fixed most of them when asked to
+repair the same pages. What this model lists in an audit is therefore a poor guide to what it can
+repair.
+
+\QV{} found none of the 192 injected faults ($S_\text{audit}={}$\res{saudit-local-qwen25vl-7b},
+recall \res{audit-recall-local-qwen25vl-7b}; difference from \Q{}
+\res{saudit-diff-local-qwen25vl-7b-local-qwen3-8b}, CI
+\res{saudit-diff-local-qwen25vl-7b-local-qwen3-8b-ci}), and none of the items it reported matched a
+fault (precision \res{audit-precision-local-qwen25vl-7b}). Its near-greedy decoding fell into
+loops that listed the same element again and again under consecutive success-criterion numbers.
+On page B03-V4, for example, it reported the label of a select element three times under SC 1.4.8, 1.4.9 and
+1.4.10, while the page's injected faults were a missing alt text, low contrast, a missing page
+language and a demoted heading (\texttt{runs/e1/scores/audit.jsonl}).
+\res{capped-audit-local-qwen25vl-7b-count} of its \res{capped-audit-local-qwen25vl-7b-n} first
+answers ran into the output cap, and a share of \res{audit-parsefail-local-qwen25vl-7b} of pages
+yielded no parseable list even after the JSON retry.
+
+\textbf{Duplicate pages.} Without the two duplicate pages, $S_\text{rep}$ was
+\res{srep-dedup-local-qwen3-8b} for \Q{} and \res{srep-dedup-local-qwen25vl-7b} for \QV{}, and
+$S_\text{audit}$ \res{saudit-dedup-local-qwen3-8b} and \res{saudit-dedup-local-qwen25vl-7b}. No
+conclusion changes.
+
+\textbf{Answer to RQ1.} \Q{} was the stronger model in repair and audit, and the only one whose
+output improved when accessibility was requested. In generation the two models could not be told
+apart. Neither is ready for unattended use: few generated pages passed every check, full repairs
+were rare, the better audit found fewer than a third of the known faults, and both models claimed
+conformance for pages that failed checks. The profiles are also uneven (Table~\ref{tab:main}). \Q's
+$S_1={}$\res{s1-local-qwen3-8b} and $S_6={}$\res{s6-local-qwen3-8b} are low, while its
+$S_3={}$\res{s3-local-qwen3-8b} and $S_5={}$\res{s5-local-qwen3-8b} are high only because DCDI and
+$S_3$ leave out the steps the session failed (Section~\ref{sec:rq2}).

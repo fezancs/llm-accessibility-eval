@@ -10,14 +10,16 @@ panel (mean of per-judge z-scores) reached \res{r-blv-cmbpe} (CI \res{r-blv-cmbp
 panel (mean raw score) \res{r-blv-naive} (CI \res{r-blv-naive-ci}), and description length alone
 \res{r-blv-length} (CI \res{r-blv-length-ci}). Against crowd ratings, CMBPE reached
 \res{r-crowd-cmbpe} (CI \res{r-crowd-cmbpe-ci}), the naive panel \res{r-crowd-naive} and length
-\res{r-crowd-length} (CI \res{r-crowd-length-ci}). All correlations were lower for crowd
-ratings (CMBPE drop: \res{r-crowd-minus-blv-cmbpe}, CI \res{r-crowd-minus-blv-cmbpe-ci}).
+\res{r-crowd-length} (CI \res{r-crowd-length-ci}). Every point estimate was lower for crowd ratings (CMBPE drop: \res{r-crowd-minus-blv-cmbpe}, CI \res{r-crowd-minus-blv-cmbpe-ci}), although
+for \QV{} and \GM{} the interval of the drop includes 0.
 The jury tracked human ratings no better than description length. On crowd ratings length was
 ahead of the CMBPE panel (difference \res{r-crowd-length-minus-cmbpe}, CI
 \res{r-crowd-length-minus-cmbpe-ci}, paired resamples); on BLV ratings no difference was
 detectable (\res{r-blv-length-minus-cmbpe}, CI \res{r-blv-length-minus-cmbpe-ci}). On the
-\res{r-blv-cmbpe-common-n} BLV items that all three judges scored, \MI{} remained the best single
-judge (\res{r-blv-local-ministral3-8b-common}, CI \res{r-blv-local-ministral3-8b-common-ci}).
+\res{r-blv-cmbpe-common-n} BLV items that all three judges scored, \MI{} had the highest point
+estimate of the single judges (\res{r-blv-local-ministral3-8b-common}, CI
+\res{r-blv-local-ministral3-8b-common-ci}), but its interval overlaps the others' and no paired
+difference was tested, so the judges are not ranked.
 
 \textbf{Known-answer pairs (E3b).} On the \res{e3b-pairs} known-answer pairs, CMBPE chose the
 original with accuracy \res{acc-known-cmbpe} (CI \res{acc-known-cmbpe-ci}), the single judges
@@ -49,8 +51,7 @@ include chance level, so these pairs do not rank the methods.
 verdicts on \res{e3c-pairs} pairs (\res{e3c-images} images) entered the fit. $S_4$ was
 \res{s4-local-ministral3-8b} for \MI{} (CI \res{s4-local-ministral3-8b-ci}),
 \res{s4-local-gemma3-4b} for \GM{} (CI \res{s4-local-gemma3-4b-ci}) and \res{s4-local-qwen25vl-7b}
-for \QV{} (CI \res{s4-local-qwen25vl-7b-ci}). Both \MI{} and \GM{} wrote better alt text than
-\QV{} (differences \res{s4-diff-local-ministral3-8b-local-qwen25vl-7b}, CI
+for \QV{} (CI \res{s4-local-qwen25vl-7b-ci}). The jury preferred the alt text of \MI{} and of \GM{} to that of \QV{} (differences \res{s4-diff-local-ministral3-8b-local-qwen25vl-7b}, CI
 \res{s4-diff-local-ministral3-8b-local-qwen25vl-7b-ci}, and
 \res{s4-diff-local-gemma3-4b-local-qwen25vl-7b}, CI
 \res{s4-diff-local-gemma3-4b-local-qwen25vl-7b-ci}); \GM{} and \MI{} did not differ
@@ -60,7 +61,8 @@ alt text had \res{e3c-meanlen-local-ministral3-8b} characters for \MI,
 \res{e3c-meanlen-local-gemma3-4b} for \GM{} and \res{e3c-meanlen-local-qwen25vl-7b} for \QV. The
 model removes each judge's length preference ($\gamma_j$), but because the length gap between two
 generators is systematic and each pair has a single non-recused judge, length bias and quality
-are only weakly separable here, and longer descriptions may also be genuinely more informative.
+are only weakly separable here, and longer descriptions may also be genuinely more informative. These differences are therefore
+jury preferences, not established differences in quality.
 H2 is \res{h2-result}; it needs a closed generator.
 
 \textbf{Judge biases (E3c).} \GM{} and \QV{} favoured the second-shown text
@@ -89,6 +91,13 @@ pair keeps one non-recused judge, so $S_4$ mixes alt-text quality with that judg
 \MI{} versus \QV{} rests on \GM{}, the judge with the largest position and length
 biases. \GM{} wrote no parseable alt text for \res{e3gen-parse-error-local-gemma3-4b} images,
 even after the retry, so its $S_4$ rests on \res{e3gen-ok-local-gemma3-4b} images.
+
+\textbf{Answer to RQ3.} CMBPE was modestly more reliable than the median single judge and the naive
+panel on clear-cut errors (H4b; the best single judge was not tested against it), and recusal was needed, because two of the three judges preferred their
+own family (H4a). It was not more reliable where it matters most: its scores tracked blind and
+low-vision readers' ratings no better than description length, and with three families each
+generator pair rests on one judge. A jury of small local models can screen alt text for gross
+errors; it cannot replace ratings by BLV readers.
 
 % ------------------------------------------------------------------------------------------
 % CANDIDATE SENTENCES (not typeset)

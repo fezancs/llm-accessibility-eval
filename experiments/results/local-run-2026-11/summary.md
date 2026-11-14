@@ -208,4 +208,4 @@ Kendall tau between dimension rankings (tau, n models): S1-S2: (None, 2); S1-S3:
 
 ## Outputs
 
-values.tex keys written: 1151. Figures: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/results/local-run-2026-11/figures/fig_drift.pdf.
+values.tex keys written: 1291. Figures: results/local-run-2026-11/figures/fig_drift.pdf.
