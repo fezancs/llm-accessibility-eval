@@ -1,0 +1,27 @@
+{
+  "generators": [
+    "local-qwen25vl-7b"
+  ],
+  "transform_counts": {},
+  "status": {
+    "local-qwen25vl-7b:error": 120
+  }
+}
+{
+  "generators": [
+    "local-qwen25vl-7b"
+  ],
+  "transform_counts": {
+    "local-qwen25vl-7b": {
+      "markdown": 0,
+      "quotes": 0,
+      "alt_text_prefix": 0,
+      "image_of": 0,
+      "picture_of": 0,
+      "n": 120
+    }
+  },
+  "status": {
+    "local-qwen25vl-7b:ok": 120
+  }
+}

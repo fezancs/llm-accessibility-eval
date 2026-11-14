@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CityCare Services</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    nav {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    nav button {
+      padding: 10px;
+      border: 2px solid #ccc;
+      background-color: #f9f9f9;
+      cursor: pointer;
+      border-radius: 4px;
+      min-width: 100px;
+      outline: none;
+    }
+    nav button[aria-selected="true"] {
+      border-color: #007bff;
+      background-color: #e6f7ff;
+    }
+    .tab-panel {
+      display: none;
+      background-color: #fff;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <nav role="tablist">
+    <button role="tab" aria-selected="true" aria-controls="vaccinations" id="tab-vaccinations">Vaccinations</button>
+    <button role="tab" aria-selected="false" aria-controls="check-ups" id="tab-check-ups">Check-ups</button>
+    <button role="tab" aria-selected="false" aria-controls="pharmacy" id="tab-pharmacy">Pharmacy</button>
+  </nav>
+  
+  <div class="tab-panel" id="vaccinations" aria-labelledby="tab-vaccinations" aria-hidden="false">
+    <h2>Vaccinations</h2>
+    <p>Get vaccinated for various diseases with our CityCare Vaccination Program. Our services are free and available at multiple locations.</p>
+  </div>
+  <div class="tab-panel" id="check-ups" aria-labelledby="tab-check-ups" aria-hidden="true">
+    <h2>Check-ups</h2>
+    <p>Regular health check-ups are essential for maintaining good health. Schedule your check-up today and ensure you're up to date with all necessary screenings.</p>
+  </div>
+  <div class="tab-panel" id="pharmacy" aria-labelledby="tab-pharmacy" aria-hidden="true">
+    <h2>Pharmacy</h2>
+    <p>Access a wide range of medications and health products at our CityCare Pharmacy. Our pharmacy is open during extended hours to accommodate your needs.</p>
+  </div>
+  
+  <script>
+    function showTab(index) {
+      const tabs = document.querySelectorAll('nav button');
+      tabs.forEach(tab => {
+        tab.setAttribute('aria-selected', 'false');
+      });
+      tabs[index].setAttribute('aria-selected', 'true');
+      
+      const panels = document.querySelectorAll('.tab-panel');
+      panels.forEach(panel => {
+        panel.setAttribute('aria-hidden', 'true');
+        panel.style.display = 'none';
+      });
+      
+      const selectedPanel = panels[index];
+      selectedPanel.setAttribute('aria-hidden', 'false');
+      selectedPanel.style.display = 'block';
+    }
+    
+    // Initial selection
+    showTab(0);
+    
+    // Add event listeners to tabs
+    document.querySelectorAll('nav button').forEach((tab, index) => {
+      tab.addEventListener('click', () => showTab(index));
+    });
+  </script>
+</body>
+</html>

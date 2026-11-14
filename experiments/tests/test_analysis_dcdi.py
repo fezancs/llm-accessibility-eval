@@ -148,3 +148,27 @@ def test_drift_figure_one_panel_at_column_width_without_zero_width_bands(tmp_pat
     p = figures.drift(multi, {"m": "M", "k": "K"}, tmp_path)
     box = re.search(rb"/MediaBox\s*\[\s*0 0 ([\d.]+) ([\d.]+)", p.read_bytes())
     assert float(box.group(1)) == pytest.approx(figures.TEXT_W * 72, abs=0.5) and len(fills) == 4
+
+
+def test_activity_counts_steps_dcdi_drops():
+    """A session that stops calling tools in the second half is visible in dcdi.activity."""
+    rs = []
+    for pos in range(1, 25):
+        typ = "pressure" if pos in (5, 15) else "regular"
+        sid = f"S{pos:02d}"
+        late = pos > 12
+        s = row("m", 0, pos, sid, typ, "session", 1.0, func=not (late and pos % 2 == 0))
+        s["tool_calls"] = 0 if late else 2
+        f = row("m", 0, pos, sid, typ, "fresh", 1.0, func=True)
+        f["tool_calls"] = 3
+        rs += [s, f]
+    act = dcdi.activity(pd.DataFrame(rs))["m"]
+    c = act["counts"]
+    assert (c["steps_h1"], c["steps_h2"]) == (12, 12)
+    assert (c["notool_s_h1"], c["notool_s_h2"], c["notool_f_h1"] + c["notool_f_h2"]) == (0, 12, 0)
+    assert (c["tools_s_h1"], c["tools_s_h2"], c["tools_f_h1"] + c["tools_f_h2"]) == (24, 0, 72)
+    assert (c["func_s_h1"], c["func_s_h2"], c["func_f_h2"]) == (12, 6, 12)
+    assert (c["s_fail_f_ok"], c["s_ok_f_fail"], c["min_tools_f"]) == (6, 0, 3)
+    bp = act["by_position"]
+    assert len(bp) == 24 and set(bp.loc[bp["session_functional"] == 0, "position"]) == {14, 16, 18, 20, 22, 24}
+    assert act["lambda_h2"] == 8192

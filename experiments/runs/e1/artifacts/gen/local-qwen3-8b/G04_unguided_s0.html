@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Frequently Asked Questions</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    .faq {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .question {
+      cursor: pointer;
+      padding: 10px;
+      background: #e0e0e0;
+      border-radius: 5px;
+      margin-bottom: 5px;
+    }
+    .answer {
+      display: none;
+      padding: 10px;
+      background: #f9f9f9;
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="faq">
+    <div class="question" onclick="toggleAnswer(this)">How do I book an appointment?</div>
+    <div class="answer">To book an appointment, visit our website and select the "Book Now" option. You can also call our office during business hours.</div>
+    
+    <div class="question" onclick="toggleAnswer(this)">Can I bring someone with me?</div>
+    <div class="answer">Yes, you can bring a companion or family member. Please inform us in advance if you need assistance.</div>
+    
+    <div class="question" onclick="toggleAnswer(this)">Is parking available?</div>
+    <div class="answer">Parking is available in the lot behind the building. A map with directions will be provided upon arrival.</div>
+    
+    <div class="question" onclick="toggleAnswer(this)">How do I get my test results?</div>
+    <div class="answer">Test results are typically available online within 5 business days. You'll receive an email notification when they're ready.</div>
+    
+    <div class="question" onclick="toggleAnswer(this)">What if I need an interpreter?</div>
+    <div class="answer">We provide free interpreter services. Please notify us at least 48 hours in advance to arrange this.</div>
+  </div>
+
+  <script>
+    function toggleAnswer(el) {
+      const answer = el.nextElementSibling;
+      if (answer.style.display === 'none') {
+        answer.style.display = 'block';
+      } else {
+        answer.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>

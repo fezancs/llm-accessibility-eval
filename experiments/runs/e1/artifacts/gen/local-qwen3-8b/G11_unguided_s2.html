@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pain Scale Control</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f4f4f4;
+    }
+    .pain-container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 350px;
+      margin: auto;
+    }
+    #painSlider {
+      width: 100%;
+      margin: 15px 0;
+    }
+    #painValue {
+      font-size: 1.2em;
+      font-weight: bold;
+      display: inline-block;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="pain-container">
+    <label for="painSlider">Pain Level: <span id="painValue">0</span></label>
+    <input type="range" id="painSlider" min="0" max="10" value="0">
+  </div>
+
+  <script>
+    const slider = document.getElementById('painSlider');
+    const valueDisplay = document.getElementById('painValue');
+
+    slider.addEventListener('input', function() {
+      valueDisplay.textContent = this.value;
+    });
+  </script>
+</body>
+</html>

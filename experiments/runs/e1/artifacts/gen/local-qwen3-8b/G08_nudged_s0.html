@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Announcements Banner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .banner {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 100px;
+            border: 2px solid #333;
+            overflow: hidden;
+            margin: 20px auto;
+            background-color: #fff;
+            color: #333;
+        }
+        .slide {
+            display: none;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            background-color: #f0f0f0;
+        }
+        .slide.active {
+            display: block;
+        }
+        button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 10px;
+            outline: none;
+        }
+        #prevBtn {
+            left: 10px;
+        }
+        #nextBtn {
+            right: 10px;
+        }
+        button:focus {
+            outline: 2px solid #000;
+            box-shadow: 0 0 0 2px #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="banner" role="region" aria-label="Announcements">
+        <div class="slide" id="slide0">Flu vaccinations are now available</div>
+        <div class="slide" id="slide1">New evening hours at Riverside</div>
+        <div class="slide" id="slide2">Download the CityCare app</div>
+        <button id="prevBtn" aria-label="Previous announcement">Previous</button>
+        <button id="nextBtn" aria-label="Next announcement">Next</button>
+    </div>
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentIndex = 0;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                if (i === index) {
+                    slide.classList.add('active');
+                }
+            });
+        }
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            showSlide(currentIndex);
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            showSlide(currentIndex);
+        });
+
+        // Initialize the first slide
+        showSlide(currentIndex);
+
+        setInterval(() => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            showSlide(currentIndex);
+        }, 5000);
+    </script>
+</body>
+</html>

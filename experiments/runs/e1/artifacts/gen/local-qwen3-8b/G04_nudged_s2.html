@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Frequently Asked Questions</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #fff;
+      color: #333;
+    }
+    .faq-item {
+      margin-bottom: 20px;
+    }
+    .question {
+      cursor: pointer;
+      font-weight: bold;
+      padding: 10px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      display: block;
+    }
+    .answer {
+      display: none;
+      padding: 10px;
+      background-color: #e0e0e0;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="faq-item">
+    <button class="question" aria-expanded="false" aria-controls="answer1" onclick="toggleAnswer(this)">How do I book an appointment?</button>
+    <div class="answer" id="answer1" aria-hidden="true">You can book an appointment through our website's scheduling tool. Please select your preferred date and time.</div>
+  </div>
+  <div class="faq-item">
+    <button class="question" aria-expanded="false" aria-controls="answer2" onclick="toggleAnswer(this)">Can I bring someone with me?</button>
+    <div class="answer" id="answer2" aria-hidden="true">Yes, you may bring one companion. They will be allowed in the waiting area.</div>
+  </div>
+  <div class="faq-item">
+    <button class="question" aria-expanded="false" aria-controls="answer3" onclick="toggleAnswer(this)">Is parking available?</button>
+    <div class="answer" id="answer3" aria-hidden="true">Parking is available in the lot behind the clinic. A map is provided upon arrival.</div>
+  </div>
+  <div class="faq-item">
+    <button class="question" aria-expanded="false" aria-controls="answer4" onclick="toggleAnswer(this)">How do I get my test results?</button>
+    <div class="answer" id="answer4" aria-hidden="true">Test results are typically available online within 5 business days. You'll receive an email notification when they're ready.</div>
+  </div>
+  <div class="faq-item">
+    <button class="question" aria-expanded="false" aria-controls="answer5" onclick="toggleAnswer(this)">What if I need an interpreter?</button>
+    <div class="answer" id="answer5" aria-hidden="true">We offer sign language and spoken interpreter services. Please notify us at least 48 hours in advance.</div>
+  </div>
+  <script>
+    function toggleAnswer(button) {
+      const answerId = button.getAttribute('aria-controls');
+      const answer = document.getElementById(answerId);
+      const isExpanded = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', !isExpanded);
+      answer.setAttribute('aria-hidden', !isExpanded);
+      answer.style.display = isExpanded ? 'none' : 'block';
+    }
+  </script>
+</body>
+</html>

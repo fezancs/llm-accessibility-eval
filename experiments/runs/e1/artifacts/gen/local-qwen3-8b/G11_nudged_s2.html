@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pain Scale Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        #painSlider {
+            width: 300px;
+            height: 10px;
+            accent-color: #007BFF;
+        }
+        #painValue {
+            margin-left: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+        <label for="painSlider">Pain Level:</label>
+        <input type="range" id="painSlider" min="0" max="10" step="1" value="0" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0">
+        <output id="painValue" aria-live="polite">0</output>
+    </div>
+
+    <script>
+        const slider = document.getElementById('painSlider');
+        const output = document.getElementById('painValue');
+
+        slider.addEventListener('input', function() {
+            const value = this.value;
+            output.textContent = value;
+            this.setAttribute('aria-valuenow', value);
+        });
+    </script>
+</body>
+</html>

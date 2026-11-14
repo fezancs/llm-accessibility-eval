@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CityCare Appointment Request</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f4f4f4;
+    }
+    .form-container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input[type="text"], input[type="email"], input[type="date"], select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .error {
+      color: red;
+      font-size: 0.9em;
+      display: none;
+    }
+    .radio-group {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    .radio-group input {
+      margin-right: 5px;
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .checkbox-group label {
+      margin-left: 10px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Request an Appointment</h2>
+    <form id="appointmentForm" onsubmit="return validateForm()">
+      <label for="fullName">Full Name</label>
+      <input type="text" id="fullName" name="fullName" placeholder="Enter your full name">
+      <div class="error" id="error-full-name"></div>
+
+      <label for="dob">Date of Birth</label>
+      <input type="date" id="dob" name="dob">
+      <div class="error" id="error-dob"></div>
+
+      <label for="phone">Phone Number</label>
+      <input type="text" id="phone" name="phone" placeholder="Optional">
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email">
+      <div class="error" id="error-email"></div>
+
+      <label for="clinic">Preferred Clinic</label>
+      <select id="clinic" name="clinic">
+        <option value="">Select a clinic</option>
+        <option value="Northside">Northside</option>
+        <option value="Riverside">Riverside</option>
+        <option value="Old Town">Old Town</option>
+        <option value="Harbour">Harbour</option>
+      </select>
+      <div class="error" id="error-clinic"></div>
+
+      <label>Consultation Type</label>
+      <div class="radio-group">
+        <input type="radio" id="inPerson" name="consultation" value="in person">
+        <label for="inPerson">In Person</label>
+        <input type="radio" id="videoCall" name="consultation" value="video call">
+        <label for="videoCall">Video Call</label>
+        <input type="radio" id="phoneCall" name="consultation" value="phone call">
+        <label for="phoneCall">Phone Call</label>
+      </div>
+
+      <label for="notes">Notes</label>
+      <textarea id="notes" name="notes" rows="4" placeholder="Additional information"></textarea>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="privacy" name="privacy" required>
+        <label for="privacy">I agree to the privacy notice</label>
+      </div>
+      <div class="error" id="error-privacy"></div>
+
+      <button type="submit">Request Appointment</button>
+    </form>
+  </div>
+
+  <script>
+    function validateForm() {
+      let isValid = true;
+
+      // Full Name
+      const fullName = document.getElementById('fullName').value.trim();
+      const errorFullName = document.getElementById('error-full-name');
+      if (!fullName) {
+        errorFullName.textContent = 'Full name is required.';
+        errorFullName.style.display = 'block';
+        isValid = false;
+      } else {
+        errorFullName.textContent = '';
+        errorFullName.style.display = 'none';
+      }
+
+      // Date of Birth
+      const dob = document.getElementById('dob').value;
+      const errorDob = document.getElementById('error-dob');
+      if (!dob) {
+        errorDob.textContent = 'Date of birth is required.';
+        errorDob.style.display = 'block';
+        isValid = false;
+      } else {
+        errorDob.textContent = '';
+        errorDob.style.display = 'none';
+      }
+
+      // Email
+      const email = document.getElementById('email').value.trim();
+      const errorEmail = document.getElementById('error-email');
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !emailRegex.test(email)) {
+        errorEmail.textContent = 'Valid email is required.';
+        errorEmail.style.display = 'block';
+        isValid = false;
+      } else {
+        errorEmail.textContent = '';
+        errorEmail.style.display = 'none';
+      }
+
+      // Clinic
+      const clinic = document.getElementById('clinic').value;
+      const errorClinic = document.getElementById('error-clinic');
+      if (!clinic) {
+        errorClinic.textContent = 'Please select a clinic.';
+        errorClinic.style.display = 'block';
+        isValid = false;
+      } else {
+        errorClinic.textContent = '';
+        errorClinic.style.display = 'none';
+      }
+
+      // Privacy Checkbox
+      const privacy = document.getElementById('privacy');
+      const errorPrivacy = document.getElementById('error-privacy');
+      if (!privacy.checked) {
+        errorPrivacy.textContent = 'You must agree to the privacy notice.';
+        errorPrivacy.style.display = 'block';
+        isValid = false;
+      } else {
+        errorPrivacy.textContent = '';
+        errorPrivacy.style.display = 'none';
+      }
+
+      return isValid;
+    }
+  </script>
+</body>
+</html>

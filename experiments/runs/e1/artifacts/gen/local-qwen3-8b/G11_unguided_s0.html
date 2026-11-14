@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pain Scale Control</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f4f4f4;
+    }
+    .pain-scale {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 30px;
+    }
+    .pain-scale label {
+      font-size: 1.2em;
+      color: #333;
+    }
+    #painSlider {
+      flex-grow: 1;
+      height: 10px;
+      background: #ddd;
+      border-radius: 5px;
+      outline: none;
+    }
+    #painSlider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #007bff;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    #painValue {
+      font-size: 1.5em;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Symptom Form</h1>
+  <div class="pain-scale">
+    <label for="painSlider">Pain Level:</label>
+    <input type="range" id="painSlider" min="0" max="10" step="1" value="0">
+    <span id="painValue">0</span>
+  </div>
+
+  <script>
+    const slider = document.getElementById('painSlider');
+    const valueDisplay = document.getElementById('painValue');
+
+    slider.addEventListener('input', () => {
+      const currentValue = slider.value;
+      valueDisplay.textContent = currentValue;
+    });
+
+    // Initialize display with initial value
+    valueDisplay.textContent = slider.value;
+  </script>
+</body>
+</html>

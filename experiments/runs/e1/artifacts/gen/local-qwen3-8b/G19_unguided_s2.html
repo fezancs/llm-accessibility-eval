@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cookie Consent</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      padding-bottom: 60px; /* Space for the banner */
+    }
+    #main-content {
+      padding: 20px;
+      min-height: 100vh;
+      background: #f0f0f0;
+    }
+    #consent-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #fff;
+      padding: 15px 20px;
+      text-align: center;
+      border-top: 1px solid #ccc;
+      z-index: 1000;
+    }
+    #consent-banner button {
+      margin: 0 10px;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    #settings-panel {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 20px;
+      border: 1px solid #ccc;
+      z-index: 1001;
+      width: 300px;
+    }
+    #settings-panel label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    #settings-panel input[type="checkbox"] {
+      margin-right: 10px;
+    }
+    #settings-panel button {
+      margin-top: 15px;
+      padding: 10px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="main-content">
+    <h1>Welcome to Our Site</h1>
+    <p>This is the main content area. We use cookies to make this site work and to understand how it is used.</p>
+  </div>
+  <div id="consent-banner">
+    <p>We use cookies to make this site work and to understand how it is used.</p>
+    <button id="accept-all">Accept all</button>
+    <button id="reject-all">Reject all</button>
+    <button id="cookie-settings">Cookie settings</button>
+  </div>
+  <div id="settings-panel">
+    <p>Cookie settings</p>
+    <label><input type="checkbox" id="necessary" checked disabled>Necessary</label>
+    <label><input type="checkbox" id="analytics">Analytics</label>
+    <label><input type="checkbox" id="marketing">Marketing</label>
+    <button id="save-preferences">Save preferences</button>
+  </div>
+  <script>
+    document.getElementById('cookie-settings').addEventListener('click', function() {
+      document.getElementById('settings-panel').style.display = 'block';
+    });
+
+    document.getElementById('accept-all').addEventListener('click', function() {
+      document.getElementById('settings-panel').style.display = 'block';
+      document.getElementById('analytics').checked = true;
+      document.getElementById('marketing').checked = true;
+    });
+
+    document.getElementById('reject-all').addEventListener('click', function() {
+      document.getElementById('settings-panel').style.display = 'block';
+      document.getElementById('analytics').checked = false;
+      document.getElementById('marketing').checked = false;
+    });
+
+    document.getElementById('save-preferences').addEventListener('click', function() {
+      // Save preferences logic can be added here
+      document.getElementById('settings-panel').style.display = 'none';
+    });
+  </script>
+</body>
+</html>

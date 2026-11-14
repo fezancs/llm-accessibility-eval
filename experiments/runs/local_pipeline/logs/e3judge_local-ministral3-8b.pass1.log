@@ -1,0 +1,22 @@
+{
+  "judges": [
+    "local-ministral3-8b"
+  ],
+  "procedures": [
+    "pointwise",
+    "known",
+    "blv_pairs"
+  ],
+  "pointwise": 272,
+  "known": {
+    "judgments": 2116,
+    "pairs": 1058,
+    "not_applicable": {
+      "truncate": 30
+    }
+  },
+  "blv_pairs": {
+    "pairs": 23,
+    "judgments": 46
+  }
+}

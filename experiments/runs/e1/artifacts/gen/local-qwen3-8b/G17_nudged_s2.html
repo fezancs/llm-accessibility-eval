@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Referral Letter Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .upload-area {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .drop-zone {
+            border: 2px dashed #999;
+            padding: 20px;
+            width: 100%;
+            cursor: pointer;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s;
+        }
+        .drop-zone.dragover {
+            background-color: #e6f7ff;
+        }
+        .file-list {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .file-item .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .file-item .file-info span {
+            font-weight: bold;
+        }
+        .remove-button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.2s;
+        }
+        .remove-button:hover {
+            background-color: #cc0000;
+        }
+        .remove-button span {
+            font-size: 18px;
+        }
+        .file-label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-area" role="region" aria-label="Upload area">
+        <label for="fileInput" class="drop-zone" aria-label="Choose a file or drag and drop here">
+            <span class="file-label">Choose a file or drag and drop here</span>
+        </label>
+        <input type="file" id="fileInput" accept="*" style="display: none;">
+        <div class="file-list" role="list" aria-label="Uploaded files">
+            <!-- File items will be inserted here -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropZone = document.querySelector('.drop-zone');
+            const fileInput = document.getElementById('fileInput');
+            const fileList = document.querySelector('.file-list');
+
+            // Handle drag events
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                handleFiles(files);
+            });
+
+            // Handle file input change
+            fileInput.addEventListener('change', (e) => {
+                const files = e.target.files;
+                handleFiles(files);
+            });
+
+            // Function to handle file processing
+            function handleFiles(files) {
+                for (const file of files) {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    const fileInfo = document.createElement('div');
+                    fileInfo.className = 'file-info';
+                    const fileName = document.createElement('span');
+                    fileName.textContent = file.name;
+                    const fileSize = document.createElement('span');
+                    fileSize.textContent = formatSize(file.size);
+                    fileInfo.appendChild(fileName);
+                    fileInfo.appendChild(fileSize);
+                    fileItem.appendChild(fileInfo);
+
+                    const removeButton = document.createElement('button');
+                    removeButton.className = 'remove-button';
+                    removeButton.innerHTML = '<span>×</span>';
+                    removeButton.setAttribute('aria-label', 'Remove file');
+                    removeButton.addEventListener('click', () => {
+                        fileList.removeChild(fileItem);
+                    });
+
+                    fileItem.appendChild(removeButton);
+                    fileList.appendChild(fileItem);
+                }
+            }
+
+            // Format file size
+            function formatSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return (bytes / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i];
+            }
+        });
+    </script>
+</body>
+</html>

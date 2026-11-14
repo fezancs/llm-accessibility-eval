@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Appointment Details</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    .appointment-card {
+      background-color: #fff;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      max-width: 300px;
+      margin: 0 auto 30px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .appointment-card h2 {
+      margin-top: 0;
+    }
+    .appointment-card p {
+      margin: 8px 0;
+    }
+    .appointment-card button {
+      margin-top: 15px;
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    .appointment-card button:hover {
+      background-color: #0056b3;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .modal-content {
+      text-align: center;
+    }
+    .modal button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    .modal button:hover {
+      background-color: #0056b3;
+    }
+    .message {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <div class="appointment-card">
+    <h2>Appointment Details</h2>
+    <p><strong>Date:</strong> Tuesday 12 March</p>
+    <p><strong>Time:</strong> 10:30</p>
+    <p><strong>Clinic:</strong> Riverside clinic</p>
+    <button id="cancelBtn">Cancel appointment</button>
+  </div>
+
+  <div class="modal" id="modal" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
+    <div class="modal-content">
+      <h3 id="modalTitle">Are you sure you want to cancel your appointment on 12 March at 10:30?</h3>
+      <button id="yesBtn">Yes, cancel</button>
+      <button id="noBtn">Keep appointment</button>
+    </div>
+  </div>
+
+  <div class="message" id="message" aria-live="polite">Your appointment has been cancelled.</div>
+
+  <script>
+    document.getElementById('cancelBtn').addEventListener('click', function() {
+      document.getElementById('modal').style.display = 'block';
+      document.getElementById('yesBtn').focus();
+    });
+
+    document.getElementById('yesBtn').addEventListener('click', function() {
+      document.getElementById('modal').style.display = 'none';
+      document.getElementById('message').style.display = 'block';
+      document.getElementById('message').focus();
+    });
+
+    document.getElementById('noBtn').addEventListener('click', function() {
+      document.getElementById('modal').style.display = 'none';
+    });
+  </script>
+</body>
+</html>

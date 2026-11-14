@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CityCare Services</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    #tabs {
+      display: flex;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    #tabs button {
+      padding: 10px;
+      border: none;
+      background-color: #e0e0e0;
+      cursor: pointer;
+      flex: 1;
+      border-radius: 4px;
+      outline: none;
+      transition: background-color 0.2s;
+    }
+    #tabs button:hover {
+      background-color: #ddd;
+    }
+    #tabs button.active {
+      background-color: #007bff;
+      color: #fff;
+    }
+    #panels {
+      margin-top: 20px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 4px;
+    }
+    #panels div {
+      display: none;
+    }
+    #vaccinations-panel {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="tabs" role="tablist">
+    <button id="vaccinations-tab" role="tab" aria-selected="true" aria-controls="vaccinations-panel">Vaccinations</button>
+    <button id="checkups-tab" role="tab" aria-selected="false" aria-controls="checkups-panel">Check-ups</button>
+    <button id="pharmacy-tab" role="tab" aria-selected="false" aria-controls="pharmacy-panel">Pharmacy</button>
+  </div>
+  <div id="panels">
+    <div id="vaccinations-panel" role="tabpanel" aria-labelledby="vaccinations-tab" aria-hidden="false">
+      <h2>Vaccinations</h2>
+      <p>Get all your vaccinations at CityCare. Our services include flu shots, travel vaccines, and more.</p>
+    </div>
+    <div id="checkups-panel" role="tabpanel" aria-labelledby="checkups-tab" aria-hidden="true">
+      <h2>Check-ups</h2>
+      <p>Regular check-ups are essential for maintaining your health. Schedule your next appointment today.</p>
+    </div>
+    <div id="pharmacy-panel" role="tabpanel" aria-labelledby="pharmacy-tab" aria-hidden="true">
+      <h2>Pharmacy</h2>
+      <p>Access a wide range of medications and over-the-counter items at our pharmacy services.</p>
+    </div>
+  </div>
+  <script>
+    document.querySelectorAll('[role="tab"]').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Deselect all tabs
+        document.querySelectorAll('[role="tab"]').forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        // Select clicked tab
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        // Hide all panels
+        document.querySelectorAll('[role="tabpanel"]').forEach(panel => {
+          panel.setAttribute('aria-hidden', 'true');
+          panel.style.display = 'none';
+        });
+        // Show selected panel
+        const panelId = tab.getAttribute('aria-controls');
+        const panel = document.getElementById(panelId);
+        panel.setAttribute('aria-hidden', 'false');
+        panel.style.display = 'block';
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .tab {
+      padding: 10px 20px;
+      margin-right: 5px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+    }
+    .tab.active {
+      background-color: #ddd;
+    }
+    .panel {
+      display: none;
+      padding: 20px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+    #vaccinations {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="tabs">
+    <button class="tab" data-panel="vaccinations">Vaccinations</button>
+    <button class="tab" data-panel="checkups">Check-ups</button>
+    <button class="tab" data-panel="pharmacy">Pharmacy</button>
+  </div>
+  <div id="panels">
+    <div class="panel" id="vaccinations">
+      <h2>Vaccinations</h2>
+      <p>Get your vaccinations at CityCare. We offer a variety of vaccines to protect your health.</p>
+    </div>
+    <div class="panel" id="checkups">
+      <h2>Check-ups</h2>
+      <p>Regular check-ups are essential for maintaining good health. Schedule your appointment today.</p>
+    </div>
+    <div class="panel" id="pharmacy">
+      <h2>Pharmacy</h2>
+      <p>CityCare's pharmacy provides affordable medications and health products for your convenience.</p>
+    </div>
+  </div>
+  <script>
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        const panelId = this.getAttribute('data-panel');
+        document.querySelectorAll('.panel').forEach(panel => {
+          panel.style.display = 'none';
+        });
+        document.getElementById(panelId).style.display = 'block';
+      });
+    });
+  </script>
+</body>
+</html>

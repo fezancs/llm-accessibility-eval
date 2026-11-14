@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Announcements Banner</title>
+  <style>
+    #banner {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+      border: 2px solid #ccc;
+      padding: 10px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    #slides {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      overflow: hidden;
+      display: block;
+    }
+
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #000;
+      background-color: #f0f0f0;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .slide.active {
+      opacity: 1;
+    }
+
+    button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: #000;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    #prev {
+      left: 10px;
+    }
+
+    #next {
+      right: 10px;
+    }
+
+    button:focus {
+      outline: 2px solid #000;
+    }
+  </style>
+</head>
+<body>
+  <div id="banner" role="region" aria-label="Announcements">
+    <div id="slides">
+      <div class="slide">Flu vaccinations are now available</div>
+      <div class="slide">New evening hours at Riverside</div>
+      <div class="slide">Download the CityCare app</div>
+    </div>
+    <button id="prev" aria-label="Previous announcement">Previous</button>
+    <button id="next" aria-label="Next announcement">Next</button>
+  </div>
+  <script>
+    let currentIndex = 0;
+    let slideInterval;
+
+    function updateSlide() {
+      const slides = document.querySelectorAll('.slide');
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentIndex);
+      });
+      // Update aria-current
+      slides.forEach((slide, index) => {
+        slide.setAttribute('aria-current', index === currentIndex ? 'true' : 'false');
+      });
+    }
+
+    function nextSlide() {
+      clearInterval(slideInterval);
+      currentIndex = (currentIndex + 1) % 3;
+      updateSlide();
+      slideInterval = setInterval(nextSlide, 5000);
+    }
+
+    function prevSlide() {
+      clearInterval(slideInterval);
+      currentIndex = (currentIndex - 1 + 3) % 3;
+      updateSlide();
+      slideInterval = setInterval(nextSlide, 5000);
+    }
+
+    // Initialize
+    updateSlide();
+    slideInterval = setInterval(nextSlide, 5000);
+
+    document.getElementById('next').addEventListener('click', nextSlide);
+    document.getElementById('prev').addEventListener('click', prevSlide);
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowRight') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        prevSlide();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frequently Asked Questions</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    .faq-section {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 600px;
+      margin: auto;
+    }
+    .faq-item {
+      margin-bottom: 15px;
+    }
+    .faq-item h3 {
+      cursor: pointer;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+    .faq-item h3:hover {
+      background-color: #0056b3;
+    }
+    .answer {
+      display: none;
+      padding: 10px;
+      background-color: #e9ecef;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="faq-section">
+    <div class="faq-item">
+      <h3 onclick="toggleAnswer(this)">How do I book an appointment?</h3>
+      <p class="answer">You can book an appointment through our website or by calling our office. Please select a date and time that suits your schedule.</p>
+    </div>
+    <div class="faq-item">
+      <h3 onclick="toggleAnswer(this)">Can I bring someone with me?</h3>
+      <p class="answer">Yes, you can bring a support person or family member with you. We recommend informing us in advance so we can accommodate your needs.</p>
+    </div>
+    <div class="faq-item">
+      <h3 onclick="toggleAnswer(this)">Is parking available?</h3>
+      <p class="answer">Yes, limited parking is available on-site. Please check our website for details on parking locations and hours.</p>
+    </div>
+    <div class="faq-item">
+      <h3 onclick="toggleAnswer(this)">How do I get my test results?</h3>
+      <p class="answer">You can access your test results through your patient portal or by requesting a copy via email. Results are typically available within 5 business days.</p>
+    </div>
+    <div class="faq-item">
+      <h3 onclick="toggleAnswer(this)">What if I need an interpreter?</h3>
+      <p class="answer">We can provide an interpreter in over 100 languages. Please notify us at least 24 hours in advance to arrange this service.</p>
+    </div>
+  </div>
+  <script>
+    function toggleAnswer(element) {
+      const answer = element.nextElementSibling;
+      if (answer.style.display === 'none' || answer.style.display === '') {
+        answer.style.display = 'block';
+      } else {
+        answer.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>

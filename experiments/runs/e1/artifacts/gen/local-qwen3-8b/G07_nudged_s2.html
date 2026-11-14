@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Our Facilities</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .gallery-item {
+      text-align: center;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .gallery-item img:hover {
+      transform: scale(1.05);
+    }
+    .caption {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #333;
+    }
+    #modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      position: relative;
+      text-align: center;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 90%;
+      max-height: 90%;
+      overflow: auto;
+    }
+    #modal-image {
+      max-width: 100%;
+      max-height: 80%;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+    }
+    #close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #fff;
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+      z-index: 1001;
+      font-size: 1.2em;
+      transition: background-color 0.2s ease;
+    }
+    #close-btn:hover {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <div class="gallery" id="gallery">
+    <div class="gallery-item">
+      <img src="images/reception.jpg" alt="Reception Area" />
+      <div class="caption">Reception Area</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/play-area.jpg" alt="Play Area" />
+      <div class="caption">Play Area</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/step-free-entrance.jpg" alt="Step-Free Entrance" />
+      <div class="caption">Step-Free Entrance</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/pharmacy-counter.jpg" alt="Pharmacy Counter" />
+      <div class="caption">Pharmacy Counter</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/waiting-room.jpg" alt="Waiting Room" />
+      <div class="caption">Waiting Room</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/garden.jpg" alt="Garden" />
+      <div class="caption">Garden</div>
+    </div>
+  </div>
+
+  <div id="modal" role="dialog" aria-labelledby="modal-caption" aria-modal="true" aria-hidden="true">
+    <div class="modal-content">
+      <span id="modal-caption" class="caption"></span>
+      <img id="modal-image" src="" alt="" />
+      <button id="close-btn" aria-label="Close modal">X</button>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.gallery-item img').forEach(img => {
+      img.addEventListener('click', function() {
+        const src = this.src;
+        const caption = this.nextElementSibling.textContent;
+        const modal = document.getElementById('modal');
+        const modalImage = document.getElementById('modal-image');
+        const modalCaption = document.getElementById('modal-caption');
+        modalImage.src = src;
+        modalCaption.textContent = caption;
+        modal.setAttribute('aria-hidden', 'false');
+        modal.style.display = 'flex';
+        modal.querySelector('#close-btn').focus();
+      });
+    });
+
+    document.getElementById('close-btn').addEventListener('click', function() {
+      const modal = document.getElementById('modal');
+      modal.setAttribute('aria-hidden', 'true');
+      modal.style.display = 'none';
+    });
+
+    window.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('modal');
+        if (!modal.getAttribute('aria-hidden')) {
+          modal.setAttribute('aria-hidden', 'true');
+          modal.style.display = 'none';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Patient ID Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+    .input-group {
+      position: relative;
+      display: inline-block;
+    }
+    .tooltip-icon {
+      cursor: help;
+      position: relative;
+    }
+    .tooltip {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+      z-index: 10;
+    }
+    .tooltip-icon:hover + .tooltip {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <label for="patientId">Patient ID number</label>
+  <div class="input-group">
+    <input type="text" id="patientId" aria-label="Enter your 10-digit patient ID">
+    <span class="tooltip-icon" aria-describedby="tooltip-patientId">?</span>
+    <div id="tooltip-patientId" class="tooltip">Your 10-digit patient ID is printed on your clinic card.</div>
+  </div>
+  <script>
+    document.querySelector('.tooltip-icon').addEventListener('focus', function() {
+      document.getElementById('tooltip-patientId').style.display = 'block';
+    });
+    document.querySelector('.tooltip-icon').addEventListener('blur', function() {
+      document.getElementById('tooltip-patientId').style.display = 'none';
+    });
+  </script>
+</body>
+</html>

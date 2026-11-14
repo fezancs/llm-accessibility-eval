@@ -19,3 +19,34 @@
 2026-11-12T21:39:58+05:00 start e1score_aud_qv: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_audit --models local-qwen25vl-7b
 2026-11-12T21:40:19+05:00 end   e1score_aud_qv rc=0 (0 min)
 2026-11-12T21:40:19+05:00 milestone: E1 for Qwen2.5-VL 7B
+2026-11-12T21:40:22+05:00 committed: E1 for Qwen2.5-VL 7B
+2026-11-12T21:40:25+05:00 pushed to origin/local-run-2026-11
+2026-11-12T21:40:25+05:00 start check_local-qwen25vl-7b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.check_keys --models local-qwen25vl-7b
+2026-11-12T21:40:28+05:00 end   check_local-qwen25vl-7b rc=0 (0 min)
+2026-11-12T21:40:28+05:00 start e3gen_local-qwen25vl-7b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_generate --models local-qwen25vl-7b
+2026-11-12T21:49:11+05:00 end   e3gen_local-qwen25vl-7b.pass1 rc=0 (8 min)
+2026-11-12T21:49:11+05:00 start e3gen_local-qwen25vl-7b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_generate --models local-qwen25vl-7b
+2026-11-12T21:57:52+05:00 end   e3gen_local-qwen25vl-7b rc=0 (8 min)
+2026-11-12T21:57:53+05:00 start e3judge_local-qwen25vl-7b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-qwen25vl-7b --procedures pointwise,known,blv_pairs
+2026-11-13T00:31:40+05:00 end   e3judge_local-qwen25vl-7b.pass1 rc=0 (153 min)
+2026-11-13T00:31:40+05:00 start e3judge_local-qwen25vl-7b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-qwen25vl-7b --procedures pointwise,known,blv_pairs
+2026-11-13T03:05:25+05:00 end   e3judge_local-qwen25vl-7b rc=0 (153 min)
+2026-11-13T03:05:25+05:00 server: start local-gemma3-4b
+2026-11-13T03:05:42+05:00 start check_local-gemma3-4b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.check_keys --models local-gemma3-4b
+2026-11-13T03:05:45+05:00 end   check_local-gemma3-4b rc=0 (0 min)
+2026-11-13T03:05:45+05:00 start e3gen_local-gemma3-4b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_generate --models local-gemma3-4b
+2026-11-13T03:14:15+05:00 end   e3gen_local-gemma3-4b.pass1 rc=0 (8 min)
+2026-11-13T03:14:15+05:00 start e3gen_local-gemma3-4b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_generate --models local-gemma3-4b
+2026-11-13T03:14:17+05:00 end   e3gen_local-gemma3-4b rc=0 (0 min)
+2026-11-13T03:14:17+05:00 start e3judge_local-gemma3-4b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-gemma3-4b --procedures pointwise,known,blv_pairs
+2026-11-13T05:18:03+05:00 end   e3judge_local-gemma3-4b.pass1 rc=0 (123 min)
+2026-11-13T05:18:03+05:00 start e3judge_local-gemma3-4b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-gemma3-4b --procedures pointwise,known,blv_pairs
+2026-11-13T05:18:07+05:00 end   e3judge_local-gemma3-4b rc=0 (0 min)
+2026-11-13T05:18:07+05:00 server: start local-ministral3-8b
+2026-11-13T05:18:22+05:00 start check_local-ministral3-8b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.check_keys --models local-ministral3-8b
+2026-11-13T05:18:24+05:00 end   check_local-ministral3-8b rc=0 (0 min)
+2026-11-13T05:18:24+05:00 start e3gen_local-ministral3-8b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_generate --models local-ministral3-8b
+2026-11-13T05:29:33+05:00 end   e3gen_local-ministral3-8b.pass1 rc=0 (11 min)
+2026-11-13T05:29:33+05:00 start e3gen_local-ministral3-8b: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_generate --models local-ministral3-8b
+2026-11-13T05:29:35+05:00 end   e3gen_local-ministral3-8b rc=0 (0 min)
+2026-11-13T05:29:35+05:00 start e3judge_local-ministral3-8b.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-ministral3-8b --procedures pointwise,known,blv_pairs

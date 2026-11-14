@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .banner {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      border: 1px solid #ccc;
+      overflow: hidden;
+    }
+    .slides {
+      width: 100%;
+      height: 100%;
+    }
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+      font-size: 1.2em;
+      color: #333;
+    }
+    #prev, #next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    #prev {
+      left: 10px;
+    }
+    #next {
+      right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    <button id="prev">Previous</button>
+    <div class="slides">
+      <div class="slide">Flu vaccinations are now available</div>
+      <div class="slide">New evening hours at Riverside</div>
+      <div class="slide">Download the CityCare app</div>
+    </div>
+    <button id="next">Next</button>
+  </div>
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    let currentIndex = 0;
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.style.display = i === index ? 'block' : 'none';
+      });
+    }
+
+    showSlide(currentIndex);
+
+    setInterval(() => {
+      currentIndex = (currentIndex + 1) % slides.length;
+      showSlide(currentIndex);
+    }, 5000);
+
+    document.getElementById('next').addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % slides.length;
+      showSlide(currentIndex);
+    });
+
+    document.getElementById('prev').addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+      showSlide(currentIndex);
+    });
+  </script>
+</body>
+</html>

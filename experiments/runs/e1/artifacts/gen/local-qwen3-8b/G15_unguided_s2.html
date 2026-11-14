@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Flu Search Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        #results {
+            padding: 20px;
+        }
+        .result {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .result a {
+            text-decoration: none;
+            color: #000;
+        }
+        #pagination {
+            text-align: center;
+            padding: 20px;
+        }
+        .pagination-link {
+            margin: 0 5px;
+            text-decoration: none;
+            color: #000;
+        }
+        .pagination-link.current {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .pagination-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div id="results"></div>
+    <div id="pagination"></div>
+    <script>
+        const fluResults = Array.from({length: 50}, (_, i) => ({
+            title: `Flu Result ${i + 1}`,
+            summary: `Summary for Flu Result ${i + 1}`
+        }));
+
+        function renderResults(page) {
+            const start = (page - 1) * 10;
+            const end = start + 10;
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = '';
+            for (let i = start; i < end && i < fluResults.length; i++) {
+                const result = fluResults[i];
+                const li = document.createElement('div');
+                li.className = 'result';
+                const link = document.createElement('a');
+                link.href = '#';
+                link.textContent = result.title;
+                const summary = document.createElement('span');
+                summary.textContent = result.summary;
+                li.appendChild(link);
+                li.appendChild(summary);
+                resultsContainer.appendChild(li);
+            }
+        }
+
+        function renderPagination(currentPage) {
+            const paginationContainer = document.getElementById('pagination');
+            paginationContainer.innerHTML = '';
+            const prevLink = document.createElement('a');
+            prevLink.href = '#';
+            prevLink.textContent = 'Previous';
+            prevLink.className = 'pagination-link';
+            prevLink.disabled = currentPage === 1;
+            prevLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    renderResults(currentPage - 1);
+                    renderPagination(currentPage - 1);
+                }
+            });
+            paginationContainer.appendChild(prevLink);
+
+            for (let i = 1; i <= 5; i++) {
+                const link = document.createElement('a');
+                link.href = '#';
+                link.textContent = i;
+                link.className = 'pagination-link';
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (i !== currentPage) {
+                        renderResults(i);
+                        renderPagination(i);
+                    }
+                });
+                if (i === currentPage) {
+                    link.classList.add('current');
+                }
+                paginationContainer.appendChild(link);
+            }
+
+            const nextLink = document.createElement('a');
+            nextLink.href = '#';
+            nextLink.textContent = 'Next';
+            nextLink.className = 'pagination-link';
+            nextLink.disabled = currentPage === 5;
+            nextLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage < 5) {
+                    renderResults(currentPage + 1);
+                    renderPagination(currentPage + 1);
+                }
+            });
+            paginationContainer.appendChild(nextLink);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentPage = 1;
+            renderResults(currentPage);
+            renderPagination(currentPage);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "generators": [
+    "local-ministral3-8b"
+  ],
+  "transform_counts": {
+    "local-ministral3-8b": {
+      "markdown": 2,
+      "quotes": 0,
+      "alt_text_prefix": 0,
+      "image_of": 0,
+      "picture_of": 0,
+      "n": 120
+    }
+  },
+  "status": {
+    "local-ministral3-8b:ok": 120
+  }
+}

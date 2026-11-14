@@ -31,9 +31,17 @@ Interpretations fixed here:
 - Position consistency (Table IV) is computed on E3c pairs when present, else on E3b; both
   are reported in the summary.
 - Krippendorff's alpha (nominal) on order-averaged verdicts: per (pair, judge) the mean over
-  available orders of 1[canonical candidate preferred], categories {0, 0.5, 1}.
+  available orders of 1[canonical candidate preferred], categories {0, 0.5, 1}. Its CI uses the
+  experiment's image resamples ("e3c", "e3b"): the coincidence matrix is a sum over pairs, so a
+  resample's matrix is the count-weighted sum of per-image matrices.
+- Paired differences reuse one count matrix: S4(a) - S4(b) for a < b (alphabetical) from the
+  panel replicates; E3b CMBPE minus naive-panel accuracy from the accuracy resamples.
 - Pointwise: CMBPE panel score = mean over judges of per-judge z-scores (within data set);
-  naive panel = mean raw score; length-only = description length in characters.
+  naive panel = mean raw score; length-only = description length in characters. Each method's r
+  has its own resamples; length minus a panel re-evaluates both on the length baseline's
+  resamples ("pw-<ds>-length", every rated item), so the difference is paired. The common-item
+  r (items every panel judge scored, scores as defined on the whole data set) shares one count
+  matrix ("pw-<ds>-common") across methods.
 - Leakage check: pooled out-of-fold accuracy of a 5-fold (stratified, grouped by image,
   seeded) logistic regression on character 3-5-gram TF-IDF features, with a Wilson 95%
   interval, against the majority-class share. All texts of an image fall in the same fold: an
@@ -47,6 +55,7 @@ Interpretations fixed here:
 from __future__ import annotations
 
 import dataclasses
+import itertools
 
 import krippendorff
 import numpy as np
@@ -251,6 +260,9 @@ def e3c(gen_pairs: pd.DataFrame, models: dict, b: int = B_DEFAULT, seed: int = S
                      for i, c in enumerate(cands)},
            "s4": {c: (Est.from_reps(s4[c], s4_r[:, i], n=len(agg)) if connected else Est(None, note=NI))
                   for i, c in enumerate(cands)},
+           "s4_diff": {(a, c): (Est.from_reps(s4[a] - s4[c], s4_r[:, i] - s4_r[:, k], n=len(agg)) if connected
+                                else Est(None, note=NI))
+                       for (i, a), (k, c) in itertools.combinations(enumerate(cands), 2)},
            "delta": {j: Est.from_reps(point["delta"][j], delta_r[:, i], n=int((agg["judge"] == j).sum()))
                      for i, j in enumerate(judges)},
            "gamma": {j: Est.from_reps(point["gamma"][j], gamma_r[:, i], n=int((agg["judge"] == j).sum()))
@@ -265,6 +277,7 @@ def e3c(gen_pairs: pd.DataFrame, models: dict, b: int = B_DEFAULT, seed: int = S
     pairs = pair_table(df, "first", "second", "image_id")
     out["pc"] = position_consistency(pairs, judges, images, b, seed, "e3c-pc")
     out["kalpha"] = kalpha(pairs, judges)
+    out["kalpha_est"] = kalpha_est(pairs, judges, images, counts)
     out["naive"] = naive_panel_pairs(df, pairs, cands, judges, sd_len, seed)
     return out
 
@@ -310,6 +323,31 @@ def kalpha(pairs: pd.DataFrame, judges: list[str]) -> float | None:
         return float(krippendorff.alpha(reliability_data=data, level_of_measurement="nominal"))
     except (ValueError, ZeroDivisionError):
         return None
+
+
+def kalpha_est(pairs: pd.DataFrame, judges: list[str], images: list, counts: np.ndarray) -> Est:
+    """kalpha with image-cluster replicates from `counts` (B x len(images)); n = pairable pairs."""
+    point = kalpha(pairs, judges)
+    if point is None:
+        return Est(None, note="alpha undefined")
+    p = pairs[pairs["pref_canon"].notna()]
+    g = p.groupby(["pair", "judge"])["pref_canon"].mean().unstack("judge").reindex(columns=judges)
+    data = g.to_numpy(float)
+    vals = np.unique(data[np.isfinite(data)])
+    V = len(vals)
+    nuc = np.stack([(data == v).sum(axis=1) for v in vals], axis=1).astype(float)    # pairs x values
+    m = nuc.sum(axis=1)
+    o_u = (nuc[:, :, None] * nuc[:, None, :] - nuc[:, :, None] * np.eye(V)) / (np.maximum(m, 2) - 1)[:, None, None]
+    img = p.groupby("pair")["image"].first().reindex(g.index).map({im: i for i, im in enumerate(images)})
+    o_img = np.zeros((len(images), V * V))
+    np.add.at(o_img, img.to_numpy(int), o_u.reshape(len(g), V * V))
+    o_r = (counts @ o_img).reshape(-1, V, V)
+    n_v = o_r.sum(axis=1)
+    tot = n_v.sum(axis=1)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        d_e = (tot ** 2 - (n_v ** 2).sum(axis=1)) / (tot - 1)         # nominal: off-diagonal sums
+        reps = 1 - (tot - np.trace(o_r, axis1=1, axis2=2)) / d_e
+    return Est.from_reps(point, reps, n=int((m >= 2).sum()))
 
 
 def chosen_orders(pair_ids: list[str], seed: int, label: str) -> dict[str, bool]:
@@ -482,14 +520,19 @@ def known_pairs(kp: pd.DataFrame, judges: list[str], biases: dict | None, sd_len
     if cm.ok and rep_single.size:
         med_point = float(np.median([res["all"][f"single:{j}"].est for j in judges if res["all"][f"single:{j}"].ok]))
         h4b = Est.from_reps(cm.est - med_point, cm.reps - np.nanmedian(rep_single, axis=0), n=cm.n)
+    # CMBPE minus naive panel, overall and per degradation (the accuracies' image resamples)
+    cm_minus_naive = {grp: Est.from_reps(a["cmbpe"].est - a["naive"].est, a["cmbpe"].reps - a["naive"].reps,
+                                         n=min(a["cmbpe"].n, a["naive"].n))
+                      for grp, a in res.items() if a["cmbpe"].ok and a["naive"].ok}
     pairs = pair_table(rows.assign(first=np.where(rows["orig_first"], "orig", "deg"),
                                    second=np.where(rows["orig_first"], "deg", "orig")),
                        "first", "second", "image")
     pairs["pair"] = rows["pair"].values
     excluded = {j: int(acc[f"single:{j}"].isna().sum()) for j in judges}
-    return {"accuracy": res, "h4b": h4b, "note": note, "n_pairs": int(acc.shape[0]),
+    return {"accuracy": res, "h4b": h4b, "cmbpe_minus_naive": cm_minus_naive, "note": note,
+            "n_pairs": int(acc.shape[0]),
             "single_missing": excluded, "pc": position_consistency(pairs, judges, images, b, seed, "e3b-pc"),
-            "kalpha": kalpha(pairs, judges),
+            "kalpha": kalpha(pairs, judges), "kalpha_est": kalpha_est(pairs, judges, images, counts),
             "missing_by_judge": {j: int(((kp["judge"] == j) & kp["y"].isna()).sum()) for j in judges}}
 
 
@@ -564,6 +607,24 @@ def correlations(scores: pd.DataFrame, b: int, seed: int, label: str) -> dict:
             "tau": Est.from_reps(tau if np.isfinite(tau) else None, _tau_reps(x, h, groups, counts), n=len(s))}
 
 
+def paired_r(scores: dict[str, pd.DataFrame], b: int, seed: int, label: str) -> dict[str, Est]:
+    """Pearson r of each method's scores (image, x, h) on ONE image index and count matrix
+    (the union of the methods' images), so differences between methods are paired."""
+    s_of = {m: sc.dropna(subset=["x", "h"]) for m, sc in scores.items()}
+    images = sorted(set().union(*(set(s["image"]) for s in s_of.values())))
+    ix = {im: i for i, im in enumerate(images)}
+    counts = counts_matrix(len(images), b, label, seed)
+    out = {}
+    for mth, s in s_of.items():
+        x, h = s["x"].to_numpy(float), s["h"].to_numpy(float)
+        if len(s) < 3 or not (np.std(x) > 0 and np.std(h) > 0):
+            out[mth] = Est(None, note="fewer than 3 items or no variance")
+            continue
+        out[mth] = Est.from_reps(stats.pearsonr(x, h).statistic,
+                                 _corr_reps(x, h, s["image"].map(ix).to_numpy(), len(images), counts), n=len(s))
+    return out
+
+
 def pointwise(pw: pd.DataFrame, items: pd.DataFrame, judges: list[str], b: int = B_DEFAULT,
               seed: int = SEED) -> dict:
     if pw.empty or items.empty or "human" not in items:
@@ -578,22 +639,32 @@ def pointwise(pw: pd.DataFrame, items: pd.DataFrame, judges: list[str], b: int =
     for ds in sorted(it["dataset"].unique()):
         itd = it[it["dataset"] == ds].set_index("item_id")
         pd_ = p[p["dataset"] == ds]
-        res = {}
+        res, sc_of = {}, {}
         wide = pd_.pivot_table(index="item_id", columns="judge", values="score", aggfunc="mean")
         for j in judges:
             if j not in wide:
                 res[f"single:{j}"] = {"r": Est(None, note="no scores"), "tau": Est(None, note="no scores")}
                 continue
-            sc = pd.DataFrame({"x": wide[j]}).join(itd[["h", "image"]], how="inner")
+            sc = sc_of[f"single:{j}"] = pd.DataFrame({"x": wide[j]}).join(itd[["h", "image"]], how="inner")
             res[f"single:{j}"] = correlations(sc, b, seed, f"pw-{ds}-{j}")
         if not wide.empty:
             z = (wide - wide.mean()) / wide.std(ddof=0).replace(0, np.nan)
-            sc = pd.DataFrame({"x": z.mean(axis=1, skipna=True)}).join(itd[["h", "image"]], how="inner")
+            sc = sc_of["cmbpe"] = pd.DataFrame({"x": z.mean(axis=1, skipna=True)}).join(itd[["h", "image"]],
+                                                                                          how="inner")
             res["cmbpe"] = correlations(sc, b, seed, f"pw-{ds}-cmbpe")
-            sc = pd.DataFrame({"x": wide.mean(axis=1, skipna=True)}).join(itd[["h", "image"]], how="inner")
+            sc = sc_of["naive"] = pd.DataFrame({"x": wide.mean(axis=1, skipna=True)}).join(itd[["h", "image"]],
+                                                                                             how="inner")
             res["naive"] = correlations(sc, b, seed, f"pw-{ds}-naive")
-        sc = itd[["h", "image"]].assign(x=itd["length"].astype(float))
+        sc = sc_of["length"] = itd[["h", "image"]].assign(x=itd["length"].astype(float))
         res["length"] = correlations(sc, b, seed, f"pw-{ds}-length")
+        # length minus each panel, paired on the length baseline's resamples (its images cover every rated item)
+        pr = paired_r({m: sc_of[m] for m in ("length", "cmbpe", "naive") if m in sc_of}, b, seed, f"pw-{ds}-length")
+        res["length_minus"] = {m: Est.from_reps(pr["length"].est - pr[m].est, pr["length"].reps - pr[m].reps,
+                                                n=min(pr["length"].n, pr[m].n))
+                               for m in ("cmbpe", "naive") if m in pr and pr[m].ok and pr["length"].ok}
+        # every method on the items all panel judges scored, one count matrix
+        common = wide.index[wide.reindex(columns=judges).notna().all(axis=1)]
+        res["common"] = paired_r({m: sc[sc.index.isin(common)] for m, sc in sc_of.items()}, b, seed, f"pw-{ds}-common")
         res["n_items"] = int(itd["h"].notna().sum())
         res["missing_by_judge"] = {j: int(((pw["judge"] == j) & (pw["dataset"] == ds) & pw["score"].isna()).sum())
                                    for j in judges}
@@ -611,6 +682,20 @@ def pointwise(pw: pd.DataFrame, items: pd.DataFrame, judges: list[str], b: int =
 
 # ------------------------------------------------------------------ leakage classifier
 
+def usable_texts(generated: pd.DataFrame) -> pd.DataFrame:
+    """Generated alt texts that enter E3c: status ok and a non-empty anonymised text."""
+    g = generated[(generated.get("status", "ok") == "ok") & generated["alt_clean"].notna()].copy()
+    return g[g["alt_clean"].astype(str).str.len() > 0]
+
+
+def alt_lengths(generated: pd.DataFrame) -> dict[str, float]:
+    """Mean character length of each generator's anonymised alt texts (the E3c candidates)."""
+    if generated.empty or "alt_clean" not in generated:
+        return {}
+    g = usable_texts(generated)
+    return {m: float(d["alt_clean"].astype(str).str.len().mean()) for m, d in g.groupby("generator")}
+
+
 def leakage(generated: pd.DataFrame, models: dict, seed: int = SEED) -> dict:
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.linear_model import LogisticRegression
@@ -619,8 +704,7 @@ def leakage(generated: pd.DataFrame, models: dict, seed: int = SEED) -> dict:
 
     if generated.empty:
         return {}
-    g = generated[(generated.get("status", "ok") == "ok") & generated["alt_clean"].notna()].copy()
-    g = g[g["alt_clean"].astype(str).str.len() > 0]
+    g = usable_texts(generated)
     if g.empty:
         return {}
     g["fam"] = g["generator"].map(lambda m: family(models, m))
@@ -681,5 +765,6 @@ def analyse(inputs, b: int = B_DEFAULT, seed: int = SEED) -> dict:
     out["blv_pairs"] = blv_pairs(inputs.blv_pairs, inputs.items, judges, biases, sd_c, b, seed)
     out["pointwise"] = pointwise(inputs.pointwise, inputs.items, judges, b, seed)
     out["leakage"] = leakage(inputs.generated, inputs.models, seed)
+    out["alt_len"] = alt_lengths(inputs.generated)
     out["transforms"] = transforms_report(inputs.generated)
     return out

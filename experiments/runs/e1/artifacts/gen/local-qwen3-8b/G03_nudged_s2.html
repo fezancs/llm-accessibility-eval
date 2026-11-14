@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CityCare Services</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    #tabs {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #tabs button {
+      padding: 10px;
+      border: 1px solid #ccc;
+      background-color: #f0f0f0;
+      cursor: pointer;
+      flex: 1;
+      min-width: 120px;
+    }
+    #tabs button[aria-selected='true'] {
+      background-color: #007BFF;
+      color: white;
+      border-color: #007BFF;
+    }
+    #panels {
+      margin-top: 20px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 20px;
+    }
+    #panels > div {
+      display: none;
+    }
+    #panels > div[aria-hidden='false'] {
+      display: block;
+    }
+    h2 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="tabs" role="tablist">
+    <button id="tab1" role="tab" aria-controls="panel1" aria-selected="true">Vaccinations</button>
+    <button id="tab2" role="tab" aria-controls="panel2" aria-selected="false">Check-ups</button>
+    <button id="tab3" role="tab" aria-controls="panel3" aria-selected="false">Pharmacy</button>
+  </div>
+  <div id="panels" role="tabpanel">
+    <div id="panel1" role="tabpanel" aria-labelledby="tab1" aria-hidden="false">
+      <h2>Vaccinations</h2>
+      <p>CityCare offers a variety of vaccinations to protect your health.</p>
+    </div>
+    <div id="panel2" role="tabpanel" aria-labelledby="tab2" aria-hidden="true">
+      <h2>Check-ups</h2>
+      <p>Regular check-ups are essential for maintaining good health.</p>
+    </div>
+    <div id="panel3" role="tabpanel" aria-labelledby="tab3" aria-hidden="true">
+      <h2>Pharmacy</h2>
+      <p>Access to a wide range of medications and health products.</p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const tabs = document.querySelectorAll('#tabs button');
+      const panels = document.querySelectorAll('#panels > div');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          // Deactivate all tabs
+          tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
+          // Hide all panels
+          panels.forEach(p => p.setAttribute('aria-hidden', 'true'));
+          // Activate the clicked tab
+          tab.setAttribute('aria-selected', 'true');
+          // Show the corresponding panel
+          const panelId = tab.getAttribute('aria-controls');
+          const panel = document.getElementById(panelId);
+          panel.setAttribute('aria-hidden', 'false');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

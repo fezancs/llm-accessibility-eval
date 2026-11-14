@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clinic Opening Hours</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 8px 12px;
+            text-align: center;
+        }
+        th {
+            cursor: pointer;
+        }
+        caption {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <caption>Clinic Opening Hours</caption>
+        <thead>
+            <tr>
+                <th onclick="sortTable()">Clinic Name</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+                <th>Saturday</th>
+                <th>Sunday</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Northside</td>
+                <td>9-5</td>
+                <td>9-5</td>
+                <td>9-5</td>
+                <td>9-5</td>
+                <td>9-5</td>
+                <td>Closed</td>
+                <td>Closed</td>
+            </tr>
+            <tr>
+                <td>Riverside</td>
+                <td>9-5</td>
+                <td>Closed</td>
+                <td>9-5</td>
+                <td>9-5</td>
+                <td>9-5</td>
+                <td>9-5</td>
+                <td>Closed</td>
+            </tr>
+            <tr>
+                <td>Old Town</td>
+                <td>9-5</td>
+                <td>Closed</td>
+                <td>9-5</td>
+                <td>Closed</td>
+                <td>9-5</td>
+                <td>Closed</td>
+                <td>Closed</td>
+            </tr>
+            <tr>
+                <td>Harbour</td>
+                <td>9-5</td>
+                <td>Closed</td>
+                <td>9-5</td>
+                <td>Closed</td>
+                <td>9-5</td>
+                <td>Closed</td>
+                <td>Closed</td>
+            </tr>
+            <tr>
+                <td>Hilltop</td>
+                <td>9-5</td>
+                <td>9-5</td>
+                <td>Closed</td>
+                <td>9-5</td>
+                <td>9-5</td>
+                <td>Closed</td>
+                <td>Closed</td>
+            </tr>
+        </tbody>
+    </table>
+    <script>
+        let ascending = true;
+
+        function sortTable() {
+            const table = document.querySelector('table');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            const clinicNames = rows.map(row => row.querySelector('td').textContent);
+
+            rows.sort((a, b) => {
+                const clinicA = a.querySelector('td').textContent;
+                const clinicB = b.querySelector('td').textContent;
+                return ascending ? clinicA.localeCompare(clinicB) : clinicB.localeCompare(clinicA);
+            });
+
+            rows.forEach(row => tbody.appendChild(row));
+            ascending = !ascending;
+        }
+    </script>
+</body>
+</html>

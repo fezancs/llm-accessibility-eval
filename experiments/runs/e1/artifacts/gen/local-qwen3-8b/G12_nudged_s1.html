@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flu Vaccine Eligibility Checker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      padding: 20px;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    button:focus {
+      outline: 2px solid #007BFF;
+      outline-offset: 2px;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    #result.green {
+      color: green;
+    }
+    #result.red {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Flu Vaccine Eligibility Checker</h1>
+    <form>
+      <label for="age">Age:</label>
+      <input type="number" id="age" aria-label="Enter your age" required>
+      
+      <label for="postcode">Postcode:</label>
+      <input type="text" id="postcode" aria-label="Enter your postcode">
+      
+      <button type="button" onclick="checkEligibility()">Check Eligibility</button>
+    </form>
+    <p id="result"></p>
+  </div>
+  <script>
+    function checkEligibility() {
+      const ageInput = document.getElementById('age');
+      const age = parseInt(ageInput.value);
+      const result = document.getElementById('result');
+      
+      if (isNaN(age) || age < 65) {
+        result.textContent = 'You are not eligible for a free flu vaccination.';
+        result.className = 'red';
+      } else {
+        result.textContent = 'You are eligible for a free flu vaccination.';
+        result.className = 'green';
+      }
+    }
+  </script>
+</body>
+</html>

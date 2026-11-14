@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cookie Consent</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #cookie-banner {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            z-index: 1000;
+        }
+        #cookie-banner button {
+            margin: 0 10px;
+            padding: 8px 15px;
+            background-color: #444;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #cookie-banner button:hover {
+            background-color: #555;
+        }
+        #cookie-settings-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+        #cookie-settings-panel div {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 300px;
+            text-align: center;
+        }
+        #cookie-settings-panel input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        #cookie-settings-panel button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #cookie-settings-panel button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="cookie-banner">
+        <p>We use cookies to make this site work and to understand how it is used.</p>
+        <button id="accept-all">Accept all</button>
+        <button id="reject-all">Reject all</button>
+        <button id="cookie-settings">Cookie settings</button>
+    </div>
+    <div id="cookie-settings-panel">
+        <div>
+            <label><input type="checkbox" id="necessary" checked disabled> Necessary</label><br>
+            <label><input type="checkbox" id="analytics"> Analytics</label><br>
+            <label><input type="checkbox" id="marketing"> Marketing</label><br>
+            <button id="save-preferences">Save preferences</button>
+        </div>
+    </div>
+    <script>
+        document.getElementById("accept-all").addEventListener("click", function() {
+            document.getElementById("analytics").checked = true;
+            document.getElementById("marketing").checked = true;
+            document.getElementById("cookie-settings-panel").style.display = "none";
+        });
+
+        document.getElementById("reject-all").addEventListener("click", function() {
+            document.getElementById("analytics").checked = false;
+            document.getElementById("marketing").checked = false;
+            document.getElementById("cookie-settings-panel").style.display = "none";
+        });
+
+        document.getElementById("cookie-settings").addEventListener("click", function() {
+            document.getElementById("cookie-settings-panel").style.display = "flex";
+        });
+
+        document.getElementById("save-preferences").addEventListener("click", function() {
+            document.getElementById("cookie-settings-panel").style.display = "none";
+        });
+    </script>
+</body>
+</html>

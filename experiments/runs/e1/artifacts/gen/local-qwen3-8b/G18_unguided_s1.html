@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        #registration-form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            margin: auto;
+        }
+        .progress {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .progress .step {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            background-color: #ccc;
+        }
+        .progress .step.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .step1, .step2, .step3 {
+            display: none;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button.back {
+            background-color: #f44336;
+            margin-right: 10px;
+        }
+        button.back:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div id="registration-form">
+        <div class="progress">
+            <div class="step active">1</div>
+            <div class="step">2</div>
+            <div class="step">3</div>
+        </div>
+        <div class="step1">
+            <input type="text" id="name" placeholder="Name" required>
+            <input type="date" id="dob" required>
+            <button onclick="nextStep()">Next</button>
+        </div>
+        <div class="step2">
+            <input type="tel" id="phone" placeholder="Phone" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <button onclick="prevStep()">Back</button>
+            <button onclick="nextStep()">Next</button>
+        </div>
+        <div class="step3">
+            <p><strong>Name:</strong> <span id="name-display"></span></p>
+            <p><strong>Date of Birth:</strong> <span id="dob-display"></span></p>
+            <p><strong>Phone:</strong> <span id="phone-display"></span></p>
+            <p><strong>Email:</strong> <span id="email-display"></span></p>
+            <button onclick="submitForm()">Submit</button>
+        </div>
+    </div>
+    <script>
+        let currentStep = 1;
+
+        function showStep(step) {
+            document.querySelectorAll('.step1, .step2, .step3').forEach(stepEl => {
+                stepEl.style.display = 'none';
+            });
+            document.querySelector(`.step${step}`).style.display = 'block';
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const steps = document.querySelectorAll('.progress .step');
+            steps.forEach((step, index) => {
+                if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+        }
+
+        function nextStep() {
+            let valid = true;
+            if (currentStep === 1) {
+                const name = document.getElementById('name').value.trim();
+                const dob = document.getElementById('dob').value;
+                if (!name || !dob) {
+                    valid = false;
+                    alert('Please fill in all fields.');
+                }
+            } else if (currentStep === 2) {
+                const phone = document.getElementById('phone').value.trim();
+                const email = document.getElementById('email').value.trim();
+                if (!phone || !email) {
+                    valid = false;
+                    alert('Please fill in all fields.');
+                }
+            }
+            if (valid) {
+                if (currentStep === 2) {
+                    const name = document.getElementById('name').value;
+                    const dob = document.getElementById('dob').value;
+                    const phone = document.getElementById('phone').value;
+                    const email = document.getElementById('email').value;
+                    document.getElementById('name-display').textContent = name;
+                    document.getElementById('dob-display').textContent = dob;
+                    document.getElementById('phone-display').textContent = phone;
+                    document.getElementById('email-display').textContent = email;
+                }
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+
+        function prevStep() {
+            currentStep--;
+            showStep(currentStep);
+        }
+
+        function submitForm() {
+            alert('Form submitted!\nName: ' + document.getElementById('name').value + '\nDOB: ' + document.getElementById('dob').value + '\nPhone: ' + document.getElementById('phone').value + '\nEmail: ' + document.getElementById('email').value);
+        }
+
+        showStep(1);
+        updateProgress();
+    </script>
+</body>
+</html>

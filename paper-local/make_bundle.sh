@@ -18,6 +18,7 @@ mkdir -p "$OUT/generated/results" "$OUT/generated/figures"
 cp "$SRC"/results/*.tex "$OUT/generated/results/"
 if compgen -G "$SRC/figures/*.pdf" > /dev/null; then cp "$SRC"/figures/*.pdf "$OUT/generated/figures/"; fi
 cp refs.bib "$OUT/"
+if compgen -G "sections/*.tex" > /dev/null; then mkdir -p "$OUT/sections"; cp sections/*.tex "$OUT/sections/"; fi
 sed 's|^\\newcommand{\\resdir}{\.\./experiments/results/local-run-2026-11}|\\newcommand{\\resdir}{generated}|' \
   main.tex > "$OUT/main.tex"
 grep -q '^\\newcommand{\\resdir}{generated}' "$OUT/main.tex" || { echo "resdir not rewritten" >&2; exit 1; }
@@ -35,5 +36,5 @@ EOF
 python3 check_keys.py || [ "${ALLOW_MISSING:-0}" = 1 ] \
   || { echo "missing \\res keys: the bundle would show red markers (ALLOW_MISSING=1 for a draft)" >&2; exit 1; }
 (cd "$OUT" && "${TECTONIC:-tectonic}" --keep-logs main.tex > build.log 2>&1) || { tail -30 "$OUT/build.log"; exit 1; }
-(cd "$OUT" && zip -qr ../final-latex.zip main.tex refs.bib README.md generated main.pdf)
+(cd "$OUT" && zip -qr ../final-latex.zip main.tex refs.bib README.md generated main.pdf $( [ -d sections ] && echo sections ))
 echo "bundle: $(pwd)/$OUT  (PDF: $(pwd)/$OUT/main.pdf, zip: $(pwd)/final-latex.zip)"

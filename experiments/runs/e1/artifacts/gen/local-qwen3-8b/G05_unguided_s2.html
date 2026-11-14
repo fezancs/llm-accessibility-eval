@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CityCare</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #333;
+      color: white;
+      padding: 10px 20px;
+    }
+
+    .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    nav {
+      display: flex;
+      list-style: none;
+      padding: 0;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      padding: 0;
+    }
+
+    nav ul li {
+      position: relative;
+      padding: 10px 15px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #444;
+      border: 1px solid #ccc;
+      min-width: 160px;
+      z-index: 1;
+      padding: 10px;
+    }
+
+    .dropdown-content li {
+      display: block;
+    }
+
+    .dropdown-content li a {
+      color: #fff;
+      padding: 5px 0;
+      display: block;
+    }
+
+    @media (max-width: 600px) {
+      .menu-button {
+        display: block;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5em;
+        cursor: pointer;
+      }
+
+      nav {
+        display: none;
+      }
+
+      nav ul {
+        display: flex;
+        flex-direction: column;
+        background-color: #333;
+        width: 100%;
+      }
+
+      nav ul li {
+        padding: 15px;
+      }
+
+      nav ul li a {
+        color: white;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: static;
+        background-color: #444;
+        border: 1px solid #ccc;
+        width: 100%;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">CityCare</div>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li class="dropdown"><a href="#">Services</a>
+          <ul class="dropdown-content">
+            <li><a href="#">Vaccinations</a></li>
+            <li><a href="#">Check-ups</a></li>
+            <li><a href="#">Pharmacy</a></li>
+            <li><a href="#">Mental health</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Appointments</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+    <button class="menu-button">☰</button>
+  </header>
+
+  <script>
+    document.querySelector('.menu-button').addEventListener('click', function() {
+      document.querySelector('nav').classList.toggle('active');
+    });
+
+    const isMobile = window.matchMedia("(max-width: 600px)").matches;
+
+    if (isMobile) {
+      document.querySelectorAll('.dropdown a').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const dropdown = this.parentElement.querySelector('.dropdown-content');
+          dropdown.classList.toggle('active');
+        });
+      });
+    }
+  </script>
+</body>
+</html>

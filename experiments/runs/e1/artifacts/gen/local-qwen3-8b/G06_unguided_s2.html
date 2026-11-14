@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clinic Opening Hours</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 20px 0;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      cursor: pointer;
+    }
+    th:hover {
+      background-color: #f0f0f0;
+    }
+    caption {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <table id="myTable">
+    <caption>Opening Hours for Clinics</caption>
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)">Clinic Name</th>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+        <th>Saturday</th>
+        <th>Sunday</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Northside</td>
+        <td>9-5</td>
+        <td>9-5</td>
+        <td>9-5</td>
+        <td>9-5</td>
+        <td>9-5</td>
+        <td>Closed</td>
+        <td>Closed</td>
+      </tr>
+      <tr>
+        <td>Riverside</td>
+        <td>Closed</td>
+        <td>Closed</td>
+        <td>9-5</td>
+        <td>9-5</td>
+        <td>9-5</td>
+        <td>9-5</td>
+        <td>9-5</td>
+      </tr>
+      <tr>
+        <td>Old Town</td>
+        <td>9-5</td>
+        <td>9-5</td>
+        <td>9-5</td>
+        <td>Closed</td>
+        <td>Closed</td>
+        <td>9-5</td>
+        <td>9-5</td>
+      </tr>
+      <tr>
+        <td>Harbour</td>
+        <td>9-5</td>
+        <td>9-5</td>
+        <td>Closed</td>
+        <td>9-5</td>
+        <td>9-5</td>
+        <td>9-5</td>
+        <td>9-5</td>
+      </tr>
+      <tr>
+        <td>Hilltop</td>
+        <td>Closed</td>
+        <td>Closed</td>
+        <td>Closed</td>
+        <td>Closed</td>
+        <td>Closed</td>
+        <td>9-5</td>
+        <td>9-5</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    let sortDirection = 1; // 1 for ascending, -1 for descending
+
+    function sortTable(columnIndex) {
+      const table = document.getElementById("myTable");
+      const rows = Array.from(table.rows).slice(1); // skip header row
+      rows.sort((a, b) => {
+        const aText = a.cells[columnIndex].textContent.trim();
+        const bText = b.cells[columnIndex].textContent.trim();
+        return aText.localeCompare(bText) * sortDirection;
+      });
+      // Clear the table and append sorted rows
+      const tbody = table.querySelector("tbody");
+      tbody.innerHTML = '';
+      rows.forEach(row => tbody.appendChild(row));
+      // Toggle direction
+      sortDirection *= -1;
+    }
+  </script>
+</body>
+</html>

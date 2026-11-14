@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Notification Settings</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      color: #000000;
+      margin: 0;
+      padding: 20px;
+    }
+    .settings-panel {
+      max-width: 400px;
+      margin: auto;
+    }
+    .toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      user-select: none;
+      padding: 10px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .toggle input[type="checkbox"] {
+      display: none;
+    }
+    .toggle .slider {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background-color: #ccc;
+      border-radius: 12px;
+      transition: 0.4s;
+    }
+    .toggle .slider::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.4s;
+    }
+    .toggle input[type="checkbox"]:checked + .slider {
+      background-color: #2196F3;
+    }
+    .toggle input[type="checkbox"]:checked + .slider::before {
+      transform: translateX(20px);
+    }
+    body.large-text {
+      font-size: 24px;
+    }
+    .toggle:focus {
+      outline: 2px solid #2196F3;
+    }
+    .toggle .label-text {
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="settings-panel">
+    <label class="toggle" role="switch" aria-checked="false" tabindex="0">
+      <span class="label-text">SMS reminders</span>
+      <input type="checkbox" id="sms-reminder">
+      <span class="slider"></span>
+    </label>
+    <label class="toggle" role="switch" aria-checked="false" tabindex="0">
+      <span class="label-text">Email reminders</span>
+      <input type="checkbox" id="email-reminder">
+      <span class="slider"></span>
+    </label>
+    <label class="toggle" role="switch" aria-checked="false" tabindex="0">
+      <span class="label-text">Large text mode</span>
+      <input type="checkbox" id="large-text">
+      <span class="slider"></span>
+    </label>
+  </div>
+  <script>
+    document.querySelectorAll('.toggle input[type="checkbox"]').forEach(checkbox => {
+      const label = checkbox.closest('.toggle');
+      label.setAttribute('aria-checked', checkbox.checked);
+      checkbox.addEventListener('change', function() {
+        const label = this.closest('.toggle');
+        label.setAttribute('aria-checked', this.checked);
+        if (this.id === 'large-text') {
+          if (this.checked) {
+            document.body.classList.add('large-text');
+          } else {
+            document.body.classList.remove('large-text');
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

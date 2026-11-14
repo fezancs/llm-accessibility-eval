@@ -1,0 +1,22 @@
+{
+ "local-qwen3-8b": {
+  "all": {
+   "tool_calls": 34,
+   "malformed": 0,
+   "rejected": 0,
+   "rate": 0.0
+  },
+  "fresh": {
+   "tool_calls": 23,
+   "malformed": 0,
+   "rejected": 0,
+   "rate": 0.0
+  },
+  "session": {
+   "tool_calls": 11,
+   "malformed": 0,
+   "rejected": 0,
+   "rate": 0.0
+  }
+ }
+}

@@ -40,55 +40,99 @@ def _style(ax):
         ax.spines[s].set_visible(False)
 
 
-def drift(curves: dict, names: dict, out_dir: pathlib.Path) -> pathlib.Path | None:
+def drift(curves: dict, names: dict, out_dir: pathlib.Path, activity: dict | None = None) -> pathlib.Path | None:
     """Small multiples: in-session (solid) vs fresh-control (dashed) adherence by position.
 
     Panels follow the registry order in `names` (models.yaml), so each vendor's larger and
     smaller model sit side by side (H1). One panel is drawn at column width (the local-run paper
     includes it at \\columnwidth), several at text width. Bootstrap bands are drawn only where a
-    position has more than one run (one run gives zero-width bands)."""
+    position has more than one run (one run gives zero-width bands).
+
+    The adherence lines use the T_reg rows DCDI sums, with a marker at every position so gaps
+    (pressure steps, dropped steps) are visible. With `activity` (dcdi.activity), each panel
+    also shades the positions where the in-session step was not functional in every run (those
+    steps drop out of DCDI), and a lower panel shows tool calls per step in both arms (same line
+    styles; P marks pressure steps)."""
     rank = {m: i for i, m in enumerate(names)}
     models = sorted((m for m in curves if len(curves[m])), key=lambda m: (rank.get(m, len(rank)), m))
     if not models:
         return None
+    activity = activity or {}
+    with_act = any(m in activity for m in models)
     n = len(models)
     cols = n if n <= 4 else math.ceil(n / 2)
     rows = 1 if n <= 4 else 2
     lo = min(min(c["session_lo"].min(), c["fresh_lo"].min()) for c in curves.values() if len(c))
     ymin = max(0.0, math.floor((lo - 0.05) * 10) / 10)
     width = COL_W if n == 1 else TEXT_W
+    sub = 2 if with_act else 1
+    ratios = ([1.0, 0.55] if with_act else [1.0]) * rows
     with plt.rc_context(RC):
-        fig, axes = plt.subplots(rows, cols, figsize=(width, 1.55 * rows + 0.35), sharex=True, sharey=True,
-                                 squeeze=False)
-        for i, ax in enumerate(axes.flat):
+        fig, axes = plt.subplots(rows * sub, cols, figsize=(width, (1.55 + (0.85 if with_act else 0)) * rows + 0.35),
+                                 sharex=True, squeeze=False, gridspec_kw={"height_ratios": ratios})
+        tmax = max([1.0] + [float(max(a["by_position"]["session_tools"].max(), a["by_position"]["fresh_tools"].max()))
+                            for m, a in activity.items() if m in models and len(a["by_position"])])
+        for i in range(rows * cols):
+            r, col = divmod(i, cols)
+            ax = axes[r * sub, col]
+            axt = axes[r * sub + 1, col] if with_act else None
             if i >= n:
                 ax.set_visible(False)
+                if axt is not None:
+                    axt.set_visible(False)
                 continue
             m = models[i]
             c = curves[m]
             x = c["position"].to_numpy()
+            act = activity.get(m)
+            if act is not None:
+                bp = act["by_position"]
+                for pos in bp.loc[bp["session_functional"] == 0, "position"]:
+                    for a_ in (ax, axt):
+                        a_.axvspan(pos - 0.5, pos + 0.5, color=GRID, alpha=0.9, linewidth=0, zorder=0)
             if (c["n"] > 1).any():
                 ax.fill_between(x, c["fresh_lo"], c["fresh_hi"], color=VERMILLION, alpha=0.12, linewidth=0)
                 ax.fill_between(x, c["session_lo"], c["session_hi"], color=BLUE, alpha=0.12, linewidth=0)
-            ax.plot(x, c["fresh"], color=VERMILLION, linestyle=(0, (4, 2)), linewidth=1.2)
-            ax.plot(x, c["session"], color=BLUE, linestyle="-", linewidth=1.2)
+            ax.plot(x, c["fresh"], color=VERMILLION, linestyle=(0, (4, 2)), linewidth=1.0,
+                    marker="o", markersize=2.6, markerfacecolor="white")
+            ax.plot(x, c["session"], color=BLUE, linestyle="-", linewidth=1.0, marker="o", markersize=2.2)
             ax.set_title(names.get(m, m), loc="left", pad=2)
-            ax.set_xlim(1, 24)
-            ax.set_ylim(ymin, 1.0)
+            ax.set_xlim(0.5, 24.5)
+            ax.set_ylim(ymin, 1.02)
             ax.set_xticks([1, 8, 16, 24])
             _style(ax)
+            ax.grid(False, axis="x")
+            if axt is not None and act is not None:
+                bp = act["by_position"]
+                axt.plot(bp["position"], bp["fresh_tools"], color=VERMILLION, linestyle=(0, (4, 2)), linewidth=1.0,
+                         marker="o", markersize=2.6, markerfacecolor="white")
+                axt.plot(bp["position"], bp["session_tools"], color=BLUE, linestyle="-", linewidth=1.0,
+                         marker="o", markersize=2.2)
+                for pos in bp.loc[bp["step_type"] == "pressure", "position"]:
+                    axt.text(pos, tmax * 1.12, "P", ha="center", va="bottom", fontsize=FONT - 1, color=MUTED)
+                axt.set_ylim(0, tmax * 1.35)
+                axt.set_xlim(0.5, 24.5)
+                _style(axt)
+                axt.grid(False, axis="x")
         for col in range(cols):
-            visible = [axes[r, col] for r in range(rows) if axes[r, col].get_visible()]
+            visible = [axes[r, col] for r in range(rows * sub) if axes[r, col].get_visible()]
             if visible:                                  # the lowest visible panel of each column
                 visible[-1].set_xlabel("Position in session")
                 visible[-1].xaxis.set_tick_params(labelbottom=True)
-        for ax in axes[:, 0]:
-            ax.set_ylabel("Adherence")
-        handles = [Line2D([], [], color=BLUE, linestyle="-", linewidth=1.2, label="In session (solid)"),
-                   Line2D([], [], color=VERMILLION, linestyle=(0, (4, 2)), linewidth=1.2,
-                          label="Fresh-context control (dashed)")]
-        fig.legend(handles=handles, loc="upper right", ncol=2, frameon=False, bbox_to_anchor=(1.0, 1.0))
-        fig.tight_layout(rect=(0, 0, 1, 0.93), w_pad=0.6, h_pad=0.6)
+        for r in range(rows):
+            axes[r * sub, 0].set_ylabel("Adherence")
+            if with_act:
+                axes[r * sub + 1, 0].set_ylabel("Tool calls")
+        handles = [Line2D([], [], color=BLUE, linestyle="-", linewidth=1.0, marker="o", markersize=2.2,
+                          label="In session"),
+                   Line2D([], [], color=VERMILLION, linestyle=(0, (4, 2)), linewidth=1.0, marker="o", markersize=2.6,
+                          markerfacecolor="white", label="Fresh control")]
+        if with_act:
+            from matplotlib.patches import Patch
+            handles.append(Patch(facecolor=GRID, edgecolor="none", label="Session not functional"))
+        fig.legend(handles=handles, loc="upper center", ncol=len(handles), frameon=False, bbox_to_anchor=(0.5, 1.0),
+                   handlelength=1.8, columnspacing=0.9, handletextpad=0.4)
+        fig.tight_layout(rect=(0, 0, 1, 0.92 if with_act else 0.93), w_pad=0.6, h_pad=0.4)
         out_dir.mkdir(parents=True, exist_ok=True)
         path = out_dir / "fig_drift.pdf"
         fig.savefig(path, format="pdf")

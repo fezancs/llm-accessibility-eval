@@ -197,6 +197,7 @@ def test_e3c_disconnected_generators_are_not_identified():
     for g in THETA:
         assert not one["s4"][g].ok and not one["theta"][g].ok and "not connected" in one["s4"][g].note
     assert not one["eta"]["j-a"].ok and "not connected" in one["eta"]["j-a"].note
+    assert one["s4_diff"] and not any(e.ok for e in one["s4_diff"].values())   # no S4 difference key either
     full = cb.e3c(df, MODELS, b=10, seed=1)
     assert full["connected"] is True and all(e.ok for e in full["s4"].values())
 
@@ -206,3 +207,95 @@ def test_e3c_counts_pairs_and_skips_all_missing_verdicts():
     out = cb.e3c(df, MODELS, b=5, seed=1)
     assert out["n_pairs"] == 3 * 15                                 # 3 images x C(6, 2) unordered pairs
     assert cb.e3c(df.assign(y=np.nan), MODELS, b=5, seed=1) == {}   # nothing valid: no fit, no crash
+
+
+def test_s4_differences_are_paired_and_alphabetical(fitted):
+    out, _, _ = fitted
+    assert list(out["s4_diff"]) == list(itertools.combinations(sorted(THETA), 2))     # first minus second
+    for (a, c), e in out["s4_diff"].items():
+        assert e.est == pytest.approx(out["s4"][a].est - out["s4"][c].est)
+        np.testing.assert_allclose(e.reps, out["s4"][a].reps - out["s4"][c].reps)    # same image resamples
+        assert e.n == out["s4"][a].n
+    big = out["s4_diff"][("g-a1", "g-d1")]                                          # theta 0.9 vs -0.6
+    assert big.est > 0 and big.lo > 0
+
+
+def test_kalpha_replicates_equal_the_package_on_duplicated_images(fitted):
+    from analysis.bootstrap import counts_matrix
+    df, _ = simulate(n_images=15, seed=6)
+    pairs = cb.pair_table(df.rename(columns={"gen_first": "first", "gen_second": "second"}), "first", "second",
+                          "image_id")
+    judges, images = sorted(DELTA), sorted(df["image_id"].unique())
+    counts = np.vstack([np.ones(len(images), dtype=int), counts_matrix(len(images), 3, "t", 0)])
+    e = cb.kalpha_est(pairs, judges, images, counts)
+    assert e.est == cb.kalpha(pairs, judges) and e.n == 15 * 15                   # every pair has 4 judges
+    assert e.reps[0] == pytest.approx(e.est, abs=1e-12)                            # each image once
+    for r in range(1, 4):                                                          # images duplicated by count
+        dup = pd.concat([pairs[pairs["image"] == im].assign(pair=lambda x, k=k: x["pair"] + f"#{k}")
+                         for im, c in zip(images, counts[r]) for k in range(c)])
+        assert e.reps[r] == pytest.approx(cb.kalpha(dup, judges), abs=1e-12)
+    out = fitted[0]
+    assert out["kalpha_est"].est == out["kalpha"] and out["kalpha_est"].lo <= out["kalpha"] <= out["kalpha_est"].hi
+
+
+def test_known_pairs_cmbpe_minus_naive_uses_the_accuracy_resamples():
+    # j3 and j4 always pick the first shown: the naive majority ties (coin) whenever the original is
+    # second, while CMBPE absorbs their position bias.
+    rule = lambda j, of, rng: 1 if j in ("j3", "j4") else (int(of) if rng.random() < 0.9 else 1 - int(of))
+    out = cb.known_pairs(known_rows(rule, n_items=40, seed=2), ["j1", "j2", "j3", "j4"], None, None, b=50, seed=0)
+    d = out["cmbpe_minus_naive"]
+    assert set(d) == {"all", "append", "truncate"}
+    for grp, e in d.items():
+        cm, nv = out["accuracy"][grp]["cmbpe"], out["accuracy"][grp]["naive"]
+        assert e.est == pytest.approx(cm.est - nv.est) and e.n == min(cm.n, nv.n)
+        np.testing.assert_allclose(e.reps, cm.reps - nv.reps)
+    assert d["all"].est > 0 and d["all"].lo > 0
+    assert out["kalpha_est"].est == out["kalpha"]
+
+
+def test_pointwise_length_minus_panel_and_common_items():
+    from scipy import stats
+    rng = np.random.default_rng(2)
+    k = 40
+    items = pd.DataFrame([{"item_id": f"i{i}", "dataset": "blv", "image_id": i // 2,
+                           "description": "w" * int(rng.integers(10, 200)),
+                           "human": {"overall_mean": float(rng.normal())}} for i in range(k)])
+    pw = pd.DataFrame([{"judge": j, "dataset": "blv", "item_id": f"i{i}", "image_id": i // 2,
+                        "score": np.nan if (j == "j3" and i % 4 == 0) else float(rng.integers(1, 6))}
+                       for i in range(k) for j in ("j1", "j2", "j3")])
+    out = cb.pointwise(pw, items, ["j1", "j2", "j3"], b=50, seed=0)["blv"]
+    lm = out["length_minus"]
+    assert set(lm) == {"cmbpe", "naive"}
+    for m in ("cmbpe", "naive"):
+        assert lm[m].est == pytest.approx(out["length"]["r"].est - out[m]["r"].est) and lm[m].n == k
+        assert lm[m].lo is not None
+    # the difference is taken on the length baseline's own resamples
+    it = items.set_index("item_id")
+    h = it["human"].map(lambda d: d["overall_mean"])
+    sc_len = pd.DataFrame({"x": it["description"].str.len().astype(float), "h": h,
+                           "image": "blv|" + it["image_id"].astype(str)})
+    np.testing.assert_allclose(cb.paired_r({"length": sc_len}, 50, 0, "pw-blv-length")["length"].reps,
+                               out["length"]["r"].reps)
+    # common items: j3 skipped every fourth item; scores keep their whole-data-set definitions
+    common = [f"i{i}" for i in range(k) if i % 4]
+    wide = pw.pivot_table(index="item_id", columns="judge", values="score")
+    z = ((wide - wide.mean()) / wide.std(ddof=0)).mean(axis=1)
+    expect = {"single:j1": wide["j1"], "single:j3": wide["j3"], "cmbpe": z, "naive": wide.mean(axis=1),
+              "length": sc_len["x"]}
+    c = out["common"]
+    assert set(c) == {"single:j1", "single:j2", "single:j3", "cmbpe", "naive", "length"}
+    for m, x in expect.items():
+        assert c[m].n == len(common)
+        assert c[m].est == pytest.approx(stats.pearsonr(x.loc[common], h.loc[common]).statistic), m
+    assert c["single:j3"].est == pytest.approx(out["single:j3"]["r"].est)          # j3 scored exactly these
+
+
+def test_alt_lengths_count_only_texts_that_enter_e3c():
+    g = pd.DataFrame([{"generator": "a", "status": "ok", "alt_clean": "abcd"},
+                      {"generator": "a", "status": "ok", "alt_clean": "ab"},
+                      {"generator": "a", "status": "error", "alt_clean": "abcdefghij"},
+                      {"generator": "a", "status": "ok", "alt_clean": ""},
+                      {"generator": "b", "status": "ok", "alt_clean": None},
+                      {"generator": "b", "status": "ok", "alt_clean": "xyz"}])
+    assert cb.alt_lengths(g) == {"a": 3.0, "b": 3.0}
+    assert cb.alt_lengths(pd.DataFrame()) == {}

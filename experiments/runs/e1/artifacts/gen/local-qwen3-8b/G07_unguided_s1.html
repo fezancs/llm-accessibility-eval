@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 20px;
+      justify-content: center;
+    }
+    .gallery-item {
+      flex: 1 1 calc(33.33% - 10px);
+      box-sizing: border-box;
+      text-align: center;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      border: 2px solid #ccc;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+    .caption {
+      margin-top: 5px;
+      font-size: 14px;
+      color: #333;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      padding-top: 60px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.9);
+    }
+    .modal-content {
+      margin: auto;
+      display: block;
+      width: 80%;
+      max-width: 900px;
+      height: auto;
+    }
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      color: #fff;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+    }
+    .close:hover {
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="gallery">
+    <div class="gallery-item">
+      <img src="images/reception.jpg" data-large="images/reception.jpg" alt="Reception Area">
+      <span class="caption">Reception Area</span>
+    </div>
+    <div class="gallery-item">
+      <img src="images/play-area.jpg" data-large="images/play-area.jpg" alt="Play Area">
+      <span class="caption">Play Area</span>
+    </div>
+    <div class="gallery-item">
+      <img src="images/step-free-entrance.jpg" data-large="images/step-free-entrance.jpg" alt="Step-free Entrance">
+      <span class="caption">Step-free Entrance</span>
+    </div>
+    <div class="gallery-item">
+      <img src="images/pharmacy-counter.jpg" data-large="images/pharmacy-counter.jpg" alt="Pharmacy Counter">
+      <span class="caption">Pharmacy Counter</span>
+    </div>
+    <div class="gallery-item">
+      <img src="images/waiting-room.jpg" data-large="images/waiting-room.jpg" alt="Waiting Room">
+      <span class="caption">Waiting Room</span>
+    </div>
+    <div class="gallery-item">
+      <img src="images/garden.jpg" data-large="images/garden.jpg" alt="Garden">
+      <span class="caption">Garden</span>
+    </div>
+  </div>
+  <div class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" src="" alt="">
+  </div>
+  <script>
+    document.querySelectorAll('.gallery-item img').forEach(img => {
+      img.addEventListener('click', function() {
+        const modal = document.querySelector('.modal');
+        const modalImg = document.querySelector('.modal-content');
+        modalImg.src = this.getAttribute('data-large');
+        modal.style.display = 'block';
+      });
+    });
+    document.querySelector('.close').addEventListener('click', function() {
+      document.querySelector('.modal').style.display = 'none';
+    });
+  </script>
+</body>
+</html>

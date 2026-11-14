@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CityCare Services</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    #tabs {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #fff;
+    }
+    .tab-links {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .tab {
+      padding: 10px 15px;
+      background-color: #f0f0f0;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    .tab.active {
+      background-color: #007bff;
+      color: white;
+    }
+    .tab-panels {
+      display: flex;
+      flex-direction: column;
+    }
+    .panel {
+      display: none;
+    }
+    .panel.active {
+      display: block;
+    }
+    .panel h2 {
+      margin-top: 0;
+    }
+    .panel p {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="tabs">
+    <div class="tab-links">
+      <button class="tab active" data-target="#vaccinations">Vaccinations</button>
+      <button class="tab" data-target="#checkups">Check-ups</button>
+      <button class="tab" data-target="#pharmacy">Pharmacy</button>
+    </div>
+    <div class="tab-panels">
+      <div id="vaccinations" class="panel active">
+        <h2>Vaccinations</h2>
+        <p>Get all your vaccinations at CityCare. Our team ensures you're protected against preventable diseases.</p>
+      </div>
+      <div id="checkups" class="panel">
+        <h2>Check-ups</h2>
+        <p>Regular check-ups are essential for maintaining your health. Schedule your appointment today.</p>
+      </div>
+      <div id="pharmacy" class="panel">
+        <h2>Pharmacy</h2>
+        <p>CityCare's pharmacy offers a wide range of medications and health products. Visit us for all your needs.</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        const target = this.getAttribute('data-target');
+        document.querySelector(target).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

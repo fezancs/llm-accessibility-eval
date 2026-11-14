@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Announcements Banner</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+    }
+    .banner {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      background-color: #f0f0f0;
+      overflow: hidden;
+      text-align: center;
+      line-height: 100px;
+      font-size: 1.5em;
+      color: #333;
+    }
+    .slides {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      color: #000;
+    }
+    .slide.visible {
+      opacity: 1;
+    }
+    .prev, .next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: #ccc;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      z-index: 10;
+      outline: none;
+    }
+    .prev {
+      left: 10px;
+    }
+    .next {
+      right: 10px;
+    }
+    .prev:hover, .next:hover {
+      background-color: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="banner" role="region" aria-label="Announcements">
+    <div class="slides">
+      <div class="slide" aria-hidden="true">Flu vaccinations are now available</div>
+      <div class="slide" aria-hidden="true">New evening hours at Riverside</div>
+      <div class="slide" aria-hidden="true">Download the CityCare app</div>
+    </div>
+    <button class="prev" aria-label="Previous announcement">Previous</button>
+    <button class="next" aria-label="Next announcement">Next</button>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const slides = document.querySelectorAll('.slide');
+      let currentIndex = 0;
+      let interval = null;
+
+      function showSlide(index) {
+        slides.forEach((slide, i) => {
+          slide.classList.remove('visible');
+          if (i === index) {
+            slide.classList.add('visible');
+            slide.setAttribute('aria-hidden', 'false');
+          } else {
+            slide.setAttribute('aria-hidden', 'true');
+          }
+        });
+      }
+
+      function nextSlide() {
+        currentIndex = (currentIndex + 1) % slides.length;
+        showSlide(currentIndex);
+      }
+
+      function prevSlide() {
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+        showSlide(currentIndex);
+      }
+
+      showSlide(currentIndex);
+
+      interval = setInterval(nextSlide, 5000);
+
+      document.querySelector('.next').addEventListener('click', nextSlide);
+      document.querySelector('.prev').addEventListener('click', prevSlide);
+    });
+  </script>
+</body>
+</html>

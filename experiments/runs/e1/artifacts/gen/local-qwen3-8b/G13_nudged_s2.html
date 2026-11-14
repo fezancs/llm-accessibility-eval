@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Prepare for a Blood Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    nav {
+      margin-bottom: 20px;
+    }
+    nav a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    section {
+      margin-bottom: 40px;
+    }
+    h2 {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 1em;
+    }
+    .print-button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    .print-button:hover {
+      background-color: #0056b3;
+    }
+    .helpful {
+      text-align: center;
+      margin-top: 40px;
+    }
+    .helpful button {
+      padding: 10px 20px;
+      font-size: 1em;
+      margin: 0 10px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+    .helpful button:hover {
+      background-color: #ddd;
+    }
+    @media print {
+      .print-button {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>How to Prepare for a Blood Test</h1>
+  <nav aria-label="Breadcrumb">
+    <a href="#">Home</a> > <a href="#">Health information</a> > <a href="#">Tests</a>
+  </nav>
+  <section>
+    <h2>Before your test</h2>
+    <p>Before your blood test, inform your healthcare provider about any medications, supplements, or allergies. Fast for 8-12 hours unless instructed otherwise. Avoid alcohol and caffeine. Wear comfortable clothing. Bring your ID and insurance information. Prepare questions for your doctor.</p>
+  </section>
+  <section>
+    <h2>On the day</h2>
+    <p>On the day of your test, arrive early to complete paperwork. Avoid tight clothing to ease vein access. Stay relaxed, as tension can make veins harder to find. Follow any specific instructions from your healthcare provider. If fasting, do not eat or drink anything except water.</p>
+  </section>
+  <section>
+    <h2>After your test</h2>
+    <p>After your test, apply pressure to the puncture site to prevent bleeding. Monitor for bruising or swelling. Keep the area clean. Avoid strenuous activity for a few hours. Results will be sent to your healthcare provider, who will discuss them with you.</p>
+  </section>
+  <button class="print-button" onclick="window.print()">Print this page</button>
+  <div class="helpful">
+    <p>Was this page helpful?</p>
+    <button aria-label="Yes" onclick="document.querySelector('.helpful p').textContent='Thank you!'; this.disabled=true; document.querySelector('.helpful button').disabled=true;">Yes</button>
+    <button aria-label="No" onclick="document.querySelector('.helpful p').textContent='Thank you!'; this.disabled=true; document.querySelector('.helpful button').disabled=true;">No</button>
+  </div>
+  <script>
+    // Ensure accessibility for buttons
+    document.querySelectorAll('.helpful button').forEach(btn => {
+      btn.setAttribute('tabindex', '0');
+    });
+  </script>
+</body>
+</html>

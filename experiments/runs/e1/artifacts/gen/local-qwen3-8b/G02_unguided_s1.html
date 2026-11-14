@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .appointment-card {
+            padding: 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            margin: 20px;
+            text-align: center;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            z-index: 1000;
+        }
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            text-align: center;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        #yesBtn {
+            background-color: #dc3545;
+            color: white;
+        }
+        #noBtn {
+            background-color: #28a745;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="appointment-card">
+        <p>Tuesday 12 March, 10:30</p>
+        <p>Riverside clinic</p>
+        <button id="cancelBtn">Cancel appointment</button>
+    </div>
+
+    <div id="modal" class="modal">
+        <p>Are you sure you want to cancel your appointment on 12 March at 10:30?</p>
+        <button id="yesBtn">Yes, cancel</button>
+        <button id="noBtn">Keep appointment</button>
+    </div>
+
+    <div id="confirmationMessage" class="message" style="display: none;">
+        Your appointment has been cancelled.
+    </div>
+
+    <script>
+        document.getElementById('cancelBtn').addEventListener('click', function() {
+            document.getElementById('modal').style.display = 'block';
+        });
+
+        document.getElementById('yesBtn').addEventListener('click', function() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('confirmationMessage').style.display = 'block';
+        });
+
+        document.getElementById('noBtn').addEventListener('click', function() {
+            document.getElementById('modal').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

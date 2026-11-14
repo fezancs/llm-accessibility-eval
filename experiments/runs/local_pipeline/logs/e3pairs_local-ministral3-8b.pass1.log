@@ -1,0 +1,15 @@
+{
+  "judges": [
+    "local-ministral3-8b"
+  ],
+  "procedures": [
+    "gen_pairs"
+  ],
+  "gen_pairs": {
+    "images": 120,
+    "pairs_per_image": 16,
+    "pairs_judged": 356,
+    "pairs_dropped": 4,
+    "judgments": 712
+  }
+}

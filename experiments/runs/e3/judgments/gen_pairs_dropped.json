@@ -1,0 +1,34 @@
+[
+  {
+    "image_id": "cr-976",
+    "a": "local-qwen25vl-7b",
+    "b": "local-gemma3-4b",
+    "missing": [
+      "local-gemma3-4b"
+    ]
+  },
+  {
+    "image_id": "cr-976",
+    "a": "local-gemma3-4b",
+    "b": "local-ministral3-8b",
+    "missing": [
+      "local-gemma3-4b"
+    ]
+  },
+  {
+    "image_id": "cr-850",
+    "a": "local-qwen25vl-7b",
+    "b": "local-gemma3-4b",
+    "missing": [
+      "local-gemma3-4b"
+    ]
+  },
+  {
+    "image_id": "cr-850",
+    "a": "local-gemma3-4b",
+    "b": "local-ministral3-8b",
+    "missing": [
+      "local-gemma3-4b"
+    ]
+  }
+]

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Referral Letter Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        #dropZone {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            min-height: 100px;
+            cursor: pointer;
+            outline: none;
+            background-color: #fff;
+            transition: background-color 0.2s;
+        }
+        #dropZone:focus {
+            outline: 2px solid #000;
+        }
+        #fileList {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        #fileList li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        #fileList li span {
+            color: #333;
+        }
+        #fileList li button {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: red;
+            padding: 0 5px;
+        }
+        #dropLabel {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <label for="fileInput" id="dropLabel">
+        <div id="dropZone">Drag and drop your referral letter here or click to select a file.</div>
+    </label>
+    <ul id="fileList"></ul>
+    <input type="file" id="fileInput" accept=".pdf,.doc,.docx" multiple hidden>
+    <script>
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return (bytes / Math.pow(k, i)).toFixed(1) + ' ' + sizes[i];
+        }
+
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                addFileToList(files[i]);
+            }
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            const files = event.dataTransfer.files;
+            for (let i = 0; i < files.length; i++) {
+                addFileToList(files[i]);
+            }
+        }
+
+        function addFileToList(file) {
+            const li = document.createElement('li');
+            const fileName = document.createElement('span');
+            fileName.textContent = file.name;
+            const fileSize = document.createElement('span');
+            fileSize.textContent = formatFileSize(file.size);
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = '×';
+            removeBtn.setAttribute('aria-label', 'Remove file');
+            removeBtn.addEventListener('click', function() {
+                removeFile(li);
+            });
+            li.appendChild(fileName);
+            li.appendChild(fileSize);
+            li.appendChild(removeBtn);
+            document.getElementById('fileList').appendChild(li);
+        }
+
+        function removeFile(element) {
+            element.remove();
+        }
+
+        document.getElementById('dropZone').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('dropZone').addEventListener('dragover', function(event) {
+            event.preventDefault();
+            this.style.backgroundColor = '#f0f0f0';
+        });
+
+        document.getElementById('dropZone').addEventListener('dragleave', function() {
+            this.style.backgroundColor = '';
+        });
+
+        document.getElementById('dropZone').addEventListener('drop', handleDrop);
+
+        document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+    </script>
+</body>
+</html>

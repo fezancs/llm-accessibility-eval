@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration Form</title>
+  <style>
+    .form-container {
+      max-width: 500px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .progress {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+    .progress .step {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    .progress .step.active {
+      background-color: #4CAF50;
+    }
+    .form-step {
+      display: none;
+    }
+    .form-step.active {
+      display: block;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .buttons button {
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <div class="progress">
+      <div class="step active">1</div>
+      <div class="step">2</div>
+      <div class="step">3</div>
+    </div>
+    <div class="form-step step1">
+      <h2>Step 1</h2>
+      <label for="name">Name:</label>
+      <input type="text" id="name" required>
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="dob" required>
+    </div>
+    <div class="form-step step2" style="display: none;">
+      <h2>Step 2</h2>
+      <label for="phone">Phone:</label>
+      <input type="text" id="phone" required>
+      <label for="email">Email:</label>
+      <input type="email" id="email" required>
+    </div>
+    <div class="form-step step3" style="display: none;">
+      <h2>Step 3</h2>
+      <p><strong>Name:</strong> <span id="reviewName"></span></p>
+      <p><strong>Date of Birth:</strong> <span id="reviewDob"></span></p>
+      <p><strong>Phone:</strong> <span id="reviewPhone"></span></p>
+      <p><strong>Email:</strong> <span id="reviewEmail"></span></p>
+    </div>
+    <div class="buttons">
+      <button id="backBtn">Back</button>
+      <button id="nextBtn">Next</button>
+    </div>
+  </div>
+  <script>
+    let currentStep = 1;
+
+    function showStep(step) {
+      document.querySelectorAll('.form-step').forEach(stepEl => {
+        stepEl.style.display = 'none';
+      });
+      document.querySelector('.form-step.step' + step).style.display = 'block';
+      updateProgress(step);
+      if (step === 3) {
+        document.getElementById('reviewName').textContent = document.getElementById('name').value;
+        document.getElementById('reviewDob').textContent = document.getElementById('dob').value;
+        document.getElementById('reviewPhone').textContent = document.getElementById('phone').value;
+        document.getElementById('reviewEmail').textContent = document.getElementById('email').value;
+      }
+    }
+
+    function updateProgress(step) {
+      document.querySelectorAll('.step').forEach((el, index) => {
+        el.classList.remove('active');
+        if (index + 1 === step) {
+          el.classList.add('active');
+        }
+      });
+    }
+
+    function nextStep() {
+      let valid = true;
+      if (currentStep === 1) {
+        const name = document.getElementById('name').value.trim();
+        const dob = document.getElementById('dob').value;
+        if (!name || !dob) {
+          valid = false;
+        }
+      } else if (currentStep === 2) {
+        const phone = document.getElementById('phone').value.trim();
+        const email = document.getElementById('email').value.trim();
+        if (!phone || !email) {
+          valid = false;
+        }
+      }
+      if (valid) {
+        if (currentStep < 3) {
+          currentStep++;
+          showStep(currentStep);
+          updateButtons();
+        } else {
+          alert('Registration successful!');
+        }
+      }
+    }
+
+    function backStep() {
+      currentStep--;
+      showStep(currentStep);
+      updateButtons();
+    }
+
+    function updateButtons() {
+      const nextBtn = document.getElementById('nextBtn');
+      const backBtn = document.getElementById('backBtn');
+      if (currentStep === 1) {
+        backBtn.disabled = true;
+        nextBtn.textContent = 'Next';
+      } else if (currentStep === 2) {
+        backBtn.disabled = false;
+        nextBtn.textContent = 'Next';
+      } else if (currentStep === 3) {
+        backBtn.disabled = false;
+        nextBtn.textContent = 'Submit';
+      }
+    }
+
+    // Initialize
+    showStep(currentStep);
+    updateButtons();
+  </script>
+</body>
+</html>

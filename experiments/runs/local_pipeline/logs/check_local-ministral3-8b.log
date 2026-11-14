@@ -1,0 +1,5 @@
+# Model check
+
+| Model | Result | Returned model | Notes |
+|---|---|---|---|
+| local-ministral3-8b | OK | Ministral-3-8B-Instruct-2512-Q4_K_M |  |

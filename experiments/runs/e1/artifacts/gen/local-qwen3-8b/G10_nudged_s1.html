@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notification Settings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #333333;
+            font-size: 16px;
+            line-height: 1.5;
+            padding: 20px;
+        }
+
+        #settings-panel {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            margin: 10px 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-switch .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 30px;
+        }
+
+        .toggle-switch .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        .toggle-switch input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .toggle-switch label {
+            cursor: pointer;
+            font-size: 16px;
+            color: #333333;
+            padding-left: 10px;
+            display: inline-block;
+        }
+
+        body.large-text {
+            font-size: 1.5em;
+        }
+
+        body.large-text h1, body.large-text h2, body.large-text h3, body.large-text h4, body.large-text h5, body.large-text h6 {
+            font-size: 1.5em;
+        }
+
+        body.large-text .toggle-switch {
+            width: 70px;
+        }
+
+        body.large-text .toggle-switch .slider {
+            width: 70px;
+        }
+
+        body.large-text .toggle-switch .slider:before {
+            width: 30px;
+            height: 30px;
+        }
+
+        body.large-text .toggle-switch .slider:before {
+            transform: translateX(30px);
+        }
+    </style>
+</head>
+<body>
+    <div id="settings-panel">
+        <label class="toggle-switch">
+            <input type="checkbox" id="sms-reminder">
+            <span class="slider"></span>
+            SMS Reminders
+        </label>
+        <label class="toggle-switch">
+            <input type="checkbox" id="email-reminder">
+            <span class="slider"></span>
+            Email Reminders
+        </label>
+        <label class="toggle-switch">
+            <input type="checkbox" id="large-text-mode">
+            <span class="slider"></span>
+            Large Text Mode
+        </label>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const largeTextCheckbox = document.getElementById('large-text-mode');
+
+            largeTextCheckbox.addEventListener('change', function() {
+                document.body.classList.toggle('large-text', this.checked);
+            });
+        });
+    </script>
+</body>
+</html>

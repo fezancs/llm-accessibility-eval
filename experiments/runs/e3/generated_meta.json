@@ -122,7 +122,9 @@
     "cr-518"
   ],
   "generators": [
-    "local-qwen25vl-7b"
+    "local-qwen25vl-7b",
+    "local-gemma3-4b",
+    "local-ministral3-8b"
   ],
   "transform_counts": {
     "local-qwen25vl-7b": {
@@ -132,9 +134,28 @@
       "image_of": 0,
       "picture_of": 0,
       "n": 120
+    },
+    "local-gemma3-4b": {
+      "markdown": 0,
+      "quotes": 0,
+      "alt_text_prefix": 0,
+      "image_of": 0,
+      "picture_of": 0,
+      "n": 118
+    },
+    "local-ministral3-8b": {
+      "markdown": 2,
+      "quotes": 0,
+      "alt_text_prefix": 0,
+      "image_of": 0,
+      "picture_of": 0,
+      "n": 120
     }
   },
   "status": {
+    "local-gemma3-4b:ok": 118,
+    "local-gemma3-4b:parse_error": 2,
+    "local-ministral3-8b:ok": 120,
     "local-qwen25vl-7b:ok": 120
   }
 }

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CityCare Services Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        #service-search {
+            width: 300px;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #suggestions {
+            display: none;
+            position: absolute;
+            width: 100%;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            border: 1px solid #ccc;
+            z-index: 1000;
+            padding: 4px 0;
+        }
+        #suggestions li {
+            padding: 8px;
+            cursor: pointer;
+        }
+        #suggestions li:hover, #suggestions li:focus {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <label for="service-search">Search for a service:</label>
+    <input type="text" id="service-search" aria-label="Search for a service" aria-expanded="false">
+    <div id="suggestions" role="listbox" aria-label="Service suggestions"></div>
+    <script>
+        const services = ["Vaccinations", "Blood tests", "Physiotherapy", "Pharmacy", "Dental care", "Eye tests", "Hearing tests", "Mental health", "Maternity", "Child health", "Travel clinic", "Sexual health"];
+        const input = document.getElementById('service-search');
+        const suggestionsContainer = document.getElementById('suggestions');
+
+        input.addEventListener('input', () => {
+            const query = input.value.toLowerCase();
+            const filtered = services.filter(service => service.toLowerCase().includes(query));
+            updateSuggestions(filtered);
+        });
+
+        function updateSuggestions(filtered) {
+            suggestionsContainer.innerHTML = '';
+            if (filtered.length === 0) {
+                suggestionsContainer.setAttribute('aria-expanded', 'false');
+                suggestionsContainer.style.display = 'none';
+                return;
+            }
+            suggestionsContainer.setAttribute('aria-expanded', 'true');
+            suggestionsContainer.style.display = 'block';
+            filtered.forEach(service => {
+                const li = document.createElement('li');
+                li.textContent = service;
+                li.setAttribute('role', 'option');
+                li.setAttribute('tabindex', '0');
+                li.addEventListener('click', () => selectService(service));
+                li.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        selectService(service);
+                    } else if (e.key === 'ArrowDown') {
+                        const items = suggestionsContainer.querySelectorAll('li');
+                        const currentIndex = Array.from(items).indexOf(li);
+                        if (currentIndex < items.length - 1) {
+                            items[currentIndex + 1].focus();
+                        }
+                    } else if (e.key === 'ArrowUp') {
+                        const items = suggestionsContainer.querySelectorAll('li');
+                        const currentIndex = Array.from(items).indexOf(li);
+                        if (currentIndex > 0) {
+                            items[currentIndex - 1].focus();
+                        }
+                    }
+                });
+                suggestionsContainer.appendChild(li);
+            });
+            // Focus the first item
+            if (filtered.length > 0) {
+                suggestionsContainer.querySelector('li').focus();
+            }
+        }
+
+        function selectService(service) {
+            input.value = service;
+            suggestionsContainer.setAttribute('aria-expanded', 'false');
+            suggestionsContainer.style.display = 'none';
+            suggestionsContainer.innerHTML = '';
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!input.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+                suggestionsContainer.setAttribute('aria-expanded', 'false');
+                suggestionsContainer.style.display = 'none';
+                suggestionsContainer.innerHTML = '';
+            }
+        });
+    </script>
+</body>
+</html>

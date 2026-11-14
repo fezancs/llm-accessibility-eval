@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CityCare Services Search</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    #serviceSearch {
+      width: 300px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      position: relative;
+    }
+    #suggestions {
+      position: absolute;
+      width: 100%;
+      max-height: 150px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      background: white;
+      z-index: 1000;
+      display: none;
+      margin-top: 5px;
+    }
+    #suggestions li {
+      padding: 8px;
+      cursor: pointer;
+      list-style-type: none;
+    }
+    #suggestions li:hover {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <input type="text" id="serviceSearch" placeholder="Search for services...">
+  <div id="suggestions"></div>
+
+  <script>
+    const services = [
+      "Vaccinations", "Blood tests", "Physiotherapy", "Pharmacy", "Dental care",
+      "Eye tests", "Hearing tests", "Mental health", "Maternity", "Child health",
+      "Travel clinic", "Sexual health"
+    ];
+
+    document.getElementById('serviceSearch').addEventListener('input', function () {
+      const input = this.value.trim().toLowerCase();
+      const suggestionsDiv = document.getElementById('suggestions');
+      suggestionsDiv.innerHTML = '';
+
+      if (input === '') {
+        suggestionsDiv.style.display = 'none';
+        return;
+      }
+
+      const filtered = services.filter(service => service.toLowerCase().includes(input));
+
+      if (filtered.length === 0) {
+        suggestionsDiv.innerHTML = '<li>No services found</li>';
+        suggestionsDiv.style.display = 'block';
+      } else {
+        filtered.forEach(service => {
+          const li = document.createElement('li');
+          li.textContent = service;
+          li.addEventListener('click', function() {
+            document.getElementById('serviceSearch').value = service;
+            suggestionsDiv.style.display = 'none';
+          });
+          suggestionsDiv.appendChild(li);
+        });
+        suggestionsDiv.style.display = 'block';
+      }
+    });
+
+    document.addEventListener('click', function(event) {
+      const input = document.getElementById('serviceSearch');
+      const suggestions = document.getElementById('suggestions');
+      if (!input.contains(event.target) && !suggestions.contains(event.target)) {
+        suggestions.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

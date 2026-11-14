@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""List the \\res{key} values main.tex uses that the analysis has not (yet) defined.
+"""List the \\res{key} values main.tex (and paper-local/sections/*.tex) uses that the analysis has not (yet) defined.
 
     python3 paper-local/check_keys.py        # exit 1 if any key is missing or extra values are stale
 
@@ -19,7 +19,8 @@ HARDWARE = VALUES.with_name("extra_values.tex")         # experiments/local/extr
 
 
 def main() -> int:
-    text = re.sub(r"(?<!\\)%.*", "", (HERE / "main.tex").read_text(encoding="utf-8"))   # drop comments
+    sources = [HERE / "main.tex", *sorted((HERE / "sections").glob("*.tex"))]   # main.tex and its \\input files
+    text = re.sub(r"(?<!\\)%.*", "", "\n".join(f.read_text(encoding="utf-8") for f in sources))   # drop comments
     used = sorted(set(re.findall(r"\\res\{([^}]+)\}", text)))
     defined = set()
     for f in (VALUES, HARDWARE):
