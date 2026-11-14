@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flu Search Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 1em;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 1.5em;
+        }
+        a {
+            text-decoration: none;
+            color: #0066cc;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .summary {
+            color: #555;
+            margin-top: 0.5em;
+        }
+        nav {
+            margin-top: 2em;
+            text-align: center;
+        }
+        nav button {
+            padding: 0.5em 1em;
+            margin: 0 0.5em;
+            font-size: 1em;
+            background-color: #ddd;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        nav button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        nav a {
+            padding: 0.5em 1em;
+            font-weight: bold;
+            text-decoration: none;
+            color: #0066cc;
+        }
+        nav a:focus {
+            outline: 2px solid #0066cc;
+        }
+        nav a[aria-current="page"] {
+            background-color: #0066cc;
+            color: white;
+        }
+        nav a[aria-current="page"]:hover {
+            background-color: #005fa3;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Search Results for "flu"</h1>
+        <section>
+            <ul id="results">
+                <li><a href="#">Flu Symptoms and Treatment</a><span class="summary">Learn about common flu symptoms and how to treat them at home.</span></li>
+                <li><a href="#">Preventing the Spread of the Flu</a><span class="summary">Tips on how to prevent the flu virus from spreading to others.</span></li>
+                <li><a href="#">Flu Vaccination Guide</a><span class="summary">Information on the flu vaccine, when to get it, and its effectiveness.</span></li>
+                <li><a href="#">Flu vs. Common Cold: Key Differences</a><span class="summary">Understanding the differences between flu and the common cold.</span></li>
+                <li><a href="#">Flu Complications and When to Seek Help</a><span class="summary">Recognizing when flu symptoms might indicate a more serious condition.</span></li>
+                <li><a href="#">Flu and Children: What Parents Should Know</a><span class="summary">Guidance for parents on managing flu in children.</span></li>
+                <li><a href="#">Flu Myths vs. Facts</a><span class="summary">Debunking common misconceptions about the flu virus.</span></li>
+                <li><a href="#">Flu and Pregnancy: Risks and Precautions</a><span class="summary">Important information for pregnant women about the flu.</span></li>
+                <li><a href="#">Flu Research and New Developments</a><span class="summary">Updates on current flu research and vaccine advancements.</span></li>
+                <li><a href="#">Flu in the Workplace: Prevention Strategies</a><span class="summary">How to reduce flu transmission in the workplace.</span></li>
+            </ul>
+        </section>
+        <nav aria-label="Pagination">
+            <button id="prev">Previous</button>
+            <div id="pageLinks">
+                <a href="#" aria-current="page">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#">5</a>
+            </div>
+            <button id="next">Next</button>
+        </nav>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const prevBtn = document.getElementById('prev');
+            const nextBtn = document.getElementById('next');
+            const pageLinks = document.querySelectorAll('#pageLinks a');
+
+            // Disable Previous on page 1
+            prevBtn.disabled = true;
+
+            // Enable Next on page 1
+            nextBtn.disabled = false;
+
+            // Add click handlers for Previous and Next
+            prevBtn.addEventListener('click', () => {
+                // Logic to go to previous page would go here
+            });
+
+            nextBtn.addEventListener('click', () => {
+                // Logic to go to next page would go here
+            });
+
+            // Ensure current page is highlighted
+            pageLinks.forEach(link => {
+                if (link.getAttribute('aria-current') === 'page') {
+                    link.style.backgroundColor = '#0066cc';
+                    link.style.color = 'white';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

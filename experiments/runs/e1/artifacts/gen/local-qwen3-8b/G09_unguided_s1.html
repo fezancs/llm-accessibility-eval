@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CityCare Services Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        #searchBox {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #suggestions {
+            display: none;
+            position: absolute;
+            border: 1px solid #ccc;
+            background: white;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 1000;
+            width: 100%;
+        }
+        #suggestions li {
+            padding: 8px;
+            cursor: pointer;
+        }
+        #suggestions li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id="searchBox" placeholder="Search for services...">
+    <div id="suggestions"></div>
+    <script>
+        const services = [
+            "Vaccinations", "Blood tests", "Physiotherapy", "Pharmacy", "Dental care",
+            "Eye tests", "Hearing tests", "Mental health", "Maternity", "Child health",
+            "Travel clinic", "Sexual health"
+        ];
+
+        document.getElementById("searchBox").addEventListener("input", function() {
+            const query = this.value.toLowerCase();
+            const filtered = services.filter(service => service.toLowerCase().startsWith(query));
+            const suggestionsDiv = document.getElementById("suggestions");
+            suggestionsDiv.innerHTML = "";
+            if (filtered.length > 0) {
+                suggestionsDiv.style.display = "block";
+                filtered.forEach(service => {
+                    const li = document.createElement("li");
+                    li.textContent = service;
+                    li.onclick = function() {
+                        document.getElementById("searchBox").value = service;
+                        suggestionsDiv.style.display = "none";
+                    };
+                    suggestionsDiv.appendChild(li);
+                });
+            } else {
+                suggestionsDiv.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>

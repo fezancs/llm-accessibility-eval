@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Notification Settings</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    #settings {
+      max-width: 300px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-size: 1em;
+    }
+    input[type="checkbox"] {
+      margin-right: 10px;
+      accent-color: #007BFF;
+    }
+    span {
+      font-weight: bold;
+    }
+    .large-text {
+      font-size: 1.5em;
+    }
+  </style>
+</head>
+<body>
+  <div id="settings">
+    <label>
+      <input type="checkbox" id="sms">
+      <span id="smsText">Off</span>
+    </label>
+    <label>
+      <input type="checkbox" id="email">
+      <span id="emailText">Off</span>
+    </label>
+    <label>
+      <input type="checkbox" id="largeText">
+      <span id="largeTextText">Off</span>
+    </label>
+  </div>
+
+  <script>
+    const sms = document.getElementById('sms');
+    const email = document.getElementById('email');
+    const largeText = document.getElementById('largeText');
+
+    sms.addEventListener('change', function() {
+      document.getElementById('smsText').textContent = this.checked ? 'On' : 'Off';
+    });
+
+    email.addEventListener('change', function() {
+      document.getElementById('emailText').textContent = this.checked ? 'On' : 'Off';
+    });
+
+    largeText.addEventListener('change', function() {
+      document.getElementById('largeTextText').textContent = this.checked ? 'On' : 'Off';
+      document.body.classList.toggle('large-text', this.checked);
+    });
+  </script>
+</body>
+</html>

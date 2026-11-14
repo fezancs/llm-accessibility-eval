@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registration Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    .registration-form {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: auto;
+    }
+    #progress-bar {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+    .step {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      background: #ddd;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .step.active {
+      background: #4CAF50;
+      color: white;
+    }
+    .step-content {
+      display: none;
+    }
+    .step-content.active {
+      display: block;
+    }
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="registration-form" role="form">
+    <div id="progress-bar">
+      <span class="step" aria-current="false">1</span>
+      <span class="step" aria-current="false">2</span>
+      <span class="step" aria-current="false">3</span>
+    </div>
+    <div id="step1" class="step-content active">
+      <h2>Step 1: Name and Date of Birth</h2>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required aria-required="true" aria-label="Full name">
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="dob" name="dob" required aria-required="true" aria-label="Date of birth">
+    </div>
+    <div id="step2" class="step-content">
+      <h2>Step 2: Phone and Email</h2>
+      <label for="phone">Phone:</label>
+      <input type="tel" id="phone" name="phone" required aria-required="true" aria-label="Phone number">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required aria-required="true" aria-label="Email address">
+    </div>
+    <div id="step3" class="step-content">
+      <h2>Step 3: Review and Submit</h2>
+      <p><strong>Name:</strong> <span id="review-name"></span></p>
+      <p><strong>Date of Birth:</strong> <span id="review-dob"></span></p>
+      <p><strong>Phone:</strong> <span id="review-phone"></span></p>
+      <p><strong>Email:</strong> <span id="review-email"></span></p>
+    </div>
+    <div class="navigation">
+      <button id="backBtn" aria-label="Back to previous step">Back</button>
+      <button id="nextBtn" aria-label="Next step">Next</button>
+    </div>
+  </div>
+  <script>
+    let currentStep = 1;
+
+    function showStep(step) {
+      document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+      document.querySelector(`#step${step}`).classList.add('active');
+      document.querySelectorAll('.step').forEach((el, index) => {
+        if (index + 1 === step) {
+          el.classList.add('active');
+          el.setAttribute('aria-current', 'true');
+        } else {
+          el.classList.remove('active');
+          el.setAttribute('aria-current', 'false');
+        }
+      });
+    }
+
+    function validateStep(step) {
+      let isValid = true;
+      if (step === 1) {
+        const name = document.getElementById('name').value.trim();
+        const dob = document.getElementById('dob').value;
+        if (!name || !dob) {
+          isValid = false;
+          alert('Please fill in all fields.');
+        }
+      } else if (step === 2) {
+        const phone = document.getElementById('phone').value.trim();
+        const email = document.getElementById('email').value.trim();
+        if (!phone || !email) {
+          isValid = false;
+          alert('Please fill in all fields.');
+        } else if (!/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(email)) {
+          isValid = false;
+          alert('Please enter a valid email address.');
+        }
+      }
+      return isValid;
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (validateStep(currentStep)) {
+        if (currentStep === 3) {
+          alert('Form submitted!\n\nName: ' + document.getElementById('name').value +
+                '\nDate of Birth: ' + document.getElementById('dob').value +
+                '\nPhone: ' + document.getElementById('phone').value +
+                '\nEmail: ' + document.getElementById('email').value);
+        } else {
+          currentStep++;
+          showStep(currentStep);
+          if (currentStep === 3) {
+            document.getElementById('review-name').textContent = document.getElementById('name').value;
+            document.getElementById('review-dob').textContent = document.getElementById('dob').value;
+            document.getElementById('review-phone').textContent = document.getElementById('phone').value;
+            document.getElementById('review-email').textContent = document.getElementById('email').value;
+          }
+        }
+      }
+    });
+
+    document.getElementById('backBtn').addEventListener('click', () => {
+      if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+        document.getElementById('nextBtn').disabled = false;
+      }
+    });
+
+    showStep(1);
+  </script>
+</body>
+</html>

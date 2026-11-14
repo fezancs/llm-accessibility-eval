@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pain Scale</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+    .pain-scale {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    #painSlider {
+      flex: 1;
+      width: 300px;
+      accent-color: #4CAF50;
+    }
+    #painValue {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="pain-scale">
+    <input type="range" id="painSlider" min="0" max="10" value="0">
+    <span id="painValue">0</span>
+  </div>
+
+  <script>
+    const slider = document.getElementById('painSlider');
+    const valueDisplay = document.getElementById('painValue');
+
+    slider.addEventListener('input', function() {
+      valueDisplay.textContent = slider.value;
+    });
+  </script>
+</body>
+</html>

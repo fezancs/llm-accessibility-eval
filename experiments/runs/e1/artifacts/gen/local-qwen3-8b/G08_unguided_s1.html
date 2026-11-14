@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rotating Announcements Banner</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .banner {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      overflow: hidden;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      background-color: #fff;
+    }
+
+    .slides {
+      display: flex;
+      width: 300%;
+      transition: transform 0.5s ease;
+    }
+
+    .slide {
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    .prev, .next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: #333;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      z-index: 10;
+      border-radius: 4px;
+    }
+
+    .prev {
+      left: 10px;
+    }
+
+    .next {
+      right: 10px;
+    }
+
+    .prev:hover, .next:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    <div class="slides">
+      <div class="slide">Flu vaccinations are now available</div>
+      <div class="slide">New evening hours at Riverside</div>
+      <div class="slide">Download the CityCare app</div>
+    </div>
+    <button class="prev">Previous</button>
+    <button class="next">Next</button>
+  </div>
+
+  <script>
+    let currentIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(index) {
+      const slidesContainer = document.querySelector('.slides');
+      slidesContainer.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    document.querySelector('.next').addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % totalSlides;
+      showSlide(currentIndex);
+    });
+
+    document.querySelector('.prev').addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+      showSlide(currentIndex);
+    });
+
+    // Auto-advance every 5 seconds
+    setInterval(() => {
+      currentIndex = (currentIndex + 1) % totalSlides;
+      showSlide(currentIndex);
+    }, 5000);
+  </script>
+</body>
+</html>

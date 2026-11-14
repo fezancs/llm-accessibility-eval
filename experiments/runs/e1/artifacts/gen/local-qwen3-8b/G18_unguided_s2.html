@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        #form-container {
+            max-width: 500px;
+            margin: auto;
+        }
+        .step {
+            display: none;
+        }
+        #progress {
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        input, label {
+            display: block;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+        }
+        #backBtn {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="form-container">
+        <div id="progress">Step 1 of 3</div>
+        <div class="step" id="step1">
+            <h2>Step 1: Name and Date of Birth</h2>
+            <label>Name:</label>
+            <input type="text" id="name" required>
+            <label>Date of Birth:</label>
+            <input type="date" id="dob" required>
+        </div>
+        <div class="step" id="step2">
+            <h2>Step 2: Phone and Email</h2>
+            <label>Phone:</label>
+            <input type="text" id="phone" required>
+            <label>Email:</label>
+            <input type="email" id="email" required>
+        </div>
+        <div class="step" id="step3">
+            <h2>Step 3: Review and Submit</h2>
+            <p><strong>Name:</strong> <span id="name-display"></span></p>
+            <p><strong>Date of Birth:</strong> <span id="dob-display"></span></p>
+            <p><strong>Phone:</strong> <span id="phone-display"></span></p>
+            <p><strong>Email:</strong> <span id="email-display"></span></p>
+        </div>
+        <button id="backBtn">Back</button>
+        <button id="nextBtn">Next</button>
+    </div>
+    <script>
+        let currentStep = 1;
+
+        function showStep(step) {
+            document.querySelectorAll('.step').forEach(stepEl => {
+                stepEl.style.display = 'none';
+            });
+            document.getElementById('step' + step).style.display = 'block';
+            updateProgress();
+            updateButtonTitles(step);
+        }
+
+        function updateProgress() {
+            document.getElementById('progress').textContent = 'Step ' + currentStep + ' of 3';
+        }
+
+        function updateButtonTitles(step) {
+            if (step === 1) {
+                document.getElementById('backBtn').style.display = 'none';
+                document.getElementById('nextBtn').textContent = 'Next';
+            } else if (step === 3) {
+                document.getElementById('backBtn').style.display = '';
+                document.getElementById('nextBtn').textContent = 'Submit';
+            } else {
+                document.getElementById('backBtn').style.display = '';
+                document.getElementById('nextBtn').textContent = 'Next';
+            }
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', function() {
+            if (currentStep === 1) {
+                if (validateStep1()) {
+                    currentStep++;
+                    showStep(currentStep);
+                }
+            } else if (currentStep === 2) {
+                if (validateStep2()) {
+                    currentStep++;
+                    showStep(currentStep);
+                }
+            } else if (currentStep === 3) {
+                submitForm();
+            }
+        });
+
+        document.getElementById('backBtn').addEventListener('click', function() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        });
+
+        function validateStep1() {
+            const name = document.getElementById('name').value.trim();
+            const dob = document.getElementById('dob').value;
+            if (!name || !dob) {
+                alert('Please fill in all fields.');
+                return false;
+            }
+            return true;
+        }
+
+        function validateStep2() {
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            if (!phone || !email) {
+                alert('Please fill in all fields.');
+                return false;
+            }
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                alert('Please enter a valid email address.');
+                return false;
+            }
+            return true;
+        }
+
+        function submitForm() {
+            document.getElementById('name-display').textContent = document.getElementById('name').value;
+            document.getElementById('dob-display').textContent = document.getElementById('dob').value;
+            document.getElementById('phone-display').textContent = document.getElementById('phone').value;
+            document.getElementById('email-display').textContent = document.getElementById('email').value;
+            alert('Registration successful!');
+        }
+
+        showStep(currentStep);
+    </script>
+</body>
+</html>

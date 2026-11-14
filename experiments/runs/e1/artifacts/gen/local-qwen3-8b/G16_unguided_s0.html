@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .tooltip-icon {
+      position: relative;
+      cursor: help;
+    }
+    .tooltip-icon::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .tooltip-icon:hover::after {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <form>
+    <label for="patientId">
+      Patient ID number
+      <span class="tooltip-icon" data-tooltip="Your 10-digit patient ID is printed on your clinic card.">?</span>
+    </label>
+    <input type="text" id="patientId" name="patientId">
+  </form>
+</body>
+</html>

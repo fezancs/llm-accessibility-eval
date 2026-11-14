@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clinic Opening Hours</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f9f9f9;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        caption {
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 10px 0;
+            text-align: center;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:focus {
+            outline: 2px solid #007bff;
+        }
+        td {
+            min-width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <caption>Clinic Opening Hours for the Week</caption>
+        <thead>
+            <tr>
+                <th scope="col"><button id="sortBtn">Sort A-Z</button></th>
+                <th scope="col">Monday</th>
+                <th scope="col">Tuesday</th>
+                <th scope="col">Wednesday</th>
+                <th scope="col">Thursday</th>
+                <th scope="col">Friday</th>
+                <th scope="col">Saturday</th>
+                <th scope="col">Sunday</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Northside</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Closed</td>
+                <td>Closed</td>
+            </tr>
+            <tr>
+                <td>Riverside</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Closed</td>
+            </tr>
+            <tr>
+                <td>Old Town</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Closed</td>
+                <td>Closed</td>
+                <td>Closed</td>
+            </tr>
+            <tr>
+                <td>Harbour</td>
+                <td>Closed</td>
+                <td>Open</td>
+                <td>Closed</td>
+                <td>Open</td>
+                <td>Closed</td>
+                <td>Closed</td>
+                <td>Closed</td>
+            </tr>
+            <tr>
+                <td>Hilltop</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Open</td>
+                <td>Open</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById('sortBtn').addEventListener('click', function() {
+            const tbody = document.querySelector('tbody');
+            const rows = Array.from(tbody.rows);
+            let isAscending = this.textContent === 'Sort A-Z';
+
+            rows.sort((a, b) => {
+                const clinicA = a.cells[0].textContent.trim();
+                const clinicB = b.cells[0].textContent.trim();
+                return isAscending ? clinicA.localeCompare(clinicB) : clinicB.localeCompare(clinicA);
+            });
+
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+            this.textContent = isAscending ? 'Sort Z-A' : 'Sort A-Z';
+        });
+    </script>
+</body>
+</html>

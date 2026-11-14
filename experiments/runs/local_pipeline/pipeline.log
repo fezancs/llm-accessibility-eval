@@ -125,3 +125,21 @@
 2026-11-14T04:50:45+05:00 start e2full.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e2_run --models local-qwen3-8b --runs 1
 2026-11-14T07:50:50+05:00 end   e2full.pass1 rc=0 (180 min); step_errors since 2026-11-13T23:50:45: 130 requests, 0 failed
 2026-11-14T07:50:50+05:00 milestone: E2 (long agentic sessions, DCDI)
+2026-11-14T07:51:20+05:00 committed: E2 (long agentic sessions, DCDI)
+2026-11-14T07:51:24+05:00 pushed to origin/local-run-2026-11
+2026-11-14T07:51:24+05:00 start e1gen_q3.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_gen --models local-qwen3-8b --no-eval
+2026-11-14T11:56:58+05:00 end   e1gen_q3.pass1 rc=0 (245 min); step_errors since 2026-11-14T02:51:24: 236 requests, 0 failed
+2026-11-14T11:56:58+05:00 start e1rep_q3.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_repair --models local-qwen3-8b --no-eval
+2026-11-14T15:33:20+05:00 end   e1rep_q3.pass1 rc=0 (216 min); step_errors since 2026-11-14T06:56:58: 46 requests, 0 failed
+2026-11-14T15:33:20+05:00 start e1aud_q3.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_audit --models local-qwen3-8b --no-eval
+2026-11-14T17:14:57+05:00 end   e1aud_q3.pass1 rc=0 (101 min); step_errors since 2026-11-14T10:33:20: 48 requests, 0 failed
+2026-11-14T17:14:57+05:00 start e1score_gen_all: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_gen --models local-qwen3-8b,local-qwen25vl-7b
+2026-11-14T17:22:04+05:00 end   e1score_gen_all rc=0 (7 min); step_errors since 2026-11-14T12:14:57: 0 requests, 0 failed
+2026-11-14T17:22:04+05:00 start e1score_rep_all: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_repair --models local-qwen3-8b,local-qwen25vl-7b
+2026-11-14T17:28:10+05:00 end   e1score_rep_all rc=0 (6 min); step_errors since 2026-11-14T12:22:04: 0 requests, 0 failed
+2026-11-14T17:28:10+05:00 start e1score_aud_all: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e1_audit --models local-qwen3-8b,local-qwen25vl-7b
+2026-11-14T17:28:38+05:00 end   e1score_aud_all rc=0 (0 min); step_errors since 2026-11-14T12:28:10: 0 requests, 0 failed
+2026-11-14T17:28:38+05:00 start checks_all: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.check_keys --models local-qwen3-8b,local-qwen25vl-7b,local-gemma3-4b,local-ministral3-8b
+2026-11-14T17:28:42+05:00 end   checks_all rc=0 (0 min); step_errors since 2026-11-14T12:28:38: 0 requests, 0 failed
+2026-11-14T17:28:48+05:00 failed steps this pass: none
+2026-11-14T17:28:48+05:00 milestone: E1 complete; all experiments done

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CityCare Footer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    footer {
+      background-color: #333;
+      color: white;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1200px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .contact-info, .social-icons {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .social-icons a {
+      margin: 0 10px;
+      color: white;
+      text-decoration: none;
+    }
+    .social-icon {
+      width: 24px;
+      height: 24px;
+      fill: white;
+    }
+    .newsletter {
+      margin-top: 30px;
+      width: 100%;
+      max-width: 600px;
+    }
+    .newsletter form {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .newsletter input {
+      padding: 8px;
+      width: 100%;
+      border: none;
+      border-radius: 4px;
+      background-color: #f2f2f2;
+    }
+    .newsletter button {
+      padding: 8px 16px;
+      background-color: #1877F2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .newsletter button:hover {
+      background-color: #1557B0;
+    }
+  </style>
+</head>
+<body>
+  <footer>
+    <div class="footer-content">
+      <div class="contact-info">
+        <p>1 Market Street, Old Town</p>
+        <p>Phone: (123) 456-7890</p>
+        <p>Email: info@citycare.org</p>
+      </div>
+      <div class="social-icons">
+        <a href="https://facebook.com" target="_blank">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="#1877F2">
+            <path d="M12 2L2 7l10 5 10-5-10-3zM22 7l-10 5-10-5 10 3v1h-4v1h4v-1zm0 4l-10-5-10 5v1h20v-1z" />
+          </svg>
+        </a>
+        <a href="https://twitter.com" target="_blank">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="#00ACEE">
+            <path d="M23 4.166c-.9 1.385-2.694 4.07-5.438 4.07-2.744 0-4.538-2.685-5.438-4.07C3.05 6.25 4.844 9 7.588 9c2.744 0 4.538-2.685 5.438-4.07M16 11.001c-1.396 0-2.531-1.135-2.531-2.531 0-1.396 1.135-2.531 2.531-2.531 1.396 0 2.531 1.135 2.531 2.531 0 1.395-1.135 2.531-2.531 2.531M12 16.001c-1.657 0-3-1.343-3-3s1.343-3 3-3 3 1.343 3 3-1.343 3-3 3z" />
+          </svg>
+        </a>
+        <a href="https://instagram.com" target="_blank">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="#E1306C">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v5h-2zm-1 8h2v2h-2z" />
+          </svg>
+        </a>
+        <a href="https://youtube.com" target="_blank">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="#FF0000">
+            <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.96 3.69 9 8.5 9.38V21h2v-1.38c4.81-.38 8.5-4.46 8.5-9.38z" />
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="newsletter">
+      <form onsubmit="event.preventDefault(); alert('Thank you for subscribing!');">
+        <input type="email" placeholder="Email address" required />
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Frequently Asked Questions</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f4f4f4;
+    }
+    .faq {
+      max-width: 600px;
+      margin: auto;
+    }
+    .faq-item {
+      background: #fff;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      padding: 15px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .question {
+      cursor: pointer;
+      font-weight: bold;
+      color: #333;
+    }
+    .answer {
+      display: none;
+      margin-top: 10px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="faq">
+    <div class="faq-item">
+      <div class="question">How do I book an appointment?</div>
+      <div class="answer">You can book an appointment by visiting our website or calling us. Please select a date and time that suits your schedule.</div>
+    </div>
+    <div class="faq-item">
+      <div class="question">Can I bring someone with me?</div>
+      <div class="answer">Yes, you can bring a friend or family member. They will need to wait in the waiting area.</div>
+    </div>
+    <div class="faq-item">
+      <div class="question">Is parking available?</div>
+      <div class="answer">Yes, there is a parking lot available for visitors. It is located across the street from the building.</div>
+    </div>
+    <div class="faq-item">
+      <div class="question">How do I get my test results?</div>
+      <div class="answer">Your test results will be sent to you via email. You can also check them online through your account.</div>
+    </div>
+    <div class="faq-item">
+      <div class="question">What if I need an interpreter?</div>
+      <div class="answer">We can provide an interpreter upon request. Please notify us in advance so we can arrange this for you.</div>
+    </div>
+  </div>
+  <script>
+    document.querySelectorAll('.question').forEach(q => {
+      q.addEventListener('click', () => {
+        const answer = q.nextElementSibling;
+        answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+      });
+    });
+  </script>
+</body>
+</html>

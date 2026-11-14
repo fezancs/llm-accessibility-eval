@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: Arial, sans-serif;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      cursor: pointer;
+      background-color: #f2f2f2;
+    }
+    th:hover {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <table id="myTable">
+    <caption>Opening Hours for Clinics</caption>
+    <thead>
+      <tr>
+        <th onclick="sortTable()">Clinic</th>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+        <th>Saturday</th>
+        <th>Sunday</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Northside</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Closed</td>
+        <td>Closed</td>
+      </tr>
+      <tr>
+        <td>Riverside</td>
+        <td>Closed</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+      </tr>
+      <tr>
+        <td>Old Town</td>
+        <td>Closed</td>
+        <td>Open</td>
+        <td>Closed</td>
+        <td>Open</td>
+        <td>Closed</td>
+        <td>Open</td>
+        <td>Closed</td>
+      </tr>
+      <tr>
+        <td>Harbour</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+      </tr>
+      <tr>
+        <td>Hilltop</td>
+        <td>Closed</td>
+        <td>Open</td>
+        <td>Closed</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+      </tr>
+    </tbody>
+  </table>
+  <script>
+    let shouldAsc = true;
+    function sortTable() {
+      const table = document.getElementById("myTable");
+      const rows = Array.from(table.querySelectorAll("tbody tr"));
+      rows.sort((a, b) => {
+        const aText = a.querySelector("td:nth-child(1)").textContent;
+        const bText = b.querySelector("td:nth-child(1)").textContent;
+        if (aText === bText) return 0;
+        return shouldAsc ? aText.localeCompare(bText) : bText.localeCompare(aText);
+      });
+      shouldAsc = !shouldAsc;
+      const tbody = table.querySelector("tbody");
+      tbody.innerHTML = '';
+      rows.forEach(row => tbody.appendChild(row));
+    }
+  </script>
+</body>
+</html>

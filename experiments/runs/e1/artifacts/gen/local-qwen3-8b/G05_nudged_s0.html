@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CityCare</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #333;
+      color: white;
+      padding: 10px 20px;
+    }
+
+    .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .main-nav {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .main-nav li {
+      position: relative;
+      margin-left: 20px;
+    }
+
+    .main-nav a {
+      text-decoration: none;
+      color: white;
+      padding: 8px 12px;
+      display: block;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: white;
+      border: 1px solid #ccc;
+      z-index: 1000;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .dropdown-menu li a {
+      padding: 8px 12px;
+      display: block;
+    }
+
+    /* Desktop dropdown */
+    @media (min-width: 601px) {
+      .dropdown-trigger:hover .dropdown-menu {
+        display: block;
+      }
+    }
+
+    /* Mobile menu */
+    @media (max-width: 600px) {
+      .main-nav {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+      }
+      .menu-btn {
+        display: block;
+      }
+    }
+
+    .menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">CityCare</div>
+    <nav>
+      <ul class="main-nav">
+        <li><a href="#">Home</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-trigger" aria-haspopup="true" aria-expanded="false">Services</a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Vaccinations</a></li>
+            <li><a href="#">Check-ups</a></li>
+            <li><a href="#">Pharmacy</a></li>
+            <li><a href="#">Mental health</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Appointments</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+    <button class="menu-btn" aria-label="Open menu">☰</button>
+  </header>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const menuBtn = document.querySelector('.menu-btn');
+      const mainNav = document.querySelector('.main-nav');
+
+      menuBtn.addEventListener('click', function () {
+        mainNav.style.display = mainNav.style.display === 'flex' ? 'none' : 'flex';
+        this.textContent = mainNav.style.display === 'flex' ? '✖' : '☰';
+        this.setAttribute('aria-label', mainNav.style.display === 'flex' ? 'Close menu' : 'Open menu');
+      });
+
+      // Dropdown toggle for Services
+      document.querySelectorAll('.dropdown-trigger').forEach(trigger => {
+        trigger.addEventListener('click', function (e) {
+          e.preventDefault();
+          const menu = this.nextElementSibling;
+          const expanded = this.getAttribute('aria-expanded') === 'true';
+          this.setAttribute('aria-expanded', !expanded);
+          menu.style.display = expanded ? 'none' : 'block';
+        });
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function (e) {
+        if (!e.target.closest('.dropdown-menu') && !e.target.closest('.dropdown-trigger')) {
+          document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            menu.style.display = 'none';
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

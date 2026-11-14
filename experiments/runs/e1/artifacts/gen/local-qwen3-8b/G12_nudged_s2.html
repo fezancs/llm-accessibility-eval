@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flu Vaccine Eligibility Checker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      padding: 20px;
+    }
+    form {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input {
+      padding: 8px;
+      margin-bottom: 15px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #message {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      border-radius: 4px;
+      color: #155724;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Flu Vaccine Eligibility Checker</h1>
+  <form>
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" required aria-required="true">
+    
+    <label for="postcode">Postcode:</label>
+    <input type="text" id="postcode" name="postcode">
+    
+    <button type="button" id="checkButton">Check eligibility</button>
+  </form>
+  <div id="message" role="status" aria-live="polite"></div>
+
+  <script>
+    document.getElementById('checkButton').addEventListener('click', function() {
+      const ageInput = document.getElementById('age');
+      const age = parseInt(ageInput.value.trim(), 10);
+      const message = document.getElementById('message');
+      
+      if (isNaN(age) || age < 65) {
+        message.textContent = 'You are not eligible for a free flu vaccination.';
+      } else {
+        message.textContent = 'You are eligible for a free flu vaccination.';
+      }
+      message.style.display = 'block';
+    });
+  </script>
+</body>
+</html>

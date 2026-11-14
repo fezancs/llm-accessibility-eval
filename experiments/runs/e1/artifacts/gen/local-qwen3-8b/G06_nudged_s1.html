@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clinic Opening Hours</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-family: Arial, sans-serif;
+    }
+    th, td {
+      border: 1px solid #000;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    caption {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <table>
+    <caption>Opening Hours for Clinics</caption>
+    <thead>
+      <tr>
+        <th scope="col"><button id="sortButton" onclick="sortTable()" aria-label="Sort clinics by name A to Z">Sort A-Z</button></th>
+        <th scope="col">Monday</th>
+        <th scope="col">Tuesday</th>
+        <th scope="col">Wednesday</th>
+        <th scope="col">Thursday</th>
+        <th scope="col">Friday</th>
+        <th scope="col">Saturday</th>
+        <th scope="col">Sunday</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Northside</td>
+        <td>9 AM - 5 PM</td>
+        <td>9 AM - 5 PM</td>
+        <td>9 AM - 5 PM</td>
+        <td>9 AM - 5 PM</td>
+        <td>9 AM - 5 PM</td>
+        <td>Closed</td>
+        <td>Closed</td>
+      </tr>
+      <tr>
+        <td>Riverside</td>
+        <td>9 AM - 5 PM</td>
+        <td>9 AM - 5 PM</td>
+        <td>9 AM - 5 PM</td>
+        <td>9 AM - 5 PM</td>
+        <td>Closed</td>
+        <td>Closed</td>
+        <td>Closed</td>
+      </tr>
+      <tr>
+        <td>Old Town</td>
+        <td>9 AM - 5 PM</td>
+        <td>9 AM - 5 PM</td>
+        <td>9 AM - 5 PM</td>
+        <td>9 AM - 5 PM</td>
+        <td>9 AM - 5 PM</td>
+        <td>9 AM - 5 PM</td>
+        <td>9 AM - 5 PM</td>
+      </tr>
+      <tr>
+        <td>Harbour</td>
+        <td>9 AM - 5 PM</td>
+        <td>9 AM - 5 PM</td>
+        <td>9 AM - 5 PM</td>
+        <td>Closed</td>
+        <td>Closed</td>
+        <td>Closed</td>
+        <td>Closed</td>
+      </tr>
+      <tr>
+        <td>Hilltop</td>
+        <td>9 AM - 5 PM</td>
+        <td>Closed</td>
+        <td>Closed</td>
+        <td>Closed</td>
+        <td>Closed</td>
+        <td>Closed</td>
+        <td>Closed</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    function sortTable() {
+      const table = document.querySelector('table');
+      const tbody = table.querySelector('tbody');
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+
+      const currentSort = table.getAttribute('data-sort') || 'asc';
+      const newSort = currentSort === 'asc' ? 'desc' : 'asc';
+      table.setAttribute('data-sort', newSort);
+
+      const button = document.getElementById('sortButton');
+      button.textContent = newSort === 'asc' ? 'Sort A-Z' : 'Sort Z-A';
+      button.setAttribute('aria-label', newSort === 'asc' ? 'Sort clinics by name A to Z' : 'Sort clinics by name Z to A');
+
+      rows.sort((a, b) => {
+        const aText = a.querySelector('td').textContent.trim();
+        const bText = b.querySelector('td').textContent.trim();
+        return newSort === 'asc' ? aText.localeCompare(bText) : bText.localeCompare(aText);
+      });
+
+      tbody.innerHTML = '';
+      rows.forEach(row => tbody.appendChild(row));
+    }
+  </script>
+</body>
+</html>

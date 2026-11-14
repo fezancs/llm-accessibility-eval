@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CityCare Footer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    footer {
+      display: flex;
+      flex-direction: column;
+      padding: 40px 20px;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    .footer-content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 30px;
+    }
+    .contact-info {
+      flex: 1;
+      min-width: 250px;
+    }
+    .contact-info p {
+      margin: 5px 0;
+    }
+    .social-icons {
+      display: flex;
+      gap: 20px;
+      flex: 1;
+      min-width: 250px;
+    }
+    .social-icons svg {
+      width: 30px;
+      height: 30px;
+      fill: #333;
+    }
+    .newsletter {
+      display: flex;
+      gap: 10px;
+      flex: 1;
+      min-width: 250px;
+    }
+    .newsletter input[type="email"] {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .newsletter button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #1877F2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .newsletter button:hover {
+      background-color: #1557B0;
+    }
+    @media (max-width: 768px) {
+      .footer-content {
+        flex-direction: column;
+      }
+      .social-icons, .newsletter {
+        margin-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <footer>
+    <div class="footer-content">
+      <div class="contact-info">
+        <p>1 Market Street, Old Town</p>
+        <p>Phone: (123) 456-7890</p>
+        <p>Email: info@citycare.org</p>
+      </div>
+      <div class="social-icons">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 12C22 16.4183 20.0221 20.3536 17.1348 22.7554C16.4264 23.3234 15.5736 23.3234 14.8652 22.7554C11.9779 20.3536 10 16.4183 10 12C10 8.58172 11.9779 4.64645 14.8652 2.24464C15.5736 1.67662 16.4264 1.67662 17.1348 2.24464C20.0221 4.64645 22 8.58172 22 12Z" fill="#1877F2"/>
+        </svg>
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.48276 2 2 6.48276 2 12C2 17.5172 6.48276 22 12 22C17.5172 22 22 17.5172 22 12C22 6.48276 17.5172 2 12 2Z" fill="#000000"/>
+          <path d="M18 9L12 15L6 9" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 12C22 16.4183 20.0221 20.3536 17.1348 22.7554C16.4264 23.3234 15.5736 23.3234 14.8652 22.7554C11.9779 20.3536 10 16.4183 10 12C10 8.58172 11.9779 4.64645 14.8652 2.24464C15.5736 1.67662 16.4264 1.67662 17.1348 2.24464C20.0221 4.64645 22 8.58172 22 12Z" fill="#E1306C"/>
+          <path d="M12 15C12 16.1046 11.1046 17 10 17C8.89543 17 8 16.1046 8 15C8 13.8954 8.89543 13 10 13C11.1046 13 12 13.8954 12 15Z" fill="white"/>
+          <path d="M14 11C14 12.1046 13.1046 13 12 13C10.8954 13 10 12.1046 10 11C10 9.89543 10.8954 9 12 9C13.1046 9 14 9.89543 14 11Z" fill="white"/>
+        </svg>
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 12C22 16.4183 20.0221 20.3536 17.1348 22.7554C16.4264 23.3234 15.5736 23.3234 14.8652 22.7554C11.9779 20.3536 10 16.4183 10 12C10 8.58172 11.9779 4.64645 14.8652 2.24464C15.5736 1.67662 16.4264 1.67662 17.1348 2.24464C20.0221 4.64645 22 8.58172 22 12Z" fill="#FF0000"/>
+          <path d="M8 8L16 13L8 18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="newsletter">
+        <input type="email" placeholder="Email address" />
+        <button>Subscribe</button>
+      </div>
+    </div>
+  </footer>
+  <script>
+    document.querySelector('.newsletter button').addEventListener('click', function() {
+      alert('Thank you for subscribing!');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cookie Consent Banner</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            z-index: 1000;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .cookie-settings-panel {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+            z-index: 1001;
+        }
+        .cookie-settings-panel label {
+            display: block;
+            margin: 0.5rem 0;
+        }
+        .cookie-settings-panel button {
+            margin-top: 1rem;
+        }
+        .cookie-settings-panel input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="cookie-banner">
+        <p>We use cookies to make this site work and to understand how it is used.</p>
+        <div class="buttons">
+            <button id="accept-all">Accept all</button>
+            <button id="reject-all">Reject all</button>
+            <button id="cookie-settings">Cookie settings</button>
+        </div>
+    </div>
+
+    <div class="cookie-settings-panel" role="dialog" aria-labelledby="settings-title">
+        <h2 id="settings-title">Cookie Settings</h2>
+        <label><input type="checkbox" checked disabled> Necessary</label>
+        <label><input type="checkbox" id="analytics"> Analytics</label>
+        <label><input type="checkbox" id="marketing"> Marketing</label>
+        <button id="save-preferences">Save preferences</button>
+    </div>
+
+    <script>
+        document.getElementById('accept-all').addEventListener('click', function() {
+            document.getElementById('analytics').checked = true;
+            document.getElementById('marketing').checked = true;
+        });
+
+        document.getElementById('reject-all').addEventListener('click', function() {
+            document.getElementById('analytics').checked = false;
+            document.getElementById('marketing').checked = false;
+        });
+
+        document.getElementById('cookie-settings').addEventListener('click', function() {
+            const panel = document.querySelector('.cookie-settings-panel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            if (panel.style.display === 'block') {
+                const firstFocusable = panel.querySelector('button, input[type="checkbox"]');
+                if (firstFocusable) {
+                    firstFocusable.focus();
+                }
+            }
+        });
+
+        document.getElementById('save-preferences').addEventListener('click', function() {
+            const panel = document.querySelector('.cookie-settings-panel');
+            panel.style.display = 'none';
+        });
+
+        document.addEventListener('click', function(event) {
+            const panel = document.querySelector('.cookie-settings-panel');
+            if (panel.style.display === 'block' && !panel.contains(event.target)) {
+                panel.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

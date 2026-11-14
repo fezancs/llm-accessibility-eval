@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Search Results for "flu"</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #fff;
+            color: #000;
+            margin: 0;
+            padding: 20px;
+        }
+        main {
+            max-width: 800px;
+            margin: auto;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .result {
+            margin-bottom: 20px;
+        }
+        .result h2 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .result a {
+            text-decoration: none;
+            color: #000;
+        }
+        .result a:hover {
+            text-decoration: underline;
+        }
+        .pagination {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .pagination a {
+            padding: 8px 12px;
+            background-color: #eee;
+            color: #000;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .pagination a.current {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .pagination a:focus {
+            outline: 2px solid #000;
+        }
+        .pagination a:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <main role="main">
+        <section aria-labelledby="results-title">
+            <h1 id="results-title">Search Results for "flu"</h1>
+            <div role="region" aria-label="Search results">
+                <div class="result" role="article">
+                    <h2><a href="#">Flu Symptoms and Treatment</a></h2>
+                    <p>Common symptoms of the flu include fever, cough, and sore throat.</p>
+                </div>
+                <div class="result" role="article">
+                    <h2><a href="#">Flu Vaccination: Importance and Side Effects</a></h2>
+                    <p>Annual flu vaccines are recommended to reduce the risk of infection.</p>
+                </div>
+                <div class="result" role="article">
+                    <h2><a href="#">Flu vs. Common Cold: Key Differences</a></h2>
+                    <p>Flu is more severe and can lead to complications like pneumonia.</p>
+                </div>
+                <div class="result" role="article">
+                    <h2><a href="#">How to Prevent the Spread of Flu</a></h2>
+                    <p>Washing hands frequently and avoiding close contact can help prevent flu.</p>
+                </div>
+                <div class="result" role="article">
+                    <h2><a href="#">Flu Research and New Treatments</a></h2>
+                    <p>Recent studies focus on antiviral drugs and vaccine development.</p>
+                </div>
+                <div class="result" role="article">
+                    <h2><a href="#">Flu in Children: What Parents Should Know</a></h2>
+                    <p>Children are more susceptible to flu and require special care.</p>
+                </div>
+                <div class="result" role="article">
+                    <h2><a href="#">Flu and Pregnancy: Risks and Precautions</a></h2>
+                    <p>Pregnant women should take extra precautions to avoid flu complications.</p>
+                </div>
+                <div class="result" role="article">
+                    <h2><a href="#">Flu Season: When to Be Most Watchful</a></h2>
+                    <p>Flu season typically occurs in the fall and winter months.</p>
+                </div>
+                <div class="result" role="article">
+                    <h2><a href="#">Flu Myths and Facts</a></h2>
+                    <p>Understanding common myths can help prevent misinformation.</p>
+                </div>
+                <div class="result" role="article">
+                    <h2><a href="#">Flu and the Elderly: Vulnerability and Care</a></h2>
+                    <p>Older adults are at higher risk for severe flu complications.</p>
+                </div>
+            </div>
+            <nav aria-label="Pagination">
+                <div class="pagination">
+                    <a href="#" aria-label="Go to previous page">Previous</a>
+                    <a href="#">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">5</a>
+                    <a href="#" aria-label="Go to next page">Next</a>
+                </div>
+            </nav>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pageLinks = document.querySelectorAll('.pagination a:not([aria-label])');
+            if (pageLinks.length > 0) {
+                pageLinks[0].classList.add('current');
+            }
+        });
+    </script>
+</body>
+</html>

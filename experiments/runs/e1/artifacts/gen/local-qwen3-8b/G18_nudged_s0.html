@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registration Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    #form-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    #progress {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+    .step {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .step[aria-current="true"] {
+      border-color: #4CAF50;
+      color: #4CAF50;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    .step-container {
+      display: none;
+    }
+    .step-container.active {
+      display: block;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    input:focus, button:focus {
+      outline: 2px solid #4CAF50;
+      outline-offset: 2px;
+    }
+    button:disabled {
+      background-color: #ddd;
+      cursor: not-allowed;
+    }
+    #step3 {
+      display: none;
+    }
+    #step3 p {
+      margin: 10px 0;
+    }
+    #step3 button {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="form-container">
+    <div id="progress">
+      <div class="step" aria-current="false">1</div>
+      <div class="step" aria-current="false">2</div>
+      <div class="step" aria-current="false">3</div>
+    </div>
+    <form id="registration-form">
+      <div id="step1" class="step-container active">
+        <label for="name">Name:</label>
+        <input type="text" id="name" required aria-required="true" />
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" required aria-required="true" />
+      </div>
+      <div id="step2" class="step-container">
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" required aria-required="true" />
+        <label for="email">Email:</label>
+        <input type="email" id="email" required aria-required="true" />
+      </div>
+      <div id="step3" class="step-container">
+        <p><strong>Name:</strong> <span id="name-display"></span></p>
+        <p><strong>Date of Birth:</strong> <span id="dob-display"></span></p>
+        <p><strong>Phone:</strong> <span id="phone-display"></span></p>
+        <p><strong>Email:</strong> <span id="email-display"></span></p>
+        <button type="submit">Submit</button>
+      </div>
+      <div>
+        <button type="button" id="backBtn">Back</button>
+        <button type="button" id="nextBtn">Next</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    let currentStep = 1;
+
+    function showStep(step) {
+      document.querySelectorAll('.step-container').forEach(container => {
+        container.classList.remove('active');
+      });
+      document.getElementById(`step${step}`).classList.add('active');
+      updateProgress(step);
+    }
+
+    function updateProgress(step) {
+      const steps = document.querySelectorAll('.step');
+      steps.forEach((s, index) => {
+        s.setAttribute('aria-current', index + 1 === step ? 'true' : 'false');
+      });
+    }
+
+    function validateStep(step) {
+      let valid = true;
+      if (step === 1) {
+        const name = document.getElementById('name').value.trim();
+        const dob = document.getElementById('dob').value;
+        if (!name || !dob) {
+          valid = false;
+          alert('Please fill in all fields.');
+        }
+      } else if (step === 2) {
+        const phone = document.getElementById('phone').value.trim();
+        const email = document.getElementById('email').value.trim();
+        if (!phone || !email) {
+          valid = false;
+          alert('Please fill in all fields.');
+        }
+      }
+      return valid;
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', function () {
+      if (validateStep(currentStep)) {
+        if (currentStep < 3) {
+          currentStep++;
+          showStep(currentStep);
+        }
+      }
+    });
+
+    document.getElementById('backBtn').addEventListener('click', function () {
+      if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    });
+
+    document.getElementById('registration-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      alert('Form submitted!\nName: ' + document.getElementById('name').value + '\nDate of Birth: ' + document.getElementById('dob').value + '\nPhone: ' + document.getElementById('phone').value + '\nEmail: ' + document.getElementById('email').value);
+    });
+
+    // Populate step 3 display when moving to step 3
+    document.querySelectorAll('.step-container').forEach(container => {
+      container.addEventListener('click', () => {
+        if (container.id === 'step3' && currentStep === 3) {
+          document.getElementById('name-display').textContent = document.getElementById('name').value;
+          document.getElementById('dob-display').textContent = document.getElementById('dob').value;
+          document.getElementById('phone-display').textContent = document.getElementById('phone').value;
+          document.getElementById('email-display').textContent = document.getElementById('email').value;
+        }
+      });
+    });
+
+    // Initialize step 1
+    showStep(1);
+  </script>
+</body>
+</html>

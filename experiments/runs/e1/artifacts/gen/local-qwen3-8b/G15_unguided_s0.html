@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Flu Search Results</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    #results {
+      margin-bottom: 30px;
+    }
+
+    .result-item {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+
+    .result-item a {
+      text-decoration: none;
+      color: blue;
+      font-weight: bold;
+    }
+
+    .result-item a:hover {
+      text-decoration: underline;
+    }
+
+    .result-item p {
+      margin-top: 5px;
+      color: #333;
+    }
+
+    #pagination {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .page-link {
+      text-decoration: none;
+      color: #000;
+      font-weight: bold;
+    }
+
+    .page-link.active {
+      color: #007BFF;
+    }
+
+    .page-link:hover {
+      text-decoration: underline;
+    }
+
+    .disabled {
+      color: #ccc;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="results"></div>
+  <div id="pagination"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const resultsData = Array.from({length: 50}, (_, i) => ({
+        title: `Flu Result ${i + 1}`,
+        summary: `Summary for result ${i + 1} related to the flu.`
+      }));
+      let currentPage = 1;
+
+      function displayResults() {
+        const start = (currentPage - 1) * 10;
+        const end = start + 10;
+        const currentResults = resultsData.slice(start, end);
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '';
+
+        currentResults.forEach(result => {
+          const resultItem = document.createElement('div');
+          resultItem.className = 'result-item';
+          const link = document.createElement('a');
+          link.href = '#';
+          link.textContent = result.title;
+          resultItem.appendChild(link);
+          const summary = document.createElement('p');
+          summary.textContent = result.summary;
+          resultItem.appendChild(summary);
+          resultsDiv.appendChild(resultItem);
+        });
+      }
+
+      function generatePagination() {
+        const paginationDiv = document.getElementById('pagination');
+        paginationDiv.innerHTML = '';
+
+        const prevLink = document.createElement('a');
+        prevLink.href = '#';
+        prevLink.textContent = 'Previous';
+        prevLink.classList.add('disabled');
+        if (currentPage !== 1) {
+          prevLink.classList.remove('disabled');
+        }
+        prevLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (currentPage > 1) {
+            currentPage--;
+            displayResults();
+            generatePagination();
+          }
+        });
+        paginationDiv.appendChild(prevLink);
+
+        for (let i = 1; i <= 5; i++) {
+          const pageLink = document.createElement('a');
+          pageLink.href = '#';
+          pageLink.textContent = i;
+          pageLink.classList.add('page-link');
+          if (i === currentPage) {
+            pageLink.classList.add('active');
+          }
+          pageLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentPage = i;
+            displayResults();
+            generatePagination();
+          });
+          paginationDiv.appendChild(pageLink);
+        }
+
+        const nextLink = document.createElement('a');
+        nextLink.href = '#';
+        nextLink.textContent = 'Next';
+        nextLink.classList.add('disabled');
+        if (currentPage !== 5) {
+          nextLink.classList.remove('disabled');
+        }
+        nextLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (currentPage < 5) {
+            currentPage++;
+            displayResults();
+            generatePagination();
+          }
+        });
+        paginationDiv.appendChild(nextLink);
+      }
+
+      displayResults();
+      generatePagination();
+    });
+  </script>
+</body>
+</html>

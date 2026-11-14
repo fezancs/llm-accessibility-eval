@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cookie Consent Banner</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            border-top: 2px solid #ccc;
+            padding: 1em 2em;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .cookie-banner p {
+            margin-bottom: 1em;
+        }
+        .cookie-banner button {
+            margin: 0 0.5em;
+            padding: 0.5em 1em;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .cookie-banner button:hover {
+            background-color: #0056b3;
+        }
+        .cookie-settings {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            border-top: 2px solid #ccc;
+            padding: 1.5em 2em;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            z-index: 1001;
+        }
+        .cookie-settings h2 {
+            margin-bottom: 1em;
+        }
+        .cookie-settings label {
+            display: block;
+            margin-bottom: 0.5em;
+        }
+        .cookie-settings input[type="checkbox"] {
+            margin-right: 0.5em;
+        }
+        .cookie-settings button {
+            margin-top: 1em;
+            padding: 0.5em 1em;
+            font-size: 1em;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        .cookie-settings button:hover {
+            background-color: #0056b3;
+        }
+        /* Ensure high contrast for accessibility */
+        .cookie-banner, .cookie-settings {
+            background-color: #fff;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="cookie-banner" role="region" aria-labelledby="banner-title">
+        <h2 id="banner-title">Cookie Consent</h2>
+        <p>We use cookies to make this site work and to understand how it is used.</p>
+        <button id="accept-all">Accept all</button>
+        <button id="reject-all">Reject all</button>
+        <button id="cookie-settings">Cookie settings</button>
+    </div>
+    <div class="cookie-settings" role="dialog" aria-labelledby="settings-title" aria-modal="true" tabindex="-1">
+        <h2 id="settings-title">Cookie settings</h2>
+        <label>
+            <input type="checkbox" id="necessary" checked disabled> Necessary
+        </label>
+        <label>
+            <input type="checkbox" id="analytics"> Analytics
+        </label>
+        <label>
+            <input type="checkbox" id="marketing"> Marketing
+        </label>
+        <button id="save-preferences">Save preferences</button>
+    </div>
+    <script>
+        const acceptAllBtn = document.getElementById('accept-all');
+        const rejectAllBtn = document.getElementById('reject-all');
+        const cookieSettingsBtn = document.getElementById('cookie-settings');
+        const savePreferencesBtn = document.getElementById('save-preferences');
+        const settingsPanel = document.querySelector('.cookie-settings');
+
+        acceptAllBtn.addEventListener('click', () => {
+            document.getElementById('analytics').checked = true;
+            document.getElementById('marketing').checked = true;
+            settingsPanel.style.display = 'none';
+        });
+
+        rejectAllBtn.addEventListener('click', () => {
+            document.getElementById('analytics').checked = false;
+            document.getElementById('marketing').checked = false;
+            settingsPanel.style.display = 'none';
+        });
+
+        cookieSettingsBtn.addEventListener('click', () => {
+            settingsPanel.style.display = 'block';
+            const firstInput = settingsPanel.querySelector('input[type="checkbox"]');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        });
+
+        savePreferencesBtn.addEventListener('click', () => {
+            settingsPanel.style.display = 'none';
+        });
+
+        // Close panel when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === settingsPanel) {
+                settingsPanel.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

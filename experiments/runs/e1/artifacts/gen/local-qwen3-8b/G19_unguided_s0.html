@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Cookie Consent Banner */
+        #consent-banner {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #f8f8f8;
+            padding: 15px;
+            text-align: center;
+            border-top: 1px solid #ccc;
+            display: block;
+        }
+        #consent-banner button {
+            margin: 0 10px;
+            padding: 8px 16px;
+            font-size: 16px;
+        }
+        /* Cookie Settings Panel */
+        #cookie-settings {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            padding: 20px;
+            border-top: 1px solid #ccc;
+            z-index: 1000;
+        }
+        #cookie-settings input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        #cookie-settings button {
+            margin-top: 15px;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="consent-banner">
+        We use cookies to make this site work and to understand how it is used.
+        <br>
+        <button onclick="acceptAll()">Accept all</button>
+        <button onclick="rejectAll()">Reject all</button>
+        <button onclick="openSettings()">Cookie settings</button>
+    </div>
+
+    <div id="cookie-settings">
+        <p><input type="checkbox" id="necessary" checked disabled> Necessary (always on)</p>
+        <p><input type="checkbox" id="analytics"> Analytics</p>
+        <p><input type="checkbox" id="marketing"> Marketing</p>
+        <br>
+        <button onclick="savePreferences()">Save preferences</button>
+    </div>
+
+    <script>
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length >= 2) return parts[1].split(';')[0];
+        }
+
+        function showBanner() {
+            document.getElementById('consent-banner').style.display = 'block';
+            document.getElementById('cookie-settings').style.display = 'none';
+        }
+
+        function hideBanner() {
+            document.getElementById('consent-banner').style.display = 'none';
+            document.getElementById('cookie-settings').style.display = 'none';
+        }
+
+        function acceptAll() {
+            const cookieData = {
+                necessary: true,
+                analytics: true,
+                marketing: true
+            };
+            document.cookie = 'cookie_prefs=' + JSON.stringify(cookieData) + '; path=/';
+            hideBanner();
+        }
+
+        function rejectAll() {
+            const cookieData = {
+                necessary: true,
+                analytics: false,
+                marketing: false
+            };
+            document.cookie = 'cookie_prefs=' + JSON.stringify(cookieData) + '; path=/';
+            hideBanner();
+        }
+
+        function openSettings() {
+            const cookie = getCookie('cookie_prefs');
+            let analytics = false;
+            let marketing = false;
+            if (cookie) {
+                const data = JSON.parse(cookie);
+                analytics = data.analytics;
+                marketing = data.marketing;
+            }
+            document.getElementById('analytics').checked = analytics;
+            document.getElementById('marketing').checked = marketing;
+            document.getElementById('cookie-settings').style.display = 'block';
+        }
+
+        function savePreferences() {
+            const analytics = document.getElementById('analytics').checked;
+            const marketing = document.getElementById('marketing').checked;
+            const cookieData = {
+                necessary: true,
+                analytics: analytics,
+                marketing: marketing
+            };
+            document.cookie = 'cookie_prefs=' + JSON.stringify(cookieData) + '; path=/';
+            hideBanner();
+        }
+
+        // On load, check if cookie exists
+        window.onload = function() {
+            const cookie = getCookie('cookie_prefs');
+            if (cookie) {
+                hideBanner();
+            } else {
+                showBanner();
+            }
+        };
+    </script>
+</body>
+</html>

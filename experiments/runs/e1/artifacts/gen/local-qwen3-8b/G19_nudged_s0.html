@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cookie Consent</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        #cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #283593;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1rem;
+            z-index: 1000;
+        }
+        #cookie-banner button {
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            background-color: white;
+            color: #283593;
+            border: none;
+            cursor: pointer;
+            outline: none;
+        }
+        #cookie-banner button:hover {
+            background-color: #e0e0e0;
+        }
+        #cookie-settings-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+        #cookie-settings-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        #cookie-settings-content label {
+            display: block;
+            margin: 1rem 0;
+        }
+        #cookie-settings-content input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+        #cookie-settings-content button {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #283593;
+            color: white;
+            border: none;
+            cursor: pointer;
+            outline: none;
+        }
+        #cookie-settings-content button:hover {
+            background-color: #1a2166;
+        }
+    </style>
+</head>
+<body>
+    <div id="cookie-banner" role="region" aria-labelledby="banner-title">
+        <h2 id="banner-title">We use cookies to make this site work and to understand how it is used.</h2>
+        <div>
+            <button id="accept-all">Accept all</button>
+            <button id="reject-all">Reject all</button>
+            <button id="cookie-settings">Cookie settings</button>
+        </div>
+    </div>
+    <div id="cookie-settings-panel" role="dialog" aria-labelledby="cookie-settings-title" aria-hidden="true">
+        <div id="cookie-settings-content">
+            <h2 id="cookie-settings-title">Cookies settings</h2>
+            <label><input type="checkbox" id="necessary" checked disabled> Necessary (always on)</label>
+            <label><input type="checkbox" id="analytics"> Analytics</label>
+            <label><input type="checkbox" id="marketing"> Marketing</label>
+            <button id="save-preferences">Save preferences</button>
+        </div>
+    </div>
+    <script>
+        const cookieBanner = document.getElementById('cookie-banner');
+        const cookieSettingsPanel = document.getElementById('cookie-settings-panel');
+        const cookieSettingsContent = document.getElementById('cookie-settings-content');
+        const acceptAllBtn = document.getElementById('accept-all');
+        const rejectAllBtn = document.getElementById('reject-all');
+        const cookieSettingsBtn = document.getElementById('cookie-settings');
+        const savePreferencesBtn = document.getElementById('save-preferences');
+        const analyticsCheckbox = document.getElementById('analytics');
+        const marketingCheckbox = document.getElementById('marketing');
+
+        cookieSettingsBtn.setAttribute('aria-expanded', 'false');
+        cookieSettingsPanel.setAttribute('aria-hidden', 'true');
+
+        cookieSettingsBtn.addEventListener('click', () => {
+            const isVisible = cookieSettingsPanel.style.display === 'flex';
+            cookieSettingsPanel.style.display = isVisible ? 'none' : 'flex';
+            cookieSettingsBtn.setAttribute('aria-expanded', !isVisible);
+            cookieSettingsPanel.setAttribute('aria-hidden', isVisible);
+        });
+
+        acceptAllBtn.addEventListener('click', () => {
+            analyticsCheckbox.checked = true;
+            marketingCheckbox.checked = true;
+            savePreferences();
+        });
+
+        rejectAllBtn.addEventListener('click', () => {
+            analyticsCheckbox.checked = false;
+            marketingCheckbox.checked = false;
+            savePreferences();
+        });
+
+        savePreferencesBtn.addEventListener('click', () => {
+            const preferences = {
+                analytics: analyticsCheckbox.checked,
+                marketing: marketingCheckbox.checked
+            };
+            localStorage.setItem('cookiePreferences', JSON.stringify(preferences));
+            cookieSettingsPanel.style.display = 'none';
+            cookieSettingsBtn.setAttribute('aria-expanded', 'false');
+            cookieSettingsPanel.setAttribute('aria-hidden', 'true');
+        });
+
+        window.addEventListener('load', () => {
+            const savedPreferences = JSON.parse(localStorage.getItem('cookiePreferences'));
+            if (savedPreferences) {
+                analyticsCheckbox.checked = savedPreferences.analytics;
+                marketingCheckbox.checked = savedPreferences.marketing;
+            }
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === cookieSettingsPanel) {
+                cookieSettingsPanel.style.display = 'none';
+                cookieSettingsBtn.setAttribute('aria-expanded', 'false');
+                cookieSettingsPanel.setAttribute('aria-hidden', 'true');
+            }
+        });
+    </script>
+</body>
+</html>

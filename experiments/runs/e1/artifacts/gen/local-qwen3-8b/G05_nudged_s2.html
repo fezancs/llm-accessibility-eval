@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CityCare</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 1rem 2rem;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      flex: 1;
+    }
+    .nav-links {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      flex: 1;
+    }
+    .nav-links ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links li {
+      margin: 0 1rem;
+    }
+    .dropdown a {
+      position: relative;
+      cursor: pointer;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      background-color: #444;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      min-width: 160px;
+      z-index: 1000;
+      border-radius: 4px;
+    }
+    .dropdown-menu li {
+      padding: 0.5rem 1rem;
+    }
+    .dropdown-menu li a {
+      color: #fff;
+      text-decoration: none;
+    }
+    .dropdown-menu li a:hover {
+      background-color: #555;
+    }
+    .menu-button {
+      display: none;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    @media (max-width: 600px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+      }
+      .menu-button {
+        display: block;
+      }
+      .nav-links ul {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .nav-links li {
+        margin: 0.5rem 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">CityCare</div>
+      <div class="nav-links">
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li class="dropdown">
+            <a href="#" id="services-link" role="menuitem" aria-haspopup="true" aria-expanded="false">Services</a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="services-link">
+              <li><a href="#">Vaccinations</a></li>
+              <li><a href="#">Check-ups</a></li>
+              <li><a href="#">Pharmacy</a></li>
+              <li><a href="#">Mental health</a></li>
+            </ul>
+          </li>
+          <li><a href="#">Appointments</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <button class="menu-button" aria-label="Toggle menu">☰</button>
+    </nav>
+  </header>
+  <script>
+    document.querySelector('#services-link').addEventListener('click', function(e) {
+      e.preventDefault();
+      const dropdown = this.nextElementSibling;
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+      this.setAttribute('aria-expanded', dropdown.style.display === 'block' ? 'true' : 'false');
+    });
+
+    document.querySelector('.menu-button').addEventListener('click', function() {
+      const navLinks = document.querySelector('.nav-links');
+      navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    });
+  </script>
+</body>
+</html>

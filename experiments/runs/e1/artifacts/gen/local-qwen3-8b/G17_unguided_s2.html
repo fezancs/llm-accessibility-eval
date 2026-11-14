@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Referral Letter Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        #drop-zone {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            min-height: 100px;
+            background-color: #f9f9f9;
+            transition: background-color 0.2s;
+        }
+        #drop-zone:hover {
+            background-color: #e0e0e0;
+        }
+        #file-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        #file-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+            background-color: #fff;
+        }
+        .remove-btn {
+            cursor: pointer;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="drop-zone">
+        <p>Drag & drop your referral letter here or click to select a file.</p>
+        <input type="file" id="fileInput" multiple />
+    </div>
+    <ul id="file-list"></ul>
+    <script>
+        let files = [];
+
+        function renderList() {
+            const list = document.getElementById('file-list');
+            list.innerHTML = '';
+            files.forEach((file, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${file.name} (${formatSize(file.size)})</span>
+                    <span class="remove-btn" onclick="removeFile(${index})">x</span>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function formatSize(size) {
+            if (size === 0) return '0 Bytes';
+            const units = ['Bytes', 'KB', 'MB', 'GB'];
+            let i = Math.floor(Math.log(size) / Math.log(1024));
+            if (i > units.length - 1) i = units.length - 1;
+            return `${(size / Math.pow(1024, i)).toFixed(1)} ${units[i]}`;
+        }
+
+        function removeFile(index) {
+            files.splice(index, 1);
+            renderList();
+        }
+
+        document.getElementById('drop-zone').addEventListener('click', () => {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            const selectedFiles = Array.from(e.target.files);
+            selectedFiles.forEach(file => {
+                files.push(file);
+            });
+            renderList();
+        });
+
+        const dropZone = document.getElementById('drop-zone');
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.backgroundColor = '#f0f0f0';
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.style.backgroundColor = '';
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.backgroundColor = '';
+            const droppedFiles = Array.from(e.dataTransfer.files);
+            droppedFiles.forEach(file => {
+                files.push(file);
+            });
+            renderList();
+        });
+    </script>
+</body>
+</html>

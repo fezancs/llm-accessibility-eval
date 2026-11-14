@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Appointment Details</title>
+  <style>
+    .appointment-card {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border: 1px solid #ccc;
+      margin: 20px auto;
+      width: 300px;
+      text-align: center;
+    }
+    #cancelModal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border: 1px solid #ccc;
+      z-index: 1000;
+    }
+    #cancelModal p {
+      margin-bottom: 15px;
+    }
+    #cancelModal button {
+      margin: 5px;
+      padding: 10px 15px;
+    }
+    #confirmationMessage {
+      margin: 20px auto;
+      width: 300px;
+      text-align: center;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <div class="appointment-card">
+    <p>Tuesday 12 March, 10:30</p>
+    <p>Riverside clinic</p>
+    <button id="cancelBtn">Cancel appointment</button>
+  </div>
+
+  <div id="cancelModal">
+    <p>Are you sure you want to cancel your appointment on 12 March at 10:30?</p>
+    <button id="yesBtn">Yes, cancel</button>
+    <button id="keepBtn">Keep appointment</button>
+  </div>
+
+  <div id="confirmationMessage" style="display:none;">Your appointment has been cancelled.</div>
+
+  <script>
+    document.getElementById('cancelBtn').onclick = function() {
+      document.getElementById('cancelModal').style.display = 'block';
+    };
+
+    document.getElementById('yesBtn').onclick = function() {
+      document.getElementById('cancelModal').style.display = 'none';
+      document.getElementById('confirmationMessage').style.display = 'block';
+    };
+
+    document.getElementById('keepBtn').onclick = function() {
+      document.getElementById('cancelModal').style.display = 'none';
+    };
+  </script>
+</body>
+</html>

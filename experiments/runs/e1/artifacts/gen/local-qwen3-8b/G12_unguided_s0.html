@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Flu Vaccine Eligibility Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 400px;
+            margin: auto;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+        input {
+            padding: 10px;
+            width: 100%;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 20px;
+            padding: 12px;
+            width: 100%;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 1.2em;
+            text-align: center;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <label for="age">Age:</label>
+        <input type="text" id="age" placeholder="Enter your age" />
+        <label for="postcode">Postcode:</label>
+        <input type="text" id="postcode" placeholder="Enter your postcode" />
+        <button onclick="checkEligibility()">Check eligibility</button>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        function checkEligibility() {
+            const ageInput = document.getElementById('age').value.trim();
+            const messageDiv = document.getElementById('message');
+            const age = parseInt(ageInput);
+
+            if (isNaN(age) || age < 65) {
+                messageDiv.textContent = "You are not eligible for a free flu vaccination.";
+                messageDiv.style.color = "red";
+            } else {
+                messageDiv.textContent = "You are eligible for a free flu vaccination.";
+                messageDiv.style.color = "green";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Prepare for a Blood Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+      background-color: #fff;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    nav {
+      margin-bottom: 20px;
+    }
+    nav a {
+      text-decoration: none;
+      color: #007BFF;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    section {
+      margin-bottom: 30px;
+    }
+    h2 {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    .print-btn {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    .print-btn:hover {
+      background-color: #218838;
+    }
+    .helpful-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .helpful-buttons button {
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 4px;
+    }
+    .helpful-buttons button:hover {
+      opacity: 0.8;
+    }
+    @media print {
+      .print-btn {
+        display: none;
+      }
+      .helpful-buttons {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>How to Prepare for a Blood Test</h1>
+  <nav aria-label="Breadcrumb">
+    <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="#"><span itemprop="name">Home</span></a>
+      </li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="#"><span itemprop="name">Health information</span></a>
+      </li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span itemprop="name">Tests</span>
+      </li>
+    </ol>
+  </nav>
+
+  <section>
+    <h2>Before Your Test</h2>
+    <p>Inform your healthcare provider about medications, allergies, and medical history. Fast for 8-12 hours before the test, unless instructed otherwise. Stay hydrated and avoid alcohol. Bring a list of current medications and any relevant medical records. Arrive on time and wear comfortable clothing to make the process easier.</p>
+  </section>
+
+  <section>
+    <h2>On the Day</h2>
+    <p>Follow fasting instructions and avoid caffeine or smoking. Wear a short-sleeved shirt for easy access. Sit comfortably during the blood draw. Do not talk or move excessively to prevent complications. If you feel faint, inform the staff immediately. Keep your arm still and follow the technician’s instructions carefully.</p>
+  </section>
+
+  <section>
+    <h2>After Your Test</h2>
+    <p>Apply pressure to the puncture site with a clean cloth or bandage. Avoid strenuous activity for a few hours. Monitor for unusual symptoms like excessive bleeding or swelling. Keep the site clean and dry. Results may take a few days; contact your provider if you have questions or concerns.</p>
+  </section>
+
+  <button class="print-btn" onclick="window.print()">Print this page</button>
+
+  <div class="helpful-buttons">
+    <button aria-label="Mark this page as helpful">Yes</button>
+    <button aria-label="Mark this page as not helpful">No</button>
+  </div>
+
+  <script>
+    document.querySelectorAll('.helpful-buttons button').forEach(button => {
+      button.addEventListener('click', () => {
+        alert('Thank you for your feedback!');
+      });
+    });
+  </script>
+</body>
+</html>

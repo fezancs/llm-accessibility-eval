@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #ccc;
+    }
+    .tab {
+      padding: 10px;
+      cursor: pointer;
+      flex: 1;
+      text-align: center;
+    }
+    .tab.active {
+      background-color: #007bff;
+      color: white;
+    }
+    .panels {
+      margin-top: 20px;
+    }
+    .panel {
+      display: none;
+    }
+    .panel:first-child {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="tabs">
+    <div class="tab active" data-panel="vaccinations" onclick="showPanel('vaccinations')">Vaccinations</div>
+    <div class="tab" data-panel="checkups" onclick="showPanel('checkups')">Check-ups</div>
+    <div class="tab" data-panel="pharmacy" onclick="showPanel('pharmacy')">Pharmacy</div>
+  </div>
+  <div class="panels">
+    <div id="vaccinations" class="panel">
+      <h2>Vaccinations</h2>
+      <p>Get your vaccinations at CityCare. We offer a variety of vaccines to protect your health.</p>
+    </div>
+    <div id="checkups" class="panel">
+      <h2>Check-ups</h2>
+      <p>Regular check-ups are essential for maintaining good health. Our doctors provide comprehensive health assessments.</p>
+    </div>
+    <div id="pharmacy" class="panel">
+      <h2>Pharmacy</h2>
+      <p>Access to a wide range of medications and over-the-counter products. Our pharmacy is open during extended hours.</p>
+    </div>
+  </div>
+  <script>
+    function showPanel(panelId) {
+      const panels = document.querySelectorAll('.panel');
+      panels.forEach(panel => panel.style.display = 'none');
+      
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      
+      document.getElementById(panelId).style.display = 'block';
+      
+      const tab = document.querySelector(`.tab[data-panel="${panelId}"]`);
+      if (tab) {
+        tab.classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>

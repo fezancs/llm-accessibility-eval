@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CityCare</title>
+  <style>
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #f8f8f8;
+    }
+    .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    .nav-links ul {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .nav-links li {
+      position: relative;
+      margin: 0 15px;
+    }
+    .nav-links li a {
+      text-decoration: none;
+      color: #000;
+      padding: 8px 10px;
+    }
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #fff;
+      border: 1px solid #ccc;
+      min-width: 200px;
+      z-index: 1000;
+    }
+    .nav-links li:hover .dropdown {
+      display: block;
+    }
+    @media (max-width: 600px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+      }
+      .nav-links li {
+        margin: 10px 0;
+      }
+      .menu-btn {
+        display: block;
+      }
+      .nav-links.active {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header">
+      <div class="logo">CityCare</div>
+      <nav class="nav-links">
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li class="services"><a href="#">Services</a>
+            <ul class="dropdown">
+              <li><a href="#">Vaccinations</a></li>
+              <li><a href="#">Check-ups</a></li>
+              <li><a href="#">Pharmacy</a></li>
+              <li><a href="#">Mental health</a></li>
+            </ul>
+          </li>
+          <li><a href="#">Appointments</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+      <button class="menu-btn" id="menu-btn">☰</button>
+    </div>
+  </header>
+  <script>
+    document.getElementById('menu-btn').addEventListener('click', function() {
+      document.querySelector('.nav-links').classList.toggle('active');
+    });
+  </script>
+</body>
+</html>

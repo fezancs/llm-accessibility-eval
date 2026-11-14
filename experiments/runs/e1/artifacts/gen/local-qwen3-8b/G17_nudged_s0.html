@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Referral Letter Upload</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2em;
+      background-color: #f4f4f4;
+    }
+    .upload-area {
+      background-color: #fff;
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      padding: 2em;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .upload-area.dragover {
+      background-color: #e0e0e0;
+    }
+    .file-list {
+      margin-top: 1em;
+    }
+    .file-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5em 1em;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 0.5em;
+    }
+    .file-list li button {
+      background-color: transparent;
+      border: none;
+      color: #d9534f;
+      font-size: 1.2em;
+      cursor: pointer;
+      padding: 0.2em 0.5em;
+    }
+    .file-list li button:focus {
+      outline: 2px solid #007bff;
+    }
+  </style>
+</head>
+<body>
+  <label for="fileInput" id="uploadArea" class="upload-area" aria-label="Upload referral letter">
+    <p>Drag and drop your referral letter here or click to select a file.</p>
+  </label>
+  <input type="file" id="fileInput" multiple style="display: none;" />
+  <ul id="fileList" class="file-list"></ul>
+
+  <script>
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return Math.round(bytes / Math.pow(k, i)) + ' ' + sizes[i];
+    }
+
+    const uploadArea = document.getElementById('uploadArea');
+    const fileList = document.getElementById('fileList');
+
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      handleFiles(files);
+    });
+
+    document.getElementById('fileInput').addEventListener('change', (e) => {
+      handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+      for (const file of files) {
+        const li = document.createElement('li');
+        li.textContent = `${file.name} (${formatFileSize(file.size)})`;
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = '×';
+        removeBtn.ariaLabel = 'Remove file';
+        removeBtn.addEventListener('click', () => {
+          li.remove();
+        });
+        li.appendChild(removeBtn);
+        fileList.appendChild(li);
+      }
+    }
+  </script>
+</body>
+</html>

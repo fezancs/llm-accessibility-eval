@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flu Vaccine Eligibility Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 20px;
+            margin: 0;
+        }
+        main {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: center;
+        }
+        #message.green {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        #message.red {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        #message.error {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Flu Vaccine Eligibility Checker</h1>
+        <form>
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required aria-required="true" aria-label="Enter your age">
+            
+            <label for="postcode">Postcode:</label>
+            <input type="text" id="postcode" name="postcode" aria-label="Enter your postcode">
+            
+            <button type="button" onclick="checkEligibility()">Check Eligibility</button>
+        </form>
+        <div id="message" role="alert"></div>
+    </main>
+
+    <script>
+        function checkEligibility() {
+            const ageInput = document.getElementById('age');
+            const age = parseInt(ageInput.value, 10);
+            const messageDiv = document.getElementById('message');
+            
+            if (isNaN(age) || age < 0) {
+                messageDiv.textContent = 'Please enter a valid age.';
+                messageDiv.className = 'error';
+            } else if (age >= 65) {
+                messageDiv.textContent = 'You are eligible for a free flu vaccination.';
+                messageDiv.className = 'green';
+            } else {
+                messageDiv.textContent = 'You are not eligible for a free flu vaccination.';
+                messageDiv.className = 'red';
+            }
+        }
+    </script>
+</body>
+</html>

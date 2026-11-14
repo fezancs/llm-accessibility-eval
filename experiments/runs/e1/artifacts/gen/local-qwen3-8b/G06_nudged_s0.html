@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clinic Opening Hours</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-family: Arial, sans-serif;
+    }
+    th, td {
+      border: 1px solid #999;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .sort-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      font: inherit;
+      outline: none;
+    }
+    .sort-button:hover {
+      text-decoration: underline;
+    }
+    caption {
+      font-weight: bold;
+      padding: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <table>
+    <caption>Opening Hours for Clinics</caption>
+    <thead>
+      <tr>
+        <th scope="col"><button class="sort-button" onclick="sortTable()" aria-label="Sort clinics by name">Sort by Clinic Name</button></th>
+        <th scope="col">Monday</th>
+        <th scope="col">Tuesday</th>
+        <th scope="col">Wednesday</th>
+        <th scope="col">Thursday</th>
+        <th scope="col">Friday</th>
+        <th scope="col">Saturday</th>
+        <th scope="col">Sunday</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Northside</th>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Closed</td>
+        <td>Closed</td>
+      </tr>
+      <tr>
+        <th scope="row">Riverside</th>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Closed</td>
+      </tr>
+      <tr>
+        <th scope="row">Old Town</th>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Closed</td>
+        <td>Open</td>
+      </tr>
+      <tr>
+        <th scope="row">Harbour</th>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Closed</td>
+        <td>Open</td>
+        <td>Closed</td>
+      </tr>
+      <tr>
+        <th scope="row">Hilltop</th>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Open</td>
+        <td>Closed</td>
+        <td>Closed</td>
+        <td>Closed</td>
+        <td>Closed</td>
+      </tr>
+    </tbody>
+  </table>
+  <script>
+    let sortOrder = 'asc';
+
+    function sortTable() {
+      const table = document.querySelector('table');
+      const tbody = table.querySelector('tbody');
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+
+      sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+
+      rows.sort((a, b) => {
+        const aText = a.querySelector('th').textContent.trim();
+        const bText = b.querySelector('th').textContent.trim();
+        return sortOrder === 'asc' ? aText.localeCompare(bText) : bText.localeCompare(aText);
+      });
+
+      tbody.innerHTML = '';
+      rows.forEach(row => tbody.appendChild(row));
+    }
+  </script>
+</body>
+</html>
