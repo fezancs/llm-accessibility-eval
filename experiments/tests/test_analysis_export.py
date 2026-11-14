@@ -294,3 +294,20 @@ def test_partial_data_writes_only_what_ran(tmp_path):
     assert "dm-enterprise" not in keys and "dm-public" in keys
     assert not (paper / "figures" / "fig_drift.pdf").exists()
     assert (paper / "figures" / "fig_pareto.pdf").exists()
+
+
+def test_e1_paired_difference_keys(run):
+    """E1 model differences use the shared resamples: one key per pair (a < b), a minus b."""
+    import itertools
+
+    from tests.test_analysis_synth import E1
+    _, paper, _ = run
+    keys = _keys(paper / "results" / "values.tex")
+    a, b = sorted(E1)[:2]
+    for stem in ("sgen", "sgen-unguided", "gap", "overclaim", "srep", "fullrepair", "saudit", "audit-recall"):
+        for s in ("", "-ci", "-lo", "-hi", "-n"):
+            assert f"{stem}-diff-{a}-{b}{s}" in keys, (stem, s)
+        assert f"{stem}-diff-{b}-{a}" not in keys
+    want = float(keys[f"srep-{a}"]) - float(keys[f"srep-{b}"])
+    assert abs(float(keys[f"srep-diff-{a}-{b}"].replace("$-$", "-")) - want) <= 0.011    # rounding of the parts
+    assert sum(1 for k in keys if re.fullmatch(r"sgen-diff-.*-n", k)) == len(list(itertools.combinations(E1, 2)))
