@@ -199,6 +199,7 @@
 \setres{ccs-partial-local-gemma3-4b}{0.51}
 \setres{ccs-partial-local-ministral3-8b}{0.63}
 \setres{ccs-partial-local-qwen25vl-7b}{0.11}
+\setres{ccs-partial-local-qwen3-8b}{0.96}
 \setres{chromium-version}{156.0.8078.4}
 \setres{clean-nudged-local-qwen25vl-7b}{0.07}
 \setres{clean-nudged-local-qwen25vl-7b-ci}{[0.00, 0.18]}
@@ -212,6 +213,11 @@
 \setres{cpds-balanced-rep-local-qwen25vl-7b}{0.01}
 \setres{cpds-batch-local-qwen25vl-7b}{0.04}
 \setres{cpds-interactive-local-qwen25vl-7b}{0.32}
+\setres{dcdi-local-qwen3-8b}{$-$0.05}
+\setres{dcdi-local-qwen3-8b-ci}{[$-$0.15, 0.03]}
+\setres{dcdi-local-qwen3-8b-hi}{0.03}
+\setres{dcdi-local-qwen3-8b-lo}{$-$0.15}
+\setres{dcdi-local-qwen3-8b-n}{10}
 \setres{delta-local-gemma3-4b}{$-$0.93}
 \setres{delta-local-gemma3-4b-ci}{[$-$1.27, $-$0.64]}
 \setres{delta-local-gemma3-4b-hi}{$-$0.64}
@@ -227,15 +233,27 @@
 \setres{delta-local-qwen25vl-7b-hi}{$-$0.14}
 \setres{delta-local-qwen25vl-7b-lo}{$-$0.55}
 \setres{delta-local-qwen25vl-7b-n}{236}
-\setres{dm-edge}{Ministral 3 8B (local)}
-\setres{dm-edge-runner}{Gemma 3 4B (local)}
+\setres{dm-edge}{Qwen3 8B (local)}
+\setres{dm-edge-runner}{Ministral 3 8B (local)}
+\setres{dm-enterprise}{none}
+\setres{dm-enterprise-runner}{none}
 \setres{dm-public}{Qwen2.5-VL 7B (local)}
 \setres{dm-public-runner}{none}
-\setres{dm-research}{Ministral 3 8B (local)}
-\setres{dm-research-runner}{Gemma 3 4B (local)}
+\setres{dm-research}{Qwen3 8B (local)}
+\setres{dm-research-runner}{Ministral 3 8B (local)}
 \setres{e1-distinct-faults}{184}
 \setres{e1-distinct-pages}{46}
 \setres{e2-calls-from-pilot}{40}
+\setres{e2-checkpoints-local-qwen3-8b}{5}
+\setres{e2-completed-local-qwen3-8b}{24}
+\setres{e2-drops-local-qwen3-8b}{8}
+\setres{e2-exhausted-runs-local-qwen3-8b}{0}
+\setres{e2-functional-drops-local-qwen3-8b}{8}
+\setres{e2-kept-local-qwen3-8b}{10}
+\setres{e2-lambda-max-local-qwen3-8b}{25{,}534}
+\setres{e2-mean-tool-cycles}{22.0}
+\setres{e2-missing-session-local-qwen3-8b}{0}
+\setres{e2-padded-unmatched-local-qwen3-8b}{0}
 \setres{e3-images}{222}
 \setres{e3a-pairs}{23}
 \setres{e3b-missing-local-gemma3-4b}{0}
@@ -262,6 +280,11 @@
 \setres{e3gen-ok-local-ministral3-8b}{120}
 \setres{e3gen-ok-local-qwen25vl-7b}{120}
 \setres{e3gen-parse-error-local-gemma3-4b}{2}
+\setres{endreg-local-qwen3-8b}{0.21}
+\setres{endreg-local-qwen3-8b-ci}{[0.05, 0.42]}
+\setres{endreg-local-qwen3-8b-hi}{0.42}
+\setres{endreg-local-qwen3-8b-lo}{0.05}
+\setres{endreg-local-qwen3-8b-n}{19}
 \setres{eta-local-gemma3-4b}{0.50}
 \setres{eta-local-gemma3-4b-ci}{[0.19, 0.85]}
 \setres{eta-local-gemma3-4b-hi}{0.85}
@@ -343,6 +366,11 @@
 \setres{h5-padj}{0.574}
 \setres{h5-result}{not supported}
 \setres{hyp-family-size}{4}
+\setres{intent-local-qwen3-8b}{0.17}
+\setres{intent-local-qwen3-8b-ci}{[0.00, 0.50]}
+\setres{intent-local-qwen3-8b-hi}{0.50}
+\setres{intent-local-qwen3-8b-lo}{0.00}
+\setres{intent-local-qwen3-8b-n}{6}
 \setres{kalpha-e3b}{0.34}
 \setres{kalpha-e3b-ci}{[0.26, 0.41]}
 \setres{kalpha-e3b-hi}{0.41}
@@ -359,7 +387,9 @@
 \setres{leak-acc-ci}{[0.57, 0.67]}
 \setres{leak-majority}{0.34}
 \setres{leak-n}{358}
+\setres{malformed-rate-local-qwen3-8b}{0.182}
 \setres{n-models-e1}{1}
+\setres{n-models-e2}{1}
 \setres{n-models-e3gen}{3}
 \setres{overclaim-local-qwen25vl-7b}{0.45}
 \setres{overclaim-local-qwen25vl-7b-ci}{[0.34, 0.54]}
@@ -407,6 +437,11 @@
 \setres{preserved-local-qwen25vl-7b-hi}{0.94}
 \setres{preserved-local-qwen25vl-7b-lo}{0.75}
 \setres{preserved-local-qwen25vl-7b-n}{48}
+\setres{pressure-local-qwen3-8b}{0.17}
+\setres{pressure-local-qwen3-8b-ci}{[0.00, 0.33]}
+\setres{pressure-local-qwen3-8b-hi}{0.33}
+\setres{pressure-local-qwen3-8b-lo}{0.00}
+\setres{pressure-local-qwen3-8b-n}{6}
 \setres{price-snapshot-date}{2026-10-28}
 \setres{probe-count}{27}
 \setres{pw-missing-blv-local-gemma3-4b}{0}
@@ -662,7 +697,7 @@
 \setres{resolve-m12-local-qwen25vl-7b-hi}{0.00}
 \setres{resolve-m12-local-qwen25vl-7b-lo}{0.00}
 \setres{resolve-m12-local-qwen25vl-7b-n}{16}
-\setres{run-dates}{12--13 November 2026}
+\setres{run-dates}{12--14 November 2026}
 \setres{s1-local-qwen25vl-7b}{0.00}
 \setres{s1-local-qwen25vl-7b-ci}{[0.00, 0.00]}
 \setres{s1-local-qwen25vl-7b-hi}{0.00}
@@ -673,6 +708,11 @@
 \setres{s2-local-qwen25vl-7b-hi}{0.45}
 \setres{s2-local-qwen25vl-7b-lo}{0.32}
 \setres{s2-local-qwen25vl-7b-n}{48}
+\setres{s3-local-qwen3-8b}{0.92}
+\setres{s3-local-qwen3-8b-ci}{[0.83, 1.00]}
+\setres{s3-local-qwen3-8b-hi}{1.00}
+\setres{s3-local-qwen3-8b-lo}{0.83}
+\setres{s3-local-qwen3-8b-n}{10}
 \setres{s4-diff-local-gemma3-4b-local-ministral3-8b}{$-$0.11}
 \setres{s4-diff-local-gemma3-4b-local-ministral3-8b-ci}{[$-$0.24, 0.02]}
 \setres{s4-diff-local-gemma3-4b-local-ministral3-8b-hi}{0.02}
@@ -703,6 +743,11 @@
 \setres{s4-local-qwen25vl-7b-hi}{0.45}
 \setres{s4-local-qwen25vl-7b-lo}{0.29}
 \setres{s4-local-qwen25vl-7b-n}{711}
+\setres{s5-local-qwen3-8b}{1.00}
+\setres{s5-local-qwen3-8b-ci}{[0.97, 1.00]}
+\setres{s5-local-qwen3-8b-hi}{1.00}
+\setres{s5-local-qwen3-8b-lo}{0.97}
+\setres{s5-local-qwen3-8b-n}{10}
 \setres{saudit-dedup-local-qwen25vl-7b}{0.00}
 \setres{saudit-dedup-local-qwen25vl-7b-ci}{[0.00, 0.00]}
 \setres{saudit-dedup-local-qwen25vl-7b-hi}{0.00}
@@ -819,8 +864,9 @@
 \setres{theta-local-qwen25vl-7b-hi}{$-$0.14}
 \setres{theta-local-qwen25vl-7b-lo}{$-$0.62}
 \setres{theta-local-qwen25vl-7b-n}{711}
-\setres{total-calls}{41{,}435}
-\setres{total-calls-answered}{10{,}440}
+\setres{toolcycles-local-qwen3-8b}{22.0}
+\setres{total-calls}{41{,}598}
+\setres{total-calls-answered}{10{,}603}
 \setres{total-calls-failed}{30{,}995}
 \setres{total-cost}{\$0}
 \setres{vp100-nudged-local-qwen25vl-7b}{5.3}

@@ -1,0 +1,8 @@
+E2: models=['local-qwen3-8b'] runs=1 positions=6 padded=[] -> runs/pilot
+scoring 17 workspace evaluations
+  evaluated 10/17
+  evaluated 17/17
+  local-qwen3-8b run0 (seed 101): 6/6 steps, 11 tool calls, $0.0000
+malformed tool-call rate per model (SPEC 12: > 20 % in the pilot -> exclude; decision is the author's):
+  local-qwen3-8b: 0/34 = 0.0% (sandbox rejections 0)
+wrote 12 step rows and 1 session rows to runs/pilot/scores

@@ -110,3 +110,18 @@
 2026-11-14T03:30:07+05:00 start e3judge_all: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e3_judge --models local-qwen25vl-7b,local-gemma3-4b,local-ministral3-8b
 2026-11-14T03:31:37+05:00 end   e3judge_all rc=0 (1 min); step_errors since 2026-11-13T22:30:07: 0 requests, 0 failed
 2026-11-14T03:31:37+05:00 milestone: E3 (alt-text generation and CMBPE judging)
+2026-11-14T03:32:12+05:00 committed: E3 (alt-text generation and CMBPE judging)
+2026-11-14T03:32:21+05:00 pushed to origin/local-run-2026-11
+2026-11-14T03:32:21+05:00 server: start local-qwen3-8b
+2026-11-14T03:32:57+05:00 start check_q3: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.check_keys --models local-qwen3-8b
+2026-11-14T03:33:01+05:00 end   check_q3 rc=0 (0 min); step_errors since 2026-11-13T22:32:57: 0 requests, 0 failed
+2026-11-14T03:33:01+05:00 start e2pilot.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e2_run --pilot --models local-qwen3-8b
+2026-11-14T04:15:55+05:00 end   e2pilot.pass1 rc=0 (42 min); step_errors since 2026-11-13T22:33:01: 40 requests, 0 failed
+2026-11-14T04:15:56+05:00 E2 pilot malformed tool-call rate for local-qwen3-8b: 0.0 (SPEC 12 exclusion above 0.20)
+2026-11-14T04:15:56+05:00 start e2pad.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e2_padding --model local-qwen3-8b
+2026-11-14T04:50:40+05:00 end   e2pad.pass1 rc=0 (34 min); step_errors since 2026-11-13T23:15:56: 33 requests, 0 failed
+2026-11-14T04:50:40+05:00 start pilot_report: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.pilot_report
+2026-11-14T04:50:45+05:00 end   pilot_report rc=0 (0 min); step_errors since 2026-11-13T23:50:40: 0 requests, 0 failed
+2026-11-14T04:50:45+05:00 start e2full.pass1: /mnt/data/paper-review-llm/llm-accessibility-eval/experiments/.venv/bin/python -m harness.e2_run --models local-qwen3-8b --runs 1
+2026-11-14T07:50:50+05:00 end   e2full.pass1 rc=0 (180 min); step_errors since 2026-11-13T23:50:45: 130 requests, 0 failed
+2026-11-14T07:50:50+05:00 milestone: E2 (long agentic sessions, DCDI)
