@@ -44,6 +44,7 @@ def compute(inputs, b: int = B_DEFAULT, seed: int = SEED) -> dict:
     res["beta"] = dcdi.drift_rate(pairs)
     res["drops"] = dcdi.drops(pairs)
     res["curves"] = dcdi.curves(pairs, b, seed)
+    res["activity"] = dcdi.activity(inputs.steps)
     res["press"] = metrics.e2_pressure(inputs.steps, b, seed)
     res["sess"] = metrics.e2_sessions(inputs.sessions, b, seed)
     res["toolcalls"] = metrics.e2_tool_calls(inputs.steps)
@@ -197,6 +198,16 @@ def summary(res: dict, inputs, values: dict, figs: list, wrote_paper: bool) -> s
                                for arm in ("session", "fresh", "padded")] for m, a in res["toolcalls"].items()]
             L.append("Malformed tool calls / tool calls, by arm:\n")
             L.append(table(["model", "session", "fresh", "padded"], rows))
+        if res.get("activity"):
+            L.append("Activity by session half (positions 1-12 / 13-24; all step types; DCDI keeps only steps "
+                     "functional in both arms):\n")
+            rows = [[nm(m)] + [f"{c[f'{k}_h1']} / {c[f'{k}_h2']}" for k in
+                               ("notool_s", "notool_f", "tools_s", "tools_f", "func_s", "func_f")]
+                    + [c["s_fail_f_ok"], c["s_ok_f_fail"]]
+                    for m, c in ((m, a["counts"]) for m, a in res["activity"].items())]
+            L.append(table(["model", "session steps without tool call", "fresh steps without tool call",
+                            "session tool calls", "fresh tool calls", "session functional", "fresh functional",
+                            "session fails, fresh works", "session works, fresh fails"], rows))
 
     e3 = res["e3"]
     if any(e3.get(k) for k in ("e3c", "known", "pointwise", "leakage", "blv_pairs")):
@@ -327,7 +338,7 @@ def main(argv=None) -> int:
         export_latex.write_all(res, inputs, paths.results)
         values = export_latex.values(res, inputs).v
         names = {m: display(inputs.models, m) for m in inputs.models}
-        p = figures.drift(res["curves"], names, paths.figures)
+        p = figures.drift(res["curves"], names, paths.figures, res.get("activity"))
         if p:
             figs.append(p)
         p = figures.pareto(res["cpds"]["summary"].get("rep", {}), res["cpds"]["frontier"].get("rep", []), names,

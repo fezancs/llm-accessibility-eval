@@ -1,0 +1,68 @@
+% E2 results (RQ2; C3, C5, C6). Every number is a res-macro key defined in values.tex (export_latex.py).
+% Facts that are not numbers (what the replies say, what the reasoning mentions) were checked by reading
+% runs/e2/transcripts/local-qwen3-8b/run0.json and runs/e2/raw/ (2026-11-14).
+\subsection{RQ2: Accessibility over a long agentic session (C3, C5, C6)}\label{sec:rq2}
+\textbf{The session.} \Q{} completed all \res{e2-completed-local-qwen3-8b} steps of its one
+session. The prompt grew to \res{e2-lambda-max-local-qwen3-8b} tokens, so the window was never
+exhausted (\res{e2-exhausted-runs-local-qwen3-8b} exhausted runs). In the session it made
+\res{e2-toolcalls-session-local-qwen3-8b} tool calls, against \res{e2-toolcalls-fresh-local-qwen3-8b}
+in the fresh controls of the same steps. \res{e2-malformed-session-local-qwen3-8b} of the session's
+calls had invalid arguments (rate \res{malformed-rate-local-qwen3-8b}), against
+\res{e2-malformed-fresh-local-qwen3-8b} in the fresh controls.
+
+\textbf{Drift as defined.} Over the \res{e2-kept-local-qwen3-8b} foundation and regular steps that
+were functional in both arms, DCDI was \res{dcdi-local-qwen3-8b} (CI \res{dcdi-local-qwen3-8b-ci}):
+no detectable drift. In-session adherence on those steps was $S_3={}$\res{s3-local-qwen3-8b} (CI
+\res{s3-local-qwen3-8b-ci}), so $S_5={}$\res{s5-local-qwen3-8b}. The drift rate $\beta$ needs more
+than one run and was not estimated. The length and history components could not be separated
+either: of the \res{e2-checkpoints-local-qwen3-8b} padded checkpoints, \res{e2-checkpoints-usable-local-qwen3-8b}
+were functional in all three arms, and the padded control itself was not functional at
+\res{e2-padded-notfunc-local-qwen3-8b} of them.
+
+\textbf{What DCDI does not see.} These favourable values rest on \res{e2-kept-local-qwen3-8b}
+steps. The other \res{e2-drops-local-qwen3-8b} foundation and regular steps were dropped, and
+they are where the session failed. The counts below were added after we saw the data and are
+exploratory. As the session grew, the model stopped acting (Fig.~\ref{fig:drift}). It ended \res{e2-notool-s-h1-local-qwen3-8b} of the first
+\res{e2-half-steps} steps without any tool call, but \res{e2-notool-s-h2-local-qwen3-8b} of the last
+\res{e2-half-steps}, and its tool calls fell from \res{e2-tools-s-h1-local-qwen3-8b} in the first
+half to \res{e2-tools-s-h2-local-qwen3-8b} in the second. The second half began at a prompt of
+\res{e2-lambda-h2-local-qwen3-8b} tokens, about half the window. The fresh controls start from the
+same workspace snapshot, with only the system prompt and the step's request. They called tools in
+every step (at least \res{e2-min-tools-f-local-qwen3-8b} calls; \res{e2-tools-f-h1-local-qwen3-8b}
+and \res{e2-tools-f-h2-local-qwen3-8b} calls in the two halves). The in-session step was functional
+in \res{e2-func-s-h1-local-qwen3-8b} and \res{e2-func-s-h2-local-qwen3-8b} steps of the two halves,
+the fresh control in \res{e2-func-f-h1-local-qwen3-8b} and \res{e2-func-f-h2-local-qwen3-8b}.
+Exactly one arm worked in \res{e2-s-fail-f-ok-local-qwen3-8b} steps. In each of them it was the
+fresh control (the reverse: \res{e2-s-ok-f-fail-local-qwen3-8b}).
+
+\textbf{Claims without changes (C6).} Every one of the \res{e2-notool-s-local-qwen3-8b} session
+steps that ended without a tool call ended with a reply that described the requested change as
+done. For example: ``I've added a language switcher to the header of every page with the
+requested functionality. Here's the implementation: \ldots''. Many of these replies also contained
+code, but no file had changed. We checked for a harness cause. Tools were offered in every request,
+and no reply contained a tool call that the server failed to parse. The model's reasoning in
+these steps planned the code but never mentioned the file tools (\texttt{runs/e2/raw}). The model
+thus lost its tool use as the context grew and still reported the work as complete. A developer
+who trusts the reply would ship a site without the feature.
+
+\textbf{Pressure and end-of-session audit.} The pressure score was \res{pressure-local-qwen3-8b}
+(CI \res{pressure-local-qwen3-8b-ci}, \res{pressure-local-qwen3-8b-n} steps), and the requested
+change was in place after a share of \res{intent-local-qwen3-8b} of them. These
+values do not show resistance to pressure. \res{e2-notool-s-pressure-local-qwen3-8b} of the
+\res{e2-pressure-s-local-qwen3-8b} pressure steps were answered without a tool call, so the page
+stayed as it was while the reply said the change had been made. Both partial scores come from
+such steps. The only pressure request the model acted on, disabling zoom, it carried out on the
+home page in the inaccessible way requested. At the end of the session, a share of
+\res{endreg-local-qwen3-8b} (CI \res{endreg-local-qwen3-8b-ci}, \res{endreg-local-qwen3-8b-n}
+earlier steps) scored lower than when it was completed. These were pages built early in the
+session. Their own HTML files were not edited again, so the losses came from later edits to the
+shared stylesheet.
+
+\textbf{Answer to RQ2.} In this one session, the changes \Q{} actually made met the accessibility
+requirement about as well as fresh-context work on the same steps. In the second half, however,
+it mostly stopped doing the work and claimed that it had. DCDI is computed only over steps that
+are functional in both arms, so it does not register this failure, and $S_5$ alone overstates
+the model's ability. We therefore report the functional and tool-use comparison with the fresh
+control next to DCDI. The padded control was also mostly not functional, which fits an effect
+of context length rather than of the session's own history. With \res{e2-checkpoints-local-qwen3-8b}
+checkpoints in one run, this is an observation, not a test.

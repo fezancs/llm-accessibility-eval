@@ -93,7 +93,8 @@ def drops(pairs: pd.DataFrame) -> dict:
         ck = d[d["position"].isin(CHECKPOINTS)]
         has_p = ck["a_p"].notna() | ck["func_p"].notna()
         fp = _truth(ck["func_p"])
-        out[m].update({"checkpoint_pairs": int(len(ck)), "missing_padded": int((~has_p).sum()),
+        out[m].update({"checkpoint_usable": int((ck["treg"] & ck["ok_p"]).sum()),
+                       "checkpoint_pairs": int(len(ck)), "missing_padded": int((~has_p).sum()),
                        "padded_not_functional": int((has_p & ~fp).sum()),
                        "padded_length_unmatched": int((has_p & ~_not_false(ck["lm_p"])).sum())})
     return out
@@ -198,4 +199,57 @@ def curves(pairs: pd.DataFrame, b: int = B_DEFAULT, seed: int = SEED) -> dict:
                          "session_lo": float(np.percentile(rs, 2.5)), "session_hi": float(np.percentile(rs, 97.5)),
                          "fresh_lo": float(np.percentile(rf, 2.5)), "fresh_hi": float(np.percentile(rf, 97.5))})
         out[m] = pd.DataFrame(rows).sort_values("position")
+    return out
+
+
+PLANNED_STEPS = 24                 # SPEC 6.1: steps per session; halves are positions 1-12 and 13-24
+
+
+def activity(steps: pd.DataFrame) -> dict:
+    """What each arm did at each position: tool calls and functional checks (all step types).
+
+    DCDI keeps only steps that are functional in both arms, so a session that stops working
+    (for example, answers without calling a tool) drops out of DCDI instead of lowering it.
+    This table shows those steps. Per model:
+      by_position  DataFrame: position, step_type, n (runs), session/fresh mean tool calls,
+                   session/fresh functional share
+      counts       session steps (per half), steps ended without any tool call (per half and arm),
+                   tool calls (per half and arm), functional steps (per half and arm), the fewest
+                   tool calls in any fresh step, paired disagreements (session not functional
+                   while the fresh control is, and the reverse), and pressure steps (all, and those
+                   the session answered without a tool call), summed over runs.
+      lambda_h2    median prompt length (Lambda) of the first in-session step of the second half.
+    """
+    out = {}
+    if steps.empty or "tool_calls" not in steps:
+        return out
+    half = PLANNED_STEPS // 2
+    cols = ID_COLS + ["tool_calls", "functional", "Lambda"]
+    d0 = steps[[c for c in cols if c in steps]].copy()
+    d0["tools"] = pd.to_numeric(d0["tool_calls"], errors="coerce")
+    d0["func"] = _truth(d0["functional"])
+    s = d0[steps["arm"] == "session"].drop_duplicates(subset=ID_COLS, keep="last")
+    f = d0[steps["arm"] == "fresh"].drop_duplicates(subset=ID_COLS, keep="last")
+    both = s.merge(f, on=ID_COLS, how="inner", suffixes=("_s", "_f"))
+    for m, d in both.groupby("model_key"):
+        h1, h2 = d[d["position"] <= half], d[d["position"] > half]
+        c = {"steps_h1": len(h1), "steps_h2": len(h2)}
+        for arm in ("s", "f"):
+            for name, part in (("h1", h1), ("h2", h2)):
+                c[f"notool_{arm}_{name}"] = int((part[f"tools_{arm}"] == 0).sum())
+                c[f"tools_{arm}_{name}"] = int(part[f"tools_{arm}"].sum())
+                c[f"func_{arm}_{name}"] = int(part[f"func_{arm}"].sum())
+        c["min_tools_f"] = int(d["tools_f"].min())
+        pr = d[d["step_type"] == "pressure"]
+        c["pressure_s"] = int(len(pr))
+        c["notool_s_pressure"] = int((pr["tools_s"] == 0).sum())
+        c["s_fail_f_ok"] = int((~d["func_s"] & d["func_f"]).sum())
+        c["s_ok_f_fail"] = int((d["func_s"] & ~d["func_f"]).sum())
+        bp = (d.groupby(["position", "step_type"])
+                .agg(n=("run", "size"), session_tools=("tools_s", "mean"), fresh_tools=("tools_f", "mean"),
+                     session_functional=("func_s", "mean"), fresh_functional=("func_f", "mean"))
+                .reset_index().sort_values("position"))
+        lam = pd.to_numeric(h2.loc[h2["position"] == h2["position"].min(), "Lambda_s"], errors="coerce").dropna() \
+            if len(h2) else pd.Series(dtype=float)
+        out[m] = {"by_position": bp, "counts": c, "lambda_h2": float(lam.median()) if len(lam) else None}
     return out

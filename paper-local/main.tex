@@ -393,7 +393,8 @@ a third local judge family (\MI), without which recusal removes every E3c verdic
 output budget for \Q{} (the plan's rule: the model's maximum output); the image-token cap; the E2
 padding transcript written by \Q{} instead of Claude Haiku 5.5, kept to the turns that fit its
 window; and one E2 run (seed 101) instead of three. No metric, prompt, task or scoring rule
-was changed. No public pre-registration tag was created before data collection, so this study
+was changed. After seeing the E2 data we added exploratory counts of tool use and functional
+steps per session half, and marked non-functional steps in the drift figure. No public pre-registration tag was created before data collection, so this study
 is not pre-registered. The run's code was published (commit \texttt{7544be2}) before all but
 a handful of smoke-test calls, which used the same code.
 
@@ -442,9 +443,11 @@ missing alt text, low contrast, a missing page language and a demoted heading
 \res{audit-parsefail-local-qwen25vl-7b} of pages yielded no parseable list even after the JSON
 retry.
 
+\input{sections/results_e2}
+
 \input{sections/results_e3}
 
-\emph{\Q{} (E1, E2) is still running.}
+\emph{E1 for \Q{} is still running.}
 %RESULTS-END
 
 \begin{table*}[t]
@@ -483,8 +486,10 @@ Method & $r_\text{BLV}$ & $r_\text{crowd}$ & Acc$_\text{known}$ & PC & $\gamma$ 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{\resdir/figures/fig_drift.pdf}
-\caption{E2 adherence by session position: in-session (solid) and fresh control (dashed),
-with bootstrap bands (generated).}
+\caption{E2 by session position (\Q, one run; generated). Top: adherence in the session (solid)
+and in the fresh control (dashed) on the steps functional in both arms, which DCDI sums. Grey:
+the in-session step was not functional and is dropped from DCDI. Bottom: tool calls per step;
+P marks pressure steps, which DCDI excludes.}
 \label{fig:drift}
 \end{figure}}{}
 
@@ -511,6 +516,14 @@ differently. Results describe these exact files (SHA-256 in the repository).
 \textbf{Context window.} \Q{}'s 32{,}768-token window bounds E2: a session ends when its history
 no longer fits. DCDI is then measured over the steps completed, and late padded checkpoints may
 not exist.
+
+\textbf{The functional gate of DCDI.} DCDI compares adherence only on steps that are functional in
+both arms. A session that stops doing the work therefore leaves the comparison instead of
+lowering the score, as happened in E2 (Section~\ref{sec:rq2}). The functional checks are also
+lenient: they test that the step's anchor element and text exist, so a step whose anchor
+already existed passes without any change (the accordion and form-validation steps). DCDI and
+$S_5$ must therefore be read together with the functional and tool-use comparison with the
+fresh control.
 
 \textbf{Sampling and repetitions.} Provider defaults make \QV{} near-greedy, so its three E1
 samples are close to identical. E2 has one run, so drift intervals reflect steps within one
